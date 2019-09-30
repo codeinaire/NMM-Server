@@ -1,16 +1,16 @@
-const SQL = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 const ArticleModel = require('../models/article');
 
 module.exports.createDatabase = () => {
-  const db = new SQL('no-meat-may', 'no-meat-may', 'aoeui12345', {
+  const sequelize = new Sequelize('no-meat-may', 'no-meat-may', 'aoeui12345', {
     host: 'localhost',
     dialect: 'postgres'
   });
 
-  const articles = ArticleModel(db, SQL);
+  const articles = ArticleModel(sequelize, DataTypes);
 
 
-  db.sync({ force: false }).then(() => {
+  sequelize.sync({ force: false }).then(() => {
     console.log('Database & tables created');
   })
 

@@ -1,13 +1,37 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
-  const Article = sequelize.define('Articles', {
-    title: DataTypes.STRING,
-    content: DataTypes.TEXT,
-    hashtag: DataTypes.ARRAY(DataTypes.STRING),
-    type: DataTypes.STRING
-  }, {});
-  Article.associate = function(models) {
-    // associations can be defined here
-  };
-  return Article;
+const { Model } = require('sequelize');
+export class Article extends Model {
+  public id!: number;
+  public title!: string;
+  public content!: string;
+  public hashtag!: [string];
+  public type!: string;
+
+  // timestamps!
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+}
+
+module.exports = (sequelize: any, DataTypes: any) => {
+  return Article.init({
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    content: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    hashtag: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: false
+    },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
+  }, {
+    sequelize,
+    modelName: 'article'
+  })
 };

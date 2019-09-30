@@ -6,3 +6,5 @@ node_modules/*
 
 # Compile ts
 dist/*
+**/*.js
+**/*.js.map

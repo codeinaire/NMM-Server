@@ -12,7 +12,7 @@ const server = new ApolloServer({
   resolvers,
   dataSources: () => {
     return {
-      articleAPI: new ArticleAPI({store})
+      articleAPI: new ArticleAPI({ store })
     }
   },
   context: ({ event, context }) => ({

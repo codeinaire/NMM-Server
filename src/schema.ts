@@ -1,6 +1,6 @@
 const { gql } = require('apollo-server-lambda');
 
-const typeDefs = gql`
+module.exports = gql`
   type Query {
     articles: [Article]
   }
@@ -29,5 +29,3 @@ const typeDefs = gql`
     type: String!
   }
 `
-
-module.exports = typeDefs;
