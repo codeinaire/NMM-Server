@@ -1,6 +1,6 @@
 'use strict';
-const { Model } = require('sequelize');
-export class Article extends Model {
+import { Model } from 'sequelize';
+class Article extends Model {
   public id!: number;
   public title!: string;
   public content!: string;
@@ -12,7 +12,7 @@ export class Article extends Model {
   public readonly updatedAt!: Date;
 }
 
-module.exports = (sequelize: any, DataTypes: any) => {
+export default (sequelize: any, DataTypes: any) => {
   return Article.init({
     title: {
       type: DataTypes.STRING,
@@ -32,6 +32,6 @@ module.exports = (sequelize: any, DataTypes: any) => {
     }
   }, {
     sequelize,
-    modelName: 'article'
+    modelName: 'Article'
   })
 };

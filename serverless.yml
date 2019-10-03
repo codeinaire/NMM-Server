@@ -1,0 +1,132 @@
+org: codeinaire
+app: nmm
+
+service: auth0-custom-authorizers
+
+plugins:
+  - serverless-webpack
+  - serverless-dotenv-plugin
+  - serverless-offline
+
+custom:
+  webpack:
+    webpackConfig: 'webpack.config.js'   # Name of webpack configuration file
+    includeModules: true   # Node modules configuration for packaging
+    excludeFiles: src/**/*.test.js # Provide a glob for files to ignore
+  serverless-offline:
+    port: 4000
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  region: ap-southeast-2
+
+layers:
+  graphql:
+    package:
+      artifact: lambda_layers/graphql_node_modules.zip
+  authorizer:
+    package:
+      artifact: lambda_layers/authorizer_node_modules.zip
+  # graphql:
+  #   path: node_modules # required, path to layer contents on disk
+  #   name: graphql # optional, Deployed Lambda layer name
+  #   description: This is for the graphql lambda # optional, Description to publish to AWS
+  #   compatibleRuntimes: # optional, a list of runtimes this layer is compatible with
+  #     - nodejs10.x
+  #   licenseInfo: GPLv3 # optional, a string specifying license information
+  #   allowedAccounts: # optional, a list of AWS account IDs allowed to access this layer.
+  #     - '829131444792'
+  #   retain: false # optional, false by default. If true, layer versions are not deleted as new ones are created
+  # authorizer:
+  #   path: custom_authorizer/lambda/node_modules # required, path to layer contents on disk
+  #   name: authorizer # optional, Deployed Lambda layer name
+  #   compatibleRuntimes: # optional, a list of runtimes this layer is compatible with
+  #     - nodejs10.x
+  #   allowedAccounts: # optional, a list of AWS account IDs allowed to access this layer.
+  #     - '829131444792'
+package:
+  exclude:
+    - node_modules/**
+    - authorizer_node_modules.zip
+    - graphql_node_modules.zip
+    - server.code-workspace
+    - test-test
+    - custom_authorizer/lambda/node_modules/**
+    - custom_authorizer/lambda/.env
+
+functions:
+  auth:
+    handler: custom_authorizer/lambda/authorizer.auth
+    cors: true
+    environment:
+      TOKEN_ISSUER: ${env:TOKEN_ISSUER}
+      AUDIENCE: ${env:AUDIENCE}
+      JWKS_URI: ${env:JWKS_URI}
+    layers:
+      - { Ref: AuthorizerLambdaLayer }
+  graphql:
+    # this is formatted as <FILENAME>.<HANDLER>
+    handler: src/main.graphql
+    events:
+    - http:
+        path: nmm-app
+        method: post
+        authorizer: auth
+        cors:
+          origin: http://localhost:3000
+          headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - access-control-allow-origin
+              - apollographql-client-name
+              - apollographql-client-version
+          allowCredentials: true
+    - http:
+        path: nmm-app
+        method: get
+        authorizer: auth
+        cors:
+          origin: http://localhost:3000
+          headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - access-control-allow-origin
+              - apollographql-client-name
+              - apollographql-client-version
+          allowCredentials: true
+    layers:
+    # Name = <name of layer>LambdaLayer
+      - { Ref: GraphqlLambdaLayer }
+
+resources:
+  Resources:
+    # This response is needed for custom authorizer failures cors support ¯\_(ツ)_/¯
+    GatewayResponse:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: EXPIRED_TOKEN
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+        StatusCode: '401'
+    AuthFailureGatewayResponse:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: UNAUTHORIZED
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+        StatusCode: '401'

@@ -1,35 +1,37 @@
 {
+  "compileOnSave":false,
   "compilerOptions": {
-    "esModuleInterop": true,
-    "declaration":false,
-    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "declaration": false,
     "emitDecoratorMetadata":true,
-    "experimentalDecorators":true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
     "lib": [
       "es6",
       "dom"
     ],
-    "module":"commonjs",
-    "moduleResolution":"node",
-    "sourceMap":true,
-    "target":"es5",
-    "jsx":"react",
-    "allowSyntheticDefaultImports":true,
-    "noImplicitAny":true,
-    "noImplicitThis":true,
-    "noImplicitReturns":true,
-    "strictNullChecks":true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "resolveJsonModule": true,
+    "rootDir": ".",
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "target": "es6"
   },
-  "include": [
-    "**/*"
-  ],
   "exclude": [
     "**/*.spec.ts",
     "node_modules",
     "vendor",
     "public"
   ],
-  "compileOnSave":false
+  "include": [
+    "**/*"
+  ]
 }
+

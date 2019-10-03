@@ -4,9 +4,10 @@
   "description": "The Amazing & Wonderful Project NMM",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.$NODE_ENV.js",
-    "start": "node dist/server"
+    "check-types": "tsc",
+    "start": "node dist/server",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -26,15 +27,26 @@
   },
   "homepage": "https://github.com/codeinaire/NMM-Server#readme",
   "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
+    "@babel/plugin-transform-typescript": "^7.6.0",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/preset-typescript": "^7.6.0",
     "@types/aws-lambda": "^8.10.33",
     "@types/bluebird": "^3.5.27",
     "@types/node": "^12.7.8",
     "@types/sequelize": "^4.28.4",
     "@types/validator": "^10.11.3",
     "@types/webpack-env": "^1.14.0",
+    "babel-loader": "^8.0.6",
+    "cache-loader": "^4.1.0",
     "clean-webpack-plugin": "^3.0.0",
+    "fork-ts-checker-webpack-plugin": "^1.5.0",
     "sequelize-cli": "^5.5.1",
+    "serverless-dotenv-plugin": "^2.1.1",
     "serverless-offline": "^5.11.0",
+    "serverless-webpack": "^5.3.1",
     "ts-loader": "^6.1.2",
     "typescript": "^3.6.3",
     "webpack": "^4.41.0",
@@ -46,8 +58,11 @@
     "apollo-datasource": "^0.6.3",
     "apollo-server-lambda": "^2.9.4",
     "graphql": "^14.5.8",
+    "graphql-tools": "^4.0.5",
+    "lodash": "^4.17.15",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^5.19.0"
+    "sequelize": "^5.19.0",
+    "serverless": "^1.53.0"
   }
 }

@@ -1,7 +1,7 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const ArticleModel = require('../models/article');
+import { Sequelize, DataTypes } from 'sequelize';
+import ArticleModel from './models/article';
 
-module.exports.createDatabase = () => {
+export default () => {
   const sequelize = new Sequelize('no-meat-may', 'no-meat-may', 'aoeui12345', {
     host: 'localhost',
     dialect: 'postgres'

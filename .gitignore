@@ -1,10 +1,20 @@
 # Dependencies
 node_modules/*
+custom_authorizer/lambda/node_modules/*
 
 # Secrets
 .env
 
-# Compile ts
+# Built
 dist/*
 **/*.js
 **/*.js.map
+.webpack/*
+.webpackCache/*
+
+
+# Misc
+**/*.zip
+
+# DB
+src/db/config/*
