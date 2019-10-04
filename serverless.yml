@@ -50,14 +50,11 @@ package:
     - node_modules/**
     - authorizer_node_modules.zip
     - graphql_node_modules.zip
-    - server.code-workspace
-    - test-test
-    - custom_authorizer/lambda/node_modules/**
-    - custom_authorizer/lambda/.env
+    - custom_authorizer/node_modules/**
 
 functions:
   auth:
-    handler: custom_authorizer/lambda/authorizer.auth
+    handler: custom_authorizer/authorizer.auth
     cors: true
     environment:
       TOKEN_ISSUER: ${env:TOKEN_ISSUER}

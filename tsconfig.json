@@ -19,7 +19,6 @@
     "moduleResolution": "node",
     "outDir": "dist",
     "resolveJsonModule": true,
-    "rootDir": ".",
     "sourceMap": true,
     "strictNullChecks": true,
     "target": "es6"

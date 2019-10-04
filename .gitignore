@@ -1,13 +1,13 @@
 # Dependencies
 node_modules/*
-custom_authorizer/lambda/node_modules/*
+custom_authorizer/node_modules/*
 
 # Secrets
 .env
 
 # Built
 dist/*
-**/*.js
+# **/*.js
 **/*.js.map
 .webpack/*
 .webpackCache/*
