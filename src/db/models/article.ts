@@ -1,5 +1,5 @@
 'use strict';
-import { Model } from 'sequelize';
+import { Model, Sequelize } from 'sequelize';
 class Article extends Model {
   public id!: number;
   public title!: string;
@@ -12,7 +12,7 @@ class Article extends Model {
   public readonly updatedAt!: Date;
 }
 
-export default (sequelize: any, DataTypes: any) => {
+export default (sequelize: Sequelize, DataTypes: any) => {
   return Article.init({
     title: {
       type: DataTypes.STRING,
@@ -32,6 +32,6 @@ export default (sequelize: any, DataTypes: any) => {
     }
   }, {
     sequelize,
-    modelName: 'Article'
+    modelName: 'article'
   })
 };

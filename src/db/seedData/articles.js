@@ -17,7 +17,6 @@ module.exports = [
     type: "Animal Rights",
     createdAt: new Date(),
     updatedAt: new Date()
-
   },
   {
     title: "Personal Health",

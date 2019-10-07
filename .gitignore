@@ -10,7 +10,7 @@ dist/*
 # **/*.js
 **/*.js.map
 .webpack/*
-.webpackCache/*
+.awcache
 
 
 # Misc

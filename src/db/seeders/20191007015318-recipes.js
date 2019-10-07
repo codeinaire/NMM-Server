@@ -1,5 +1,5 @@
 'use strict';
-const articles = require('../seedData/articles');
+const recipes = require('../seedData/recipes');
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -13,7 +13,7 @@ module.exports = {
         isBetaMember: false
       }], {});
     */
-   return queryInterface.bulkInsert('articles', articles);
+   return queryInterface.bulkInsert('recipes', recipes);
   },
 
   down: (queryInterface, Sequelize) => {
@@ -24,6 +24,6 @@ module.exports = {
       Example:
       return queryInterface.bulkDelete('People', null, {});
     */
-   return queryInterface.bulkDelete('articles', null, {});
+   return queryInterface.bulkDelete('recipes', null, {});
   }
 };

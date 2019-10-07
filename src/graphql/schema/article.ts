@@ -1,15 +1,6 @@
-const { gql } = require('apollo-server-lambda');
+import { gql } from 'apollo-server-lambda';
 
 export default gql`
-  type Query {
-    articles: [Article]
-  }
-
-  type Mutation {
-    createArticles(articles: [CreateArticle]!): [Article]
-    createArticle(article: CreateArticle!): Article
-  }
-
   type Article {
     id: ID!
     title: String!
