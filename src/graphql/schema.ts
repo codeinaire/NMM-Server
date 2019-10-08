@@ -6,8 +6,8 @@ import Mutations from './schema/mutations';
 import Article from './schema/article';
 import Recipe from './schema/recipe';
 // RESOLVERS
-import articleResolvers from './resolver/article';
-import recipeResolvers from './resolver/recipe';
+import articleResolvers from './resolvers/article';
+import recipeResolvers from './resolvers/recipe';
 
 export default makeExecutableSchema({
   typeDefs: [

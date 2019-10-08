@@ -18,7 +18,7 @@ export class RecipeAPI extends DataSource {
     this.context = config.context;
   }
 
-  public async getRecipes() {
+  public async findAllRecipes() {
     const recipes = await this.store.recipes.findAll({
       attributes: ['id', 'title', 'attribution', 'ingredients', 'method', 'hashtags', 'standardResolution'],
       raw: true

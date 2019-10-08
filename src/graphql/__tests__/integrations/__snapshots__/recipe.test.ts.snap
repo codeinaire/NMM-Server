@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Queries finds all recipes 1`] = `
+Object {
+  "data": Object {
+    "recipes": null,
+  },
+  "errors": Array [
+    [GraphQLError: this.store.recipes.findAll is not a function],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;

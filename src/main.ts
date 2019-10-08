@@ -1,4 +1,4 @@
-import server from './graphql/server';
+const { server } = require('./graphql/index');
 
 export const graphql = server.createHandler({
   cors: {
