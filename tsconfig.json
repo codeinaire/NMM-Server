@@ -24,10 +24,11 @@
     "target": "es6"
   },
   "exclude": [
-    "**/*.spec.ts",
+    "**/*.test.ts",
     "node_modules",
     "vendor",
-    "public"
+    "public",
+    "custom_authorizer/exampleClass.ts"
   ],
   "include": [
     "**/*"

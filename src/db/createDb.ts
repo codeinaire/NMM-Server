@@ -11,10 +11,10 @@ export default () => {
   const articles = ArticleModel(sequelize, DataTypes);
   const recipes = RecipeModel(sequelize, DataTypes);
 
-
-  sequelize.sync({ force: false }).then(() => {
-    console.log('Database & tables created');
-  })
+  // TODO - This is causing DB connection error in tests.
+  // sequelize.sync({ force: false }).then(() => {
+  //   console.log('Database & tables created');
+  // })
 
   return {
     articles,
