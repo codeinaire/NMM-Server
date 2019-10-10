@@ -1,11 +1,16 @@
 import recipeResolver from '../../resolvers/recipe';
 
 export const mockRecipe = {
-  thumbnail: '{"width":150,"height":150,"url":"Test URL"}',
-  lowResolution: '{"width":320,"height":320,"url":"Test URL"}',
-  standardResolution: '{"width":640,"height":640,"url":"Test URL"}',
-  title: "Test Title",
-  attribution: '{"name":"Test Name", "url":"Test URL"}',
+  standardResolution: {
+    width: 640,
+    height: 640,
+    url: 'Test URL'
+  },
+  title: 'Test Title',
+  attribution: {
+    name:'Test Name',
+    url: 'Test URL'
+  },
   ingredients: 'Test Ingredients',
   method: 'Test Method',
   hashtags: ['testString'],

@@ -3,7 +3,7 @@ const {
   schema,
   RecipeAPI,
   ApolloServer,
-  store,
+  store
 } = require('../');
 
 /**
@@ -11,6 +11,8 @@ const {
  */
 export const constructTestServer = ({ context = defaultContext } = {}) => {
   const recipeAPI = new RecipeAPI({ store });
+  console.log('UTILS RECIPE API', recipeAPI);
+
 
   const server = new ApolloServer({
     schema,
