@@ -45,6 +45,8 @@
     "fork-ts-checker-webpack-plugin": "^1.5.0",
     "hard-source-webpack-plugin": "^0.13.1",
     "jest": "^24.9.0",
+    "mock-jwks": "^0.2.0",
+    "nock": "^11.4.0",
     "sequelize-cli": "^5.5.1",
     "serverless-dotenv-plugin": "^2.1.1",
     "serverless-offline": "^5.12.0",
