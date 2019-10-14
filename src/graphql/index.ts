@@ -1,23 +1,31 @@
 import { ApolloServer } from 'apollo-server-lambda';
-// graphql
-import { ArticleAPI } from './datasources/article';
-import { RecipeAPI } from './datasources/recipe';
+// GRAPHQL
+import ArticleAPI from './datasources/article';
+import RecipeAPI from './datasources/recipe';
+import UserAPI from './datasources/user';
+
 import schema from './schema';
-// types
-import { IAPIGatewayProxyEvent } from '../types/lambda';
+
+import Auth from '../utils/auth';
 
 import createDatabase from '../db/createDb';
+// TYPES
+import { APIGatewayProxyEvent } from 'aws-lambda';
+
 const store = createDatabase();
 
 const dataSources = () => ({
   articleAPI: new ArticleAPI({ store }),
-  recipeAPI: new RecipeAPI({ store })
+  recipeAPI: new RecipeAPI({ store }),
+  userAPI: new UserAPI({ store })
 });
 
-const context = ({ event } : { event: IAPIGatewayProxyEvent }) => ({
-  headers: event.headers,
-  event
-});
+const context = ({ event } : { event: APIGatewayProxyEvent }) => {
+  return {
+    event,
+    auth: new Auth()
+  }
+};
 
 const server = new ApolloServer({
   schema,
@@ -32,7 +40,9 @@ module.exports = {
   schema,
   RecipeAPI,
   ArticleAPI,
+  UserAPI,
   ApolloServer,
   store,
   server,
+  Auth
 };

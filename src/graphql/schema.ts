@@ -9,6 +9,7 @@ import User from './schema/user';
 // RESOLVERS
 import articleResolvers from './resolvers/article';
 import recipeResolvers from './resolvers/recipe';
+import userResolvers from './resolvers/user';
 
 export default makeExecutableSchema({
   typeDefs: [
@@ -20,6 +21,7 @@ export default makeExecutableSchema({
   ],
   resolvers: merge(
     recipeResolvers,
-    articleResolvers
+    articleResolvers,
+    userResolvers
   )
 });
