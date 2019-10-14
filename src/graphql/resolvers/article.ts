@@ -1,8 +1,8 @@
 export default {
   Query: {
     articles: async (_ : any, __ : any, { dataSources } : { dataSources: any }) => {
-      console.log('This is query', dataSources);
-      console.log('DataSources', dataSources.articleAPI.context.event);
+      // console.log('This is query', dataSources);
+      // console.log('DataSources', dataSources.articleAPI.context.event);
       const result = await dataSources.articleAPI.getArticles();
       return result;
     }

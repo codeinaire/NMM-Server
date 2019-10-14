@@ -1,6 +1,6 @@
 import { DataSource } from 'apollo-datasource';
 
-export class RecipeAPI extends DataSource {
+export default class RecipeAPI extends DataSource {
   store: any
   context: any
   public constructor({ store } : { store: any }) {
@@ -23,7 +23,7 @@ export class RecipeAPI extends DataSource {
       attributes: ['id', 'title', 'attribution', 'ingredients', 'method', 'hashtags', 'standardResolution'],
       raw: true
     })
-    console.log('This is recipes!!!!!', recipes);
+    // console.log('This is recipes!!!!!', recipes);
     return recipes;
   };
 }

@@ -6,6 +6,7 @@ let data: IEvent;
 
 // Lambda function index.handler - thin wrapper around lib.authenticate
 export const auth = async (event: IEvent) => {
+  console.log('EVENT IN AUTHORISER', event);
   try {
     data = await authenticate(event);
   }

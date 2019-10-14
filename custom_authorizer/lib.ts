@@ -22,6 +22,8 @@ const getPolicyDocument = (effect: string, resource: string) => {
 
 // extract and return the Bearer Token from the Lambda event parameters
 const getToken = (event: IEvent) => {
+    console.log('EVENT IN AUTHORISER', event);
+
     if (!event.type || event.type !== 'TOKEN') {
         throw new Error('Expected "event.type" parameter to have value "TOKEN"');
     }
@@ -51,6 +53,9 @@ export default (event: IEvent) => {
         throw new Error('invalid token');
     }
 
+    console.log('DECODED', decoded);
+
+
     const client = jwksClient({
         cache: true,
         rateLimit: true,
@@ -60,12 +65,19 @@ export default (event: IEvent) => {
 
     const getSigningKey = util.promisify(client.getSigningKey);
 
+    console.log('GETSIGNINGKEY', getSigningKey);
+
+
     return getSigningKey(decoded.header.kid)
         .then((key: IKey) => {
+          console.log('KEY', key);
+
           const signingKey = key.publicKey || key.rsaPublicKey;
           return jwt.verify(token, signingKey, jwtOptions);
         })
         .then((decoded: IDecoded) => {
+          console.log('DECODED2', decoded);
+
           return {
             principalId: decoded.sub,
             policyDocument: getPolicyDocument('Allow', event.methodArn),

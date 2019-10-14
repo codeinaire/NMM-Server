@@ -1,6 +1,6 @@
 import { DataSource } from 'apollo-datasource';
 
-export class ArticleAPI extends DataSource {
+export default class ArticleAPI extends DataSource {
   store: any
   context: any
   public constructor({ store } : { store: any }) {
@@ -23,14 +23,14 @@ export class ArticleAPI extends DataSource {
       attributes: ['id', 'title', 'content', 'hashtag', 'type'],
       raw: true
     })
-    console.log('This is articles!!!!!', articles);
+    // console.log('This is articles!!!!!', articles);
     return articles;
   };
 
   public async createArticles ({ articles } : { articles: any}) {
-    console.log('This is created articles', this.store);
+    // console.log('This is created articles', this.store);
     const created = await this.store.articles.bulkCreate(articles);
-    console.log('This is created articles', created);
+    // console.log('This is created articles', created);
     return created;
   };
 
