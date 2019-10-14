@@ -42,6 +42,7 @@ module.exports = {
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin(),
-    new CheckerPlugin()
+    new CheckerPlugin(),
+    new HardSourceWebpackPlugin()
   ]
 };
