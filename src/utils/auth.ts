@@ -55,30 +55,30 @@ export default class Auth implements IAuth {
     }
     const verifiedToken: IVerifiedToken = await jwt.verify(token, rsaOrCertSigningKey, jwtOptions) as IVerifiedToken;
 
+    const scopes: Array<string> = verifiedToken.scope.split(' ');
+
     return {
       principleId: verifiedToken.sub,
-      scope: verifiedToken.scope
+      scopes: scopes
     }
   }
 
-  public async checkScopesAndResolve(event: APIGatewayProxyEvent, expectedScopes: [string]): Promise<boolean> {
-    const result = await this.verifyToken(event);
-    const scopes = result.scope;
-    if (!scopes) {
-      throw new Error('No scopes supplied!');
-    }
-    const scopesMatch = expectedScopes.some(scope => scopes.indexOf(scope) !== -1);
-    if(scopesMatch) {
-      return true
-    } else {
-      throw new Error('You are not authorized');
-    }
-  }
-
-  public async checkAuthAndResolve(event: APIGatewayProxyEvent): Promise<boolean> {
+  public async checkScopesAndResolve(event: APIGatewayProxyEvent, expectedScopes: [string]): Promise<string> {
     try {
-      const result = await this.verifyToken(event);
-      return result.hasOwnProperty('principleId') ? true : false;
+      const verifiedToken = await this.verifyToken(event);
+
+      const scopes = verifiedToken.scopes;
+
+      if (!scopes) {
+        throw new Error('No scopes supplied!');
+      }
+
+      const scopesMatch = expectedScopes.some(scope => scopes.indexOf(scope) !== -1);
+      if(scopesMatch) {
+        return verifiedToken.principleId;
+      } else {
+        throw new Error('You are not authorized!');
+      }
     } catch (error) {
       return error;
     }

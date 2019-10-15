@@ -30,14 +30,25 @@ export interface IDecodedToken {
 
 export interface IScopeAndId {
   principleId: string;
-  scope: string;
+  scopes: Array<string>;
 }
 
 export interface IAuth {
-  checkScopesAndResolve: (arg0: APIGatewayProxyEvent, arg1: [string]) => Promise<boolean>;
-  checkAuthAndResolve: (arg0: APIGatewayProxyEvent) => Promise<boolean>;
+  checkScopesAndResolve: (arg0: APIGatewayProxyEvent, arg1: [string]) => Promise<string>;
 }
 
-export interface ModifiedObject {
+export interface IModifiedObject {
   [name: string]: string
+}
+
+export interface IJwksClientMock {
+  start: () => void;
+  stop: () => Promise<void>;
+  kid: () => string;
+  token: (token: {}) => string;
+}
+
+export interface ICreateJwksContextReturn {
+  accessToken: string;
+  jwksMock: IJwksClientMock;
 }

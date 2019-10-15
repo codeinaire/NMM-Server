@@ -4,6 +4,6 @@ export default gql`
   type Mutation {
     createArticles(articles: [CreateArticle]!): [Article]
     createArticle(article: CreateArticle!): Article
-    createProfile(id: ID!): User
+    createProfile: User
   }
 `

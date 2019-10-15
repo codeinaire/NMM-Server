@@ -1,42 +1,34 @@
-// import { mocked } from 'ts-jest/utils';
-
-import { APIGatewayProxyEvent } from 'aws-lambda';
-import { ModifiedObject } from '../../types';
-
 import createJWKSMock from 'mock-jwks';
 import Auth from '../auth';
 
-describe('Authentication and Authorization class', () => {
-  describe('[Auth.checkAuthAndResolve()] is given an event with a VALID Bearer authorization token', () => {
-    it('Returned - true', async (done) => {
-      process.env.JWKS_URI = 'https://test-app.com/.well-known/jwks.json';
-      process.env.TOKEN_ISSUER = 'https://test-app.com/';
-      process.env.AUDIENCE = 'https://test-app.com/test/';
+import { APIGatewayProxyEvent } from 'aws-lambda';
+import { IModifiedObject } from '../../types';
 
-      const jwksMock = createJWKSMock('https://test-app.com/')
-      const accessToken = jwksMock.token({
-        aud: [
-          'https://test-app.com/test/'
-        ],
-        iss: 'https://test-app.com/',
-        sub: 'test user',
-        scope: 'test scope'
-      })
-      jwksMock.start();
+
+
+describe('Authentication and Authorization class', () => {
+  afterAll(async done => {
+    done();
+  });
+
+  describe('[Auth.checkScopesAndResolve()] is given an event with a [VALID] Bearer authorization token & [VALID & CORRECT] scope', () => {
+    it('Returned - true', async (done) => {
+      const {accessToken, jwksMock} = createJwksContext();
+      done();
 
       const mockedEvent = customMockedEvent({
-      authorization: `Bearer ${accessToken}`
+        authorization: `Bearer ${accessToken}`
       });
 
       const authInstance = new Auth();
-      const authCheck = await authInstance.checkAuthAndResolve(mockedEvent);
+      const authCheck = await authInstance.checkScopesAndResolve(mockedEvent, ['test scope']);
 
-      expect(authCheck).toBe(true);
-      done()
+      expect(authCheck).toBe('test user');
+      jwksMock.stop();
     })
   })
 
-  describe('[Auth.checkAuthAndResolve()] ERRORS', () => {
+  describe('[Auth.checkScopesAndResolve()] ERRORS', () => {
     describe('Given an event with an [INVALID] authorization Bearer token', () => {
       it('Returned - Error: Invalid Token', async (done) => {
         const authInstance = new Auth();
@@ -46,7 +38,7 @@ describe('Authentication and Authorization class', () => {
         });
 
         expect( async () => {
-          await authInstance.checkAuthAndResolve(mockedEvent);
+          await authInstance.checkScopesAndResolve(mockedEvent, ['test scope']);
           done();
         }).toThrow('Error: Invalid Token');
       })
@@ -61,7 +53,7 @@ describe('Authentication and Authorization class', () => {
         });
 
         expect( async () => {
-          await authInstance.checkAuthAndResolve(mockedEvent);
+          await authInstance.checkScopesAndResolve(mockedEvent, ['test scope']);
           done();
         }).toThrow('Expected "event.headers.authorization" parameter to be set');
       })
@@ -76,16 +68,79 @@ describe('Authentication and Authorization class', () => {
         });
 
         expect( async () => {
-          await authInstance.checkAuthAndResolve(mockedEvent);
+          await authInstance.checkScopesAndResolve(mockedEvent, ['test scope']);
           done();
         }).toThrow(`Invalid Authorization token - '' does not match "Bearer .*"`);
+      })
+    })
+
+    describe('Given an event with an [EMPTY] scope', () => {
+      it('Returned - No scopes supplied!', async (done) => {
+        const {accessToken, jwksMock} = await createJwksContext({
+          sub: 'test user',
+          scope: '',
+        })
+        done();
+
+        const mockedEvent = customMockedEvent({
+          authorization: `Bearer ${accessToken}`
+        });
+
+        const authInstance = new Auth();
+
+        expect( async () => {
+          await authInstance.checkScopesAndResolve(mockedEvent, ['test scope']);
+          done();
+        }).toThrow('No scopes supplied!');
+        jwksMock.stop();
+      })
+    })
+
+    describe('Given an event with an [INCORRECT] scope', () => {
+      it('Returned - You are not authorized!', async (done) => {
+        const {accessToken, jwksMock} = await createJwksContext({
+          sub: 'test user',
+          scope: 'incorrect scope'
+        });
+        done();
+
+        const mockedEvent = customMockedEvent({
+          authorization: `Bearer ${accessToken}`
+        });
+
+        const authInstance = new Auth();
+
+        expect( async () => {
+          await authInstance.checkScopesAndResolve(mockedEvent, ['test scope']);
+          done();
+        }).toThrow('No scopes supplied!');
+        jwksMock.stop();
       })
     })
   })
 })
 
+function createJwksContext(userObject: { sub: string, scope: string} = { sub: 'test user', scope: 'test scope'}): any {
+  process.env.JWKS_URI = 'https://test-app.com/.well-known/jwks.json';
+  process.env.TOKEN_ISSUER = 'https://test-app.com/';
+  process.env.AUDIENCE = 'https://test-app.com/test/';
 
-function customMockedEvent(modificationObject: ModifiedObject): APIGatewayProxyEvent {
+  const jwksMock = createJWKSMock('https://test-app.com/')
+
+  const accessToken = jwksMock.token({
+    aud: [
+      'https://test-app.com/test/'
+    ],
+    iss: 'https://test-app.com/',
+    sub: `${userObject.sub}`,
+    scope: `${userObject.scope}`
+  })
+
+  return { accessToken, jwksMock };
+}
+
+
+function customMockedEvent(modificationObject: IModifiedObject): APIGatewayProxyEvent {
   return {
     body: '{"body": "mock body"}',
     headers: {

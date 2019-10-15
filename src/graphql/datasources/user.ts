@@ -19,7 +19,7 @@ export default class UserAPI extends DataSource {
   }
 
   // TODO - default points is just an estimate, not sure how points are going to work. Change later.
-  public async createUserProfile(id: string) {
+  public async findOrCreateUserProfile(id: string) {
     console.log('ID in datasource', id);
 
     const result = await this.store.users.findOrCreate({
