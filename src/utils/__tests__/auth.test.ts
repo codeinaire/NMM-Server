@@ -4,8 +4,6 @@ import Auth from '../auth';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { IModifiedObject } from '../../types';
 
-
-
 describe('Authentication and Authorization class', () => {
   afterAll(async done => {
     done();

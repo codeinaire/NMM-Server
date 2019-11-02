@@ -69,3 +69,12 @@ const checkScopesAndResolve = (
     });
   }
 };
+
+const client: jwksClient.JwksClient
+
+(property) JwksRsa.JwksClient.getSigningKey: (kid: string, cb: (err: Error | null, key: jwksClient.SigningKey) => void) => void
+
+
+const retrieveSigningKey: Function
+
+const retrieveSigningKey: (arg1: string) => Promise<jwksClient.SigningKey>
