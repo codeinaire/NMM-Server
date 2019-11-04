@@ -7,7 +7,9 @@
     "build": "webpack --config webpack.$NODE_ENV.js",
     "check-types": "tsc",
     "start": "node dist/server",
-    "test": "jest"
+    "test": "jest",
+    "typeorm": "ts-node ./node_modules/.bin/typeorm",
+    "seed": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed"
   },
   "repository": {
     "type": "git",
@@ -31,11 +33,9 @@
     "@babel/preset-env": "^7.6.3",
     "@babel/preset-typescript": "^7.6.0",
     "@types/aws-lambda": "^8.10.33",
-    "@types/bluebird": "^3.5.28",
     "@types/jest": "^24.0.19",
     "@types/jsonwebtoken": "^8.3.4",
     "@types/node": "^12.7.12",
-    "@types/sequelize": "^4.28.6",
     "@types/validator": "^10.11.3",
     "@types/webpack-env": "^1.14.1",
     "apollo-server-testing": "^2.9.6",
@@ -47,11 +47,12 @@
     "jest": "^24.9.0",
     "mock-jwks": "^0.2.0",
     "nock": "^11.4.0",
-    "sequelize-cli": "^5.5.1",
     "serverless-dotenv-plugin": "^2.1.1",
     "serverless-offline": "^5.12.0",
     "serverless-webpack": "^5.3.1",
     "ts-jest": "^24.1.0",
+    "ts-node": "^8.4.1",
+    "typeorm-seeding": "^1.2.0",
     "typescript": "^3.6.4",
     "webpack": "^4.41.1",
     "webpack-cli": "^3.3.9",
@@ -70,7 +71,8 @@
     "lodash": "^4.17.15",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^5.19.6",
-    "serverless": "^1.54.0"
+    "reflect-metadata": "^0.1.13",
+    "serverless": "^1.56.1",
+    "typeorm": "^0.2.20"
   }
 }

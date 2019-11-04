@@ -7,8 +7,7 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "lib": [
-      "es6",
-      "dom"
+      "es6"
     ],
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -27,8 +26,7 @@
     "**/*.test.ts",
     "node_modules",
     "vendor",
-    "public",
-    "custom_authorizer/exampleClass.ts"
+    "public"
   ],
   "include": [
     "**/*"

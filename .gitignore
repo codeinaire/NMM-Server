@@ -17,4 +17,4 @@ dist/*
 **/*.zip
 
 # DB
-src/db/config/*
+ormconfig.json

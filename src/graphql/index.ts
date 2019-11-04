@@ -1,18 +1,21 @@
 import { ApolloServer } from 'apollo-server-lambda';
+import { getConnection } from 'typeorm';
 // GRAPHQL
 import ArticleAPI from './datasources/article';
 import RecipeAPI from './datasources/recipe';
 import UserAPI from './datasources/user';
-
 import schema from './schema';
 
+// AUTH
 import Auth from '../utils/auth';
 
-import createDatabase from '../db/createDb';
 // TYPES
 import { APIGatewayProxyEvent } from 'aws-lambda';
 
-const store = createDatabase();
+const store = getConnection();
+
+console.log('DATABASE!!!', store);
+
 
 const dataSources = () => ({
   articleAPI: new ArticleAPI({ store }),
