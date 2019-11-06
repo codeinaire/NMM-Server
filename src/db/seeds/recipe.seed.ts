@@ -1,7 +1,7 @@
 import { Seeder } from 'typeorm-seeding'
 import { Connection } from 'typeorm'
 
-import Recipe from '../entity/Recipe';
+import Recipe from '../entities/Recipe';
 const RecipeSeedData = require ('../seedData/recipes');
 
 export default class CreateRecipes implements Seeder {

@@ -29,7 +29,6 @@ layers:
 package:
   exclude:
     - node_modules/**
-    - authorizer_node_modules.zip
     - graphql_node_modules.zip
     - custom_authorizer/node_modules/**
 

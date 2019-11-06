@@ -11,16 +11,20 @@ export default class Auth implements IAuth {
   constructor() {}
 
   private async getSigningKey(keyId: string): Promise<string> {
+    console.log('testing', keyId);
     const client = jwksClient({
       cache: true,
       rateLimit: true,
       jwksRequestsPerMinute: 10,
-      jwksUri: process.env.JWKS_URI || ""
+      jwksUri: process.env.JWKS_URI || ''
     });
 
-    const retrieveSigningKey = util.promisify(client.getSigningKey);
-    const retrievedKey = await retrieveSigningKey(keyId);
+    console.log('testing####', client);
 
+    const retrieveSigningKey = util.promisify(client.getSigningKey);
+    console.log('retrieveSigningKey####', retrieveSigningKey);
+    const retrievedKey = await retrieveSigningKey(keyId);
+    console.log('retrievedKey####', retrievedKey);
     return (retrievedKey as jwksClient.CertSigningKey).publicKey ||
     (retrievedKey as jwksClient.RsaSigningKey).rsaPublicKey;
   }
@@ -28,12 +32,12 @@ export default class Auth implements IAuth {
   private extractBearerToken(event: APIGatewayProxyEvent): string {
     const tokenString = event.headers.authorization;
     if (!tokenString) {
-        throw new Error('Expected "event.headers.authorization" parameter to be set');
+        throw new Error('Error: Expected "event.headers.authorization" parameter to be set');
     }
 
     const match = tokenString.match(/^Bearer (.*)$/);
     if (!match || match.length < 2) {
-        throw new Error(`Invalid Authorization token - ${tokenString} does not match "Bearer .*"`);
+        throw new Error(`Error: Invalid Authorization token - ${tokenString} does not match "Bearer .*"`);
     }
 
     return match[1];
@@ -44,7 +48,7 @@ export default class Auth implements IAuth {
 
     const decoded: IDecodedToken = jwt.decode(token, { complete: true }) as IDecodedToken;
     if (!decoded || !decoded.header || !decoded.header.kid) {
-      throw new Error('Invalid Token');
+      throw new Error('Error: Invalid Token');
     }
 
     const rsaOrCertSigningKey: string = await this.getSigningKey(decoded.header.kid);
@@ -70,16 +74,20 @@ export default class Auth implements IAuth {
       const scopes = verifiedToken.scopes;
 
       if (!scopes) {
-        throw new Error('No scopes supplied!');
+        throw new Error('Error: No scopes supplied!');
       }
 
       const scopesMatch = expectedScopes.some(scope => scopes.indexOf(scope) !== -1);
       if(scopesMatch) {
         return verifiedToken.principleId;
       } else {
-        throw new Error('You are not authorized!');
+        throw new Error('Error: You are not authorized!');
       }
     } catch (error) {
+      // console.error(error);
+      // console.group();
+      // console.trace();
+      // console.groupEnd();
       return error;
     }
   }

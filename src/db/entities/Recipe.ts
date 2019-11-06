@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm";
+import { RecipePhoto } from './RecipePhoto';
+
 
 export enum DifficultyEnum {
   Easy = 'Easy',
@@ -59,20 +61,8 @@ export default class Recipe {
   })
   mealType: MealTypeEnum
 
-  @Column({
-    type: 'json'
-  })
-  thumbnail: object
-
-  @Column({
-    type: 'json'
-  })
-  lowResolution: object
-
-  @Column({
-    type: 'json'
-  })
-  standardResolution: object
+  @OneToMany(() => RecipePhoto, photo => photo.recipe)
+  photos: RecipePhoto[]
 
   @CreateDateColumn()
   createdAt: Date;

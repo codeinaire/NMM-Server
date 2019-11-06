@@ -4,13 +4,35 @@ export default gql`
   type Recipe {
     id: ID!
     title: String!
-    attribution: Attribution!
+    attribution: Attribution
     ingredients: String!
     method: String!
-    hashtags: [String!]!
+    hashtags: String!
+    difficulty: DifficultyEnum!
+    cost: CostEnum
+    mealType: MealTypeEnum
     thumbnail: Thumbnail!
     standardResolution: StandardResolution!
     lowResolution: LowResolution!
+  }
+
+  enum DifficultyEnum {
+    Easy
+    Medium
+    Hard
+  }
+
+  enum CostEnum {
+    Budget
+    Moderate
+    Expensive
+  }
+
+  enum MealTypeEnum {
+    Breakfast
+    Lunch
+    Dinner
+    Snack
   }
 
   type Attribution {
@@ -19,9 +41,9 @@ export default gql`
   }
 
   type StandardResolution {
-    width: Int!
-    height: Int!
-    url: String!
+    width: Int
+    height: Int
+    url: String
   }
 
   type LowResolution {

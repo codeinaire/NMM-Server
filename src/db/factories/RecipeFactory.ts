@@ -1,7 +1,7 @@
 import { define } from 'typeorm-seeding';
-import Recipe from '../entity/Recipe';
+import Recipe from '../entities/Recipe';
 
-import { DifficultyEnum, CostEnum, MealTypeEnum } from '../entity/Recipe';
+import { DifficultyEnum, CostEnum, MealTypeEnum } from '../entities/Recipe';
 
 define(Recipe, (faker: any) => {
   const title = faker.lorem.word(2)
@@ -12,7 +12,7 @@ define(Recipe, (faker: any) => {
   recipe.title = title;
   recipe.ingredients = ingredients;
   recipe.method = method;
-  recipe.hashtag = '#theclumsyvegan#meatballs#spaghetti#nomeatmay';
+  recipe.hashtags = '#theclumsyvegan#meatballs#spaghetti#nomeatmay';
   recipe.mealType = MealTypeEnum.Breakfast;
   recipe.difficulty = DifficultyEnum.Easy;
   recipe.cost = CostEnum.Budget;

@@ -1,11 +1,13 @@
 import { DataSource } from 'apollo-datasource';
-
+import database from '../../db/';
+// import { getRepository } from 'typeorm';
+import Recipe from '../../db/entities/Recipe';
 export default class RecipeAPI extends DataSource {
   store: any
   context: any
-  public constructor({ store } : { store: any }) {
+  public constructor() {
     super();
-    this.store = store;
+    // this.store = store
   }
 
   /**
@@ -19,11 +21,22 @@ export default class RecipeAPI extends DataSource {
   }
 
   public async findAllRecipes() {
-    const recipes = await this.store.recipes.findAll({
-      attributes: ['id', 'title', 'attribution', 'ingredients', 'method', 'hashtags', 'standardResolution'],
-      raw: true
+    // const recipes = getRepository(Recipe).find();
+    console.log('hey', database)
+    const recipes = await database();
+    const found = await recipes.getRepository(Recipe).find({
+      select: [
+        'title',
+        'method',
+        'mealType',
+        'difficulty',
+        'hashtags',
+        'ingredients',
+        'cost',
+        'id'
+      ]
     })
-    // console.log('This is recipes!!!!!', recipes);
-    return recipes;
+    console.log('This is recipes!!!!!', recipes, found);
+    return found;
   };
 }

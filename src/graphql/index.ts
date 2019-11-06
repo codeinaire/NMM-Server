@@ -1,10 +1,11 @@
+import "reflect-metadata";
 import { ApolloServer } from 'apollo-server-lambda';
-import { getConnection } from 'typeorm';
 // GRAPHQL
-import ArticleAPI from './datasources/article';
 import RecipeAPI from './datasources/recipe';
-import UserAPI from './datasources/user';
 import schema from './schema';
+
+// DB
+// import database from '../db';
 
 // AUTH
 import Auth from '../utils/auth';
@@ -12,15 +13,30 @@ import Auth from '../utils/auth';
 // TYPES
 import { APIGatewayProxyEvent } from 'aws-lambda';
 
-const store = getConnection();
+// createConnection().then((connection) => {
+//   console.log('connection', connection);
+//   console.log('Connection has been established successfully!');
+// })
+// .catch(err => {
+//   console.error(`Unable to connect to the database: ${err}`);
+// });
+// database();
+// const store = getConnection();
+// console.log('DATABASE!!!', store.options.entities);
 
-console.log('DATABASE!!!', store);
+// This won't work as the code after the promise will run before the promise is done
+// let RecipeEntity: any;
+// database().then(value => {
+//   const { RecipeRepository } = value;
+//   console.log('RecipeRepository', RecipeRepository);
 
+//   RecipeEntity = RecipeRepository;
+// }).then(err => console.error(err));
+
+// console.log('RecipeEntity', RecipeEntity );
 
 const dataSources = () => ({
-  articleAPI: new ArticleAPI({ store }),
-  recipeAPI: new RecipeAPI({ store }),
-  userAPI: new UserAPI({ store })
+  recipeAPI: new RecipeAPI()
 });
 
 const context = ({ event } : { event: APIGatewayProxyEvent }) => {
@@ -42,10 +58,7 @@ module.exports = {
   context,
   schema,
   RecipeAPI,
-  ArticleAPI,
-  UserAPI,
   ApolloServer,
-  store,
   server,
   Auth
 };

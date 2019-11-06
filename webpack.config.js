@@ -7,8 +7,11 @@ const { CheckerPlugin } = require('awesome-typescript-loader');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
 const isLocal = slsw.lib.webpack.isLocal;
-
+// TODO - migration files unbundle - https://github.com/typeorm/typeorm/blob/master/docs/faq.md#how-to-use-webpack-for-the-backend
 module.exports = {
+  optimization: {
+    minimize: false
+  },
   mode: isLocal ? 'development' : 'production',
   entry: slsw.lib.entries,
   externals: [nodeExternals()],
