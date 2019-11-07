@@ -7,6 +7,7 @@ import util from 'util';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { IVerifiedToken, IDecodedToken, IAuth, IScopeAndId } from '../types';
 
+// Create a singleton of the client and do a check to see if the class has already been initialised.
 export default class Auth implements IAuth {
   constructor() {}
 

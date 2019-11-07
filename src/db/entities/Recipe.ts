@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm";
-import { RecipePhoto } from './RecipePhoto';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, OneToOne, JoinColumn } from "typeorm";
 
+import { RecipePhoto } from './RecipePhoto';
+import { RecipeAttribution } from './RecipeAttribution';
 
 export enum DifficultyEnum {
   Easy = 'Easy',
@@ -61,8 +62,18 @@ export default class Recipe {
   })
   mealType: MealTypeEnum
 
-  @OneToMany(() => RecipePhoto, photo => photo.recipe)
+  @OneToMany(() => RecipePhoto, photo => photo.recipe, {
+    eager: true,
+    onDelete: 'CASCADE'
+  })
   photos: RecipePhoto[]
+
+  @OneToOne(() => RecipeAttribution, {
+    eager: true,
+    onDelete: 'CASCADE'
+  })
+  @JoinColumn()
+  attribution: RecipeAttribution
 
   @CreateDateColumn()
   createdAt: Date;

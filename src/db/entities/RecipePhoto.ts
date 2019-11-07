@@ -8,9 +8,9 @@ export enum RecipePhotoTypeEnum {
 }
 
 @Entity()
-export class RecipePhoto {
+export default class RecipePhoto {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column()
   url: string
