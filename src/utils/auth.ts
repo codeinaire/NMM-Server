@@ -29,6 +29,7 @@ export const createCheckScopesAndResolve = ({
       (retrievedKey as jwksClient.CertSigningKey).publicKey ||
       (retrievedKey as jwksClient.RsaSigningKey).rsaPublicKey
     )
+
   }
 
   const extractBearerToken = (event: APIGatewayProxyEvent): string => {
