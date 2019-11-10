@@ -8,7 +8,7 @@ import schema from './schema';
 // import database from '../db';
 
 // AUTH
-import Auth from '../utils/auth';
+import { createCheckScopesAndResolve } from '../utils/auth';
 
 // TYPES
 import { APIGatewayProxyEvent } from 'aws-lambda';
@@ -35,6 +35,12 @@ import { APIGatewayProxyEvent } from 'aws-lambda';
 
 // console.log('RecipeEntity', RecipeEntity );
 
+const auth = createCheckScopesAndResolve({
+  jwksUri: process.env.JWS_URI || '',
+  issuer: process.env.TOKEN_ISSUER || '',
+  audience: process.env.AUDIENCE || '',
+})
+
 const dataSources = () => ({
   recipeAPI: new RecipeAPI()
 });
@@ -42,7 +48,7 @@ const dataSources = () => ({
 const context = ({ event } : { event: APIGatewayProxyEvent }) => {
   return {
     event,
-    auth: new Auth()
+    auth,
   }
 };
 
@@ -60,5 +66,5 @@ module.exports = {
   RecipeAPI,
   ApolloServer,
   server,
-  Auth
+  auth
 };
