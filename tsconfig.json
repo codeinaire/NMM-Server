@@ -7,14 +7,13 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "lib": [
-      "es6",
-      "dom"
+      "es6"
     ],
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "dist",
@@ -27,8 +26,7 @@
     "**/*.test.ts",
     "node_modules",
     "vendor",
-    "public",
-    "custom_authorizer/exampleClass.ts"
+    "public"
   ],
   "include": [
     "**/*"

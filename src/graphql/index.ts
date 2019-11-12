@@ -1,36 +1,39 @@
-import { ApolloServer } from 'apollo-server-lambda';
+import 'reflect-metadata'
+import { ApolloServer } from 'apollo-server-lambda'
+
 // GRAPHQL
-import ArticleAPI from './datasources/article';
-import RecipeAPI from './datasources/recipe';
-import UserAPI from './datasources/user';
+import RecipeAPI from './datasources/recipe'
+import schema from './schema'
 
-import schema from './schema';
+// AUTH
+import { createCheckScopesAndResolve } from '../utils/auth'
+const auth = createCheckScopesAndResolve({
+  jwksUri: process.env.JWS_URI || '',
+  issuer: process.env.TOKEN_ISSUER || '',
+  audience: process.env.AUDIENCE || ''
+})
 
-import Auth from '../utils/auth';
-
-import createDatabase from '../db/createDb';
 // TYPES
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { APIGatewayProxyEvent } from 'aws-lambda'
 
-const store = createDatabase();
-
+// SERVER stuff
 const dataSources = () => ({
-  articleAPI: new ArticleAPI({ store }),
-  recipeAPI: new RecipeAPI({ store }),
-  userAPI: new UserAPI({ store })
-});
+  recipeAPI: new RecipeAPI()
+})
 
-const context = ({ event } : { event: APIGatewayProxyEvent }) => {
+const context = ({ event }: { event: APIGatewayProxyEvent }) => {
   return {
     event,
-    auth: new Auth()
+    auth
   }
-};
+}
 
 const server = new ApolloServer({
   schema,
   dataSources,
-  context
+  context,
+  introspection: true,
+  playground: true
 })
 
 // export all the important pieces for integration/e2e tests to use
@@ -39,10 +42,7 @@ module.exports = {
   context,
   schema,
   RecipeAPI,
-  ArticleAPI,
-  UserAPI,
   ApolloServer,
-  store,
   server,
-  Auth
-};
+  auth
+}

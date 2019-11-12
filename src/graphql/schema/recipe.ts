@@ -1,38 +1,82 @@
 const { gql } = require('apollo-server-lambda');
 
 export default gql`
+   enum DifficultyEnum {
+    Easy
+    Medium
+    Hard
+  }
+
+  enum CostEnum {
+    Budget
+    Moderate
+    Expensive
+  }
+
+  enum MealTypeEnum {
+    Breakfast
+    Lunch
+    Dinner
+    Snack
+  }
+
   type Recipe {
+    "**LIST && SHOW**"
     id: ID!
     title: String!
+    difficulty: DifficultyEnum!
+    cost: CostEnum!
+    mealType: MealTypeEnum!
+    hashtags: String!
+    "**LIST**"
+    lowResolution: String!
+    "**SHOW**"
     attribution: Attribution!
     ingredients: String!
     method: String!
-    hashtags: [String!]!
-    thumbnail: Thumbnail!
-    standardResolution: StandardResolution!
-    lowResolution: LowResolution!
+    standardResolution: String!
   }
 
   type Attribution {
     name: String!
     url: String!
+    email: String!
+    socialMedia: AttributionSocialMedia
   }
 
-  type StandardResolution {
-    width: Int!
-    height: Int!
-    url: String!
+  type AttributionSocialMedia {
+    facebook: String
+    instagram: String
+    twitter: String
   }
 
-  type LowResolution {
-    width: Int!
-    height: Int!
-    url: String!
+  input RecipeInput {
+    title: String!
+    attribution: AttributionInput!
+    ingredients: String!
+    method: String!
+    hashtags: String!
+    difficulty: DifficultyEnum!
+    cost: CostEnum!
+    mealType: MealTypeEnum!
+    recipePhotos: RecipePhotoInput!
   }
 
-  type Thumbnail {
-    width: Int!
-    height: Int!
-    url: String!
+  input AttributionInput {
+    name: String!
+    email: String!
+    website: String!
+    socialMedia: AttributionSocialMediaInput!
+  }
+
+  input AttributionSocialMediaInput {
+    facebook: String
+    instagram: String
+    twitter: String
+  }
+
+  input RecipePhotoInput {
+    lowResolution: String!
+    standardResolution: String!
   }
 `
