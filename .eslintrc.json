@@ -12,7 +12,8 @@
           "error",
           {
               "semi": false,
-              "singleQuote": true
+              "singleQuote": true,
+              "function-call-argument-newline": "consistent"
           }
       ],
       "curly": [

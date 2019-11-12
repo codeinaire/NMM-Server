@@ -1,12 +1,12 @@
 // DB Entities
 import database from '../../db/'
 import RecipeEntity from '../../db/entities/Recipe'
-import RecipeAttributionEntity from '../../db/entities/RecipeAttribution';
+import RecipeAttributionEntity from '../../db/entities/RecipeAttribution'
 import AttributionSocialMediaEntity from '../../db/entities/AttributionSocialMedia'
 
 // TYPES
-import { RecipeInput } from '../types';
-import { RecipeApiClass } from '../custom.types';
+import { RecipeInput } from '../types'
+import { RecipeApiClass } from '../custom.types'
 
 export default class RecipeAPI extends RecipeApiClass {
   public constructor() {
@@ -24,21 +24,24 @@ export default class RecipeAPI extends RecipeApiClass {
   }
 
   public async findAllRecipes() {
-    // const recipes = getRepository(Recipe).find();
-    console.log('Please soup for you!!', database)
-    const found = await this.database.getRepository(RecipeEntity).find({
-      relations: [
-        'attribution',
-        'attribution.attributionSocialMedia'
-      ]
+    const recipes = await this.database.getRepository(RecipeEntity).find({
+      relations: ['attribution', 'attribution.attributionSocialMedia']
     })
-    console.log('Lumpo recapio!!!!!', found)
-    return found;
+
+    return recipes
   }
 
-  public async createRecipe({ title, attribution, ingredients, method, hashtags, difficulty, cost, mealType, recipePhotos }: RecipeInput) {
-    console.log('CHECK HECK ECK YALL', title);
-
+  public async createRecipe({
+    title,
+    attribution,
+    ingredients,
+    method,
+    hashtags,
+    difficulty,
+    cost,
+    mealType,
+    recipePhotos
+  }: RecipeInput) {
     let recipe = new RecipeEntity()
     recipe.title = title
     recipe.ingredients = ingredients
@@ -56,15 +59,18 @@ export default class RecipeAPI extends RecipeApiClass {
     recipeAttribution.website = attribution.website
 
     let attributionSocial = new AttributionSocialMediaEntity()
-    attributionSocial.facebook = attribution.socialMedia.facebook || ""
+    attributionSocial.facebook = attribution.socialMedia.facebook || ''
 
     recipeAttribution.attributionSocialMedia = attributionSocial
-    const savedAttribution = await this.database.getRepository(RecipeAttributionEntity).save(recipeAttribution)
+    const savedAttribution = await this.database
+      .getRepository(RecipeAttributionEntity)
+      .save(recipeAttribution)
 
     recipe.attribution = savedAttribution
-    const savedRecipe = await this.database.getRepository(RecipeEntity).save(recipe)
+    const savedRecipe = await this.database
+      .getRepository(RecipeEntity)
+      .save(recipe)
 
-    console.log('Recipe saved', savedRecipe);
     return savedRecipe
   }
 }

@@ -1,4 +1,4 @@
-import "reflect-metadata"
+import 'reflect-metadata'
 import { ApolloServer } from 'apollo-server-lambda'
 
 // GRAPHQL
@@ -16,13 +16,12 @@ const auth = createCheckScopesAndResolve({
 // TYPES
 import { APIGatewayProxyEvent } from 'aws-lambda'
 
-
 // SERVER stuff
 const dataSources = () => ({
   recipeAPI: new RecipeAPI()
 })
 
-const context = ({ event } : { event: APIGatewayProxyEvent }) => {
+const context = ({ event }: { event: APIGatewayProxyEvent }) => {
   return {
     event,
     auth
