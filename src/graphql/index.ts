@@ -21,7 +21,9 @@ const dataSources = () => ({
   recipeAPI: new RecipeAPI()
 })
 
-const context = ({ event }: { event: APIGatewayProxyEvent }) => {
+const context = ({ event, context }: { event: APIGatewayProxyEvent, context: any }) => {
+  console.log('CONTEXT', context);
+
   return {
     event,
     auth
