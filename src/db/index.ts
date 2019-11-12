@@ -7,7 +7,6 @@ import {
 } from "typeorm";
 
 import Recipe from './entities/Recipe'
-import RecipePhoto from './entities/RecipePhoto'
 import RecipeAttribution from './entities/RecipeAttribution'
 import AttributionSocialMedia from './entities/AttributionSocialMedia'
 
@@ -48,7 +47,6 @@ export class Database {
         password: process.env.DB_PASSWORD,
         entities: [
           Recipe,
-          RecipePhoto,
           RecipeAttribution,
           AttributionSocialMedia
         ]

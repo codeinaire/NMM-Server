@@ -16,6 +16,7 @@ const auth = createCheckScopesAndResolve({
 // TYPES
 import { APIGatewayProxyEvent } from 'aws-lambda'
 
+
 // SERVER stuff
 const dataSources = () => ({
   recipeAPI: new RecipeAPI()

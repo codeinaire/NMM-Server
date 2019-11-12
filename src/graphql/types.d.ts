@@ -64,13 +64,6 @@ export enum DifficultyEnum {
   Hard = 'Hard'
 }
 
-export type LowResolution = {
-   __typename?: 'LowResolution',
-  width: Scalars['Int'],
-  height: Scalars['Int'],
-  url: Scalars['String'],
-};
-
 export enum MealTypeEnum {
   Breakfast = 'Breakfast',
   Lunch = 'Lunch',
@@ -118,13 +111,12 @@ export type Recipe = {
   mealType: MealTypeEnum,
   hashtags: Scalars['String'],
   /** **LIST** */
-  thumbnail: Thumbnail,
-  lowResolution: LowResolution,
+  lowResolution: Scalars['String'],
   /** **SHOW** */
   attribution: Attribution,
   ingredients: Scalars['String'],
   method: Scalars['String'],
-  standardResolution: Array<Maybe<StandardResolution>>,
+  standardResolution: Scalars['String'],
 };
 
 export type RecipeInput = {
@@ -136,34 +128,12 @@ export type RecipeInput = {
   difficulty: DifficultyEnum,
   cost: CostEnum,
   mealType: MealTypeEnum,
-  recipePhotos: Array<Maybe<RecipePhotoInput>>,
+  recipePhotos: RecipePhotoInput,
 };
 
 export type RecipePhotoInput = {
-  url: Scalars['String'],
-  width: Scalars['Int'],
-  height: Scalars['Int'],
-  type: RecipePhotoInputEnum,
-};
-
-export enum RecipePhotoInputEnum {
-  StandardResolution = 'StandardResolution',
-  Thumbnail = 'Thumbnail',
-  LowResolution = 'LowResolution'
-}
-
-export type StandardResolution = {
-   __typename?: 'StandardResolution',
-  width: Scalars['Int'],
-  height: Scalars['Int'],
-  url: Scalars['String'],
-};
-
-export type Thumbnail = {
-   __typename?: 'Thumbnail',
-  width: Scalars['Int'],
-  height: Scalars['Int'],
-  url: Scalars['String'],
+  lowResolution: Scalars['String'],
+  standardResolution: Scalars['String'],
 };
 
 export type User = {

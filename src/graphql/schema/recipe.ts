@@ -59,7 +59,7 @@ export default gql`
     difficulty: DifficultyEnum!
     cost: CostEnum!
     mealType: MealTypeEnum!
-    recipePhotos: [RecipePhotoInput]!
+    recipePhotos: RecipePhotoInput!
   }
 
   input AttributionInput {
@@ -75,16 +75,8 @@ export default gql`
     twitter: String
   }
 
-  enum RecipePhotoInputEnum {
-    StandardResolution
-    Thumbnail
-    LowResolution
-  }
-
   input RecipePhotoInput {
-    url: String!
-    width: Int!
-    height: Int!
-    type: RecipePhotoInputEnum!
+    lowResolution: String!
+    standardResolution: String!
   }
 `

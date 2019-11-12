@@ -1,21 +1,17 @@
-import { DataSource } from 'apollo-datasource'
-
 // DB Entities
 import database from '../../db/'
-import Recipe from '../../db/entities/Recipe'
-import RecipeAttribution from '../../db/entities/RecipeAttribution';
-import AttributionSocialMedia from '../../db/entities/AttributionSocialMedia'
+import RecipeEntity from '../../db/entities/Recipe'
+import RecipeAttributionEntity from '../../db/entities/RecipeAttribution';
+import AttributionSocialMediaEntity from '../../db/entities/AttributionSocialMedia'
 
 // TYPES
-import { RecipeInput } from '../types'
+import { RecipeInput } from '../types';
+import { RecipeApiClass } from '../custom.types';
 
-export default class RecipeAPI extends DataSource {
-  database: any
-  context: any
+export default class RecipeAPI extends RecipeApiClass {
   public constructor() {
     super()
   }
-
   /**
    * This is a function that gets called by ApolloServer when being setup.
    * This function gets   called with the datasource config including things
@@ -30,20 +26,20 @@ export default class RecipeAPI extends DataSource {
   public async findAllRecipes() {
     // const recipes = getRepository(Recipe).find();
     console.log('Please soup for you!!', database)
-    const found = await this.database.getRepository(Recipe).find({
+    const found = await this.database.getRepository(RecipeEntity).find({
       relations: [
         'attribution',
         'attribution.attributionSocialMedia'
       ]
     })
-    console.log('Lumpo recapio!!!!!', found[2].attribution);
+    console.log('Lumpo recapio!!!!!', found)
     return found;
   }
 
   public async createRecipe({ title, attribution, ingredients, method, hashtags, difficulty, cost, mealType, recipePhotos }: RecipeInput) {
-    console.log('INSIDE DATA SOURCE', title);
+    console.log('CHECK HECK ECK YALL', title);
 
-    let recipe = new Recipe()
+    let recipe = new RecipeEntity()
     recipe.title = title
     recipe.ingredients = ingredients
     recipe.method = method
@@ -51,33 +47,24 @@ export default class RecipeAPI extends DataSource {
     recipe.difficulty = difficulty
     recipe.cost = cost
     recipe.mealType = mealType
+    recipe.lowResolution = recipePhotos.lowResolution
+    recipe.standardResolution = recipePhotos.standardResolution
 
-    const recipePhotosArr = recipePhotos.map((recipe: any) => {
-      let recipePhoto = new RecipePhoto()
-      recipePhoto.height = recipe.height
-      recipePhoto.width = recipe.width
-      recipePhoto.url = recipe.url
-      recipePhoto.type = recipe.type
-      return recipePhoto
-    })
-    recipe.photos = recipePhotosArr
-
-    let recipeAttribution = new RecipeAttribution()
+    let recipeAttribution = new RecipeAttributionEntity()
     recipeAttribution.name = attribution.name
     recipeAttribution.email = attribution.email
     recipeAttribution.website = attribution.website
 
-
-    let attributionSocial = new AttributionSocialMedia()
+    let attributionSocial = new AttributionSocialMediaEntity()
     attributionSocial.facebook = attribution.socialMedia.facebook || ""
 
     recipeAttribution.attributionSocialMedia = attributionSocial
+    const savedAttribution = await this.database.getRepository(RecipeAttributionEntity).save(recipeAttribution)
 
-    const savedAttribution = await this.database.getRepository(RecipeAttribution).save(recipeAttribution)
     recipe.attribution = savedAttribution
-    const saved = await this.database.getRepository(Recipe).save(recipe)
+    const savedRecipe = await this.database.getRepository(RecipeEntity).save(recipe)
 
-    console.log('Recipe saved', saved);
-    return saved
+    console.log('Recipe saved', savedRecipe);
+    return savedRecipe
   }
 }

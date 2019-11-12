@@ -1,4 +1,7 @@
-// import { RecipeInput } from '../types';
+// TYPES
+import { RecipeInput, Recipe } from '../types';
+import { DataSources } from 'apollo-server-core/dist/graphqlOptions';
+import { RecipeApiClass } from '../custom.types';
 
 export default {
   Query: {
@@ -9,7 +12,7 @@ export default {
     }
   },
   Mutation: {
-    createRecipe: async (_ : any, { recipe } : any, { dataSources } : { dataSources: any }) => {
+    createRecipe: async (_ : any, { recipe } :{ recipe: RecipeInput }, { dataSources } : { dataSources: DataSources<RecipeApiClass> }): Promise<Recipe> => {
       console.log('args in resolver', recipe);
       console.log('datasources in resolver', dataSources);
       console.log('recipeAPI in resolver', dataSources.recipeAPI);
