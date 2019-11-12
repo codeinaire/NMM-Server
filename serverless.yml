@@ -68,6 +68,10 @@ functions:
               - apollographql-client-name
               - apollographql-client-version
           allowCredentials: true
+    - http:
+        path: playground
+        method: '*'
+        cors: true
     layers:
     # Name = <name of layer>LambdaLayer
       - { Ref: GraphqlLambdaLayer }

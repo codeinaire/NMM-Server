@@ -1,61 +1,39 @@
-import "reflect-metadata";
-import { ApolloServer } from 'apollo-server-lambda';
-// GRAPHQL
-import RecipeAPI from './datasources/recipe';
-import schema from './schema';
+import "reflect-metadata"
+import { ApolloServer } from 'apollo-server-lambda'
 
-// DB
-// import database from '../db';
+// GRAPHQL
+import RecipeAPI from './datasources/recipe'
+import schema from './schema'
 
 // AUTH
-import { createCheckScopesAndResolve } from '../utils/auth';
-
-// TYPES
-import { APIGatewayProxyEvent } from 'aws-lambda';
-
-// createConnection().then((connection) => {
-//   console.log('connection', connection);
-//   console.log('Connection has been established successfully!');
-// })
-// .catch(err => {
-//   console.error(`Unable to connect to the database: ${err}`);
-// });
-// database();
-// const store = getConnection();
-// console.log('DATABASE!!!', store.options.entities);
-
-// This won't work as the code after the promise will run before the promise is done
-// let RecipeEntity: any;
-// database().then(value => {
-//   const { RecipeRepository } = value;
-//   console.log('RecipeRepository', RecipeRepository);
-
-//   RecipeEntity = RecipeRepository;
-// }).then(err => console.error(err));
-
-// console.log('RecipeEntity', RecipeEntity );
-
+import { createCheckScopesAndResolve } from '../utils/auth'
 const auth = createCheckScopesAndResolve({
   jwksUri: process.env.JWS_URI || '',
   issuer: process.env.TOKEN_ISSUER || '',
-  audience: process.env.AUDIENCE || '',
+  audience: process.env.AUDIENCE || ''
 })
 
+// TYPES
+import { APIGatewayProxyEvent } from 'aws-lambda'
+
+// SERVER stuff
 const dataSources = () => ({
   recipeAPI: new RecipeAPI()
-});
+})
 
 const context = ({ event } : { event: APIGatewayProxyEvent }) => {
   return {
     event,
-    auth,
+    auth
   }
-};
+}
 
 const server = new ApolloServer({
   schema,
   dataSources,
-  context
+  context,
+  introspection: true,
+  playground: true
 })
 
 // export all the important pieces for integration/e2e tests to use
@@ -67,4 +45,4 @@ module.exports = {
   ApolloServer,
   server,
   auth
-};
+}

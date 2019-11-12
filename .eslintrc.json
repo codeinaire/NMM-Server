@@ -12,7 +12,6 @@
           "error",
           {
               "semi": false,
-              "trailingComma": "all",
               "singleQuote": true
           }
       ],

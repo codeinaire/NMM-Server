@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import util from 'util'
 
 import { APIGatewayProxyEvent } from 'aws-lambda'
-import { IVerifiedToken, IDecodedToken, IScopeAndId, IAuth } from '../types';
+import { IVerifiedToken, IDecodedToken, IScopeAndId } from '../types';
 
 export const createCheckScopesAndResolve = ({
   jwksUri,

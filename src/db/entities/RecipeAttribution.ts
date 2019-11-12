@@ -20,7 +20,8 @@ export default class RecipeAttribution {
 
   @OneToOne(() => AttributionSocialMedia, {
     eager: true,
-    onDelete: 'CASCADE'
+    onDelete: 'CASCADE',
+    cascade: ['insert', 'remove']
   })
   @JoinColumn()
   attributionSocialMedia: AttributionSocialMedia

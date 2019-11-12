@@ -1,22 +1,7 @@
 const { gql } = require('apollo-server-lambda');
 
 export default gql`
-  type Recipe {
-    id: ID!
-    title: String!
-    attribution: Attribution
-    ingredients: String!
-    method: String!
-    hashtags: String!
-    difficulty: DifficultyEnum!
-    cost: CostEnum
-    mealType: MealTypeEnum
-    thumbnail: Thumbnail!
-    standardResolution: StandardResolution!
-    lowResolution: LowResolution!
-  }
-
-  enum DifficultyEnum {
+   enum DifficultyEnum {
     Easy
     Medium
     Hard
@@ -35,26 +20,71 @@ export default gql`
     Snack
   }
 
+  type Recipe {
+    "**LIST && SHOW**"
+    id: ID!
+    title: String!
+    difficulty: DifficultyEnum!
+    cost: CostEnum!
+    mealType: MealTypeEnum!
+    hashtags: String!
+    "**LIST**"
+    lowResolution: String!
+    "**SHOW**"
+    attribution: Attribution!
+    ingredients: String!
+    method: String!
+    standardResolution: String!
+  }
+
   type Attribution {
     name: String!
     url: String!
+    email: String!
+    socialMedia: AttributionSocialMedia
   }
 
-  type StandardResolution {
-    width: Int
-    height: Int
-    url: String
+  type AttributionSocialMedia {
+    facebook: String
+    instagram: String
+    twitter: String
   }
 
-  type LowResolution {
+  input RecipeInput {
+    title: String!
+    attribution: AttributionInput!
+    ingredients: String!
+    method: String!
+    hashtags: String!
+    difficulty: DifficultyEnum!
+    cost: CostEnum!
+    mealType: MealTypeEnum!
+    recipePhotos: [RecipePhotoInput]!
+  }
+
+  input AttributionInput {
+    name: String!
+    email: String!
+    website: String!
+    socialMedia: AttributionSocialMediaInput!
+  }
+
+  input AttributionSocialMediaInput {
+    facebook: String
+    instagram: String
+    twitter: String
+  }
+
+  enum RecipePhotoInputEnum {
+    StandardResolution
+    Thumbnail
+    LowResolution
+  }
+
+  input RecipePhotoInput {
+    url: String!
     width: Int!
     height: Int!
-    url: String!
-  }
-
-  type Thumbnail {
-    width: Int!
-    height: Int!
-    url: String!
+    type: RecipePhotoInputEnum!
   }
 `
