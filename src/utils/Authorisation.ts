@@ -1,37 +1,38 @@
-import jwksClient from 'jwks-rsa'
+import jwksClient, { JwksClient } from 'jwks-rsa'
 import jwt from 'jsonwebtoken'
 import util from 'util'
 
 import { APIGatewayProxyEvent } from 'aws-lambda'
 import { IVerifiedToken, IDecodedToken, IScopeAndId } from '../types'
 
-export const createCheckScopesAndResolve = ({
-  jwksUri,
-  audience,
-  issuer
-}: {
-  jwksUri: string
-  audience: string
-  issuer: string
-}) => {
-  const client = jwksClient({
-    cache: true,
-    rateLimit: true,
-    jwksRequestsPerMinute: 10,
-    jwksUri
-  })
+export class Authorisation {
+  private client: JwksClient
+  private audience: string
+  private issuer: string
 
-  const retrieveSigningKey = util.promisify(client.getSigningKey)
+  constructor() {
+    this.client = jwksClient({
+      cache: true,
+      rateLimit: true,
+      jwksRequestsPerMinute: 10,
+      jwksUri: process.env.JWS_URI || ''
+    })
+    this.audience = process.env.AUDIENCE || ''
+    this.issuer = process.env.TOKEN_ISSUER || ''
+  }
 
-  const getSigningKey = async (keyId: string): Promise<string> => {
+  private async getSigningKey(keyId: string): Promise<string> {
+    const retrieveSigningKey = util.promisify(this.client.getSigningKey)
+
     const retrievedKey = await retrieveSigningKey(keyId)
+
     return (
       (retrievedKey as jwksClient.CertSigningKey).publicKey ||
       (retrievedKey as jwksClient.RsaSigningKey).rsaPublicKey
     )
   }
 
-  const extractBearerToken = (event: APIGatewayProxyEvent): string => {
+  private extractBearerToken(event: APIGatewayProxyEvent): string {
     const tokenString = event.headers.authorization
     if (!tokenString) {
       throw new Error(
@@ -49,10 +50,10 @@ export const createCheckScopesAndResolve = ({
     return match[1]
   }
 
-  const verifyToken = async (
+  private async verifyToken (
     event: APIGatewayProxyEvent
-  ): Promise<IScopeAndId> => {
-    const token = extractBearerToken(event)
+  ): Promise<IScopeAndId> {
+    const token = this.extractBearerToken(event)
 
     const decoded: IDecodedToken = jwt.decode(token, {
       complete: true
@@ -61,11 +62,11 @@ export const createCheckScopesAndResolve = ({
       throw new Error('Invalid Token')
     }
 
-    const rsaOrCertSigningKey: string = await getSigningKey(decoded.header.kid)
+    const rsaOrCertSigningKey: string = await this.getSigningKey(decoded.header.kid)
 
     const jwtOptions = {
-      audience,
-      issuer
+      audience: this.audience,
+      issuer: this.issuer
     }
     const verifiedToken: IVerifiedToken = (await jwt.verify(
       token,
@@ -81,11 +82,11 @@ export const createCheckScopesAndResolve = ({
     }
   }
 
-  return async (
+  public async checkScopesAndResolve(
     event: APIGatewayProxyEvent,
     expectedScopes: Array<string>
-  ): Promise<boolean> => {
-    const verifiedToken = await verifyToken(event)
+  ): Promise<boolean> {
+    const verifiedToken = await this.verifyToken(event)
 
     const scopes: Array<string> = verifiedToken.scopes
 
@@ -105,3 +106,8 @@ export const createCheckScopesAndResolve = ({
     }
   }
 }
+
+const authorisation = new Authorisation()
+Object.freeze(authorisation)
+
+export default authorisation
