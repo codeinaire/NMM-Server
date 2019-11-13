@@ -1,16 +1,24 @@
 // DB Entities
-import database from '../../db/'
+// import database from '../../db/'
 import RecipeEntity from '../../db/entities/Recipe'
 import RecipeAttributionEntity from '../../db/entities/RecipeAttribution'
 import AttributionSocialMediaEntity from '../../db/entities/AttributionSocialMedia'
 
 // TYPES
-import { RecipeInput } from '../types'
-import { RecipeApiClass } from '../custom.types'
+import { RecipeInput, Recipe } from '../types'
+import { DataSource } from 'apollo-datasource'
+export abstract class RecipeApiClass extends DataSource {
+  database: any
+  context: any
+  abstract initialize(config: any): Promise<void>
+  abstract findAllRecipes(): Promise<Array<Recipe>>
+  abstract createRecipe(arg0: RecipeInput): Promise<Recipe>
+}
 
 export default class RecipeAPI extends RecipeApiClass {
-  public constructor() {
+  public constructor(database: any) {
     super()
+    this.database = database
   }
   /**
    * This is a function that gets called by ApolloServer when being setup.
@@ -20,7 +28,7 @@ export default class RecipeAPI extends RecipeApiClass {
    */
   public async initialize(config: any) {
     this.context = config.context
-    this.database = await database()
+    // this.database = await database()
   }
 
   public async findAllRecipes() {
