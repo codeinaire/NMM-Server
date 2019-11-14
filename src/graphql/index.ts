@@ -1,18 +1,21 @@
 import 'reflect-metadata'
 import { ApolloServer } from 'apollo-server-lambda'
-import { Database }  from '../db'
+
+// DI stuff
+import { myContainer } from '../inversify.config'
+import { RecipeApiClass } from './datasources/recipe';
+import { TYPES } from '../inversifyTypes'
 
 // GRAPHQL
-import RecipeAPI from './datasources/recipe'
 import schema from './schema'
 
 // AUTH
-import { createCheckScopesAndResolve } from '../utils/auth'
-const auth = createCheckScopesAndResolve({
-  jwksUri: process.env.JWS_URI || '',
-  issuer: process.env.TOKEN_ISSUER || '',
-  audience: process.env.AUDIENCE || ''
-})
+// import { createCheckScopesAndResolve } from '../utils/Authorisation'
+// const auth = createCheckScopesAndResolve({
+//   jwksUri: process.env.JWS_URI || '',
+//   issuer: process.env.TOKEN_ISSUER || '',
+//   audience: process.env.AUDIENCE || ''
+// })
 
 import log from '../utils/logger'
 
@@ -20,15 +23,10 @@ import log from '../utils/logger'
 import { APIGatewayProxyEvent } from 'aws-lambda'
 
 // SERVER stuff
-const database = async () => {
-  const database = new Database();
+const recipeAPI = myContainer.get<RecipeApiClass>(TYPES.RecipeAPI)
 
-  const dbConn: any = await database.getConnection();
-  return dbConn;
-}
-
-const dataSources = async () => ({
-  recipeAPI: new RecipeAPI({ database: await database() })
+const dataSources = () => ({
+  recipeAPI
 })
 
 const context = ({ event, context }: { event: APIGatewayProxyEvent, context: any }) => {
@@ -38,7 +36,7 @@ const context = ({ event, context }: { event: APIGatewayProxyEvent, context: any
 
   return {
     event,
-    auth
+    // auth
   }
 }
 
@@ -55,8 +53,8 @@ module.exports = {
   dataSources,
   context,
   schema,
-  RecipeAPI,
+  recipeAPI,
   ApolloServer,
   server,
-  auth
+  // auth
 }
