@@ -1,23 +1,20 @@
+import { injectable, inject } from "inversify"
 // DB Entities
-import { injectable, inject } from "inversify";
 import RecipeEntity from '../../db/entities/Recipe'
 import RecipeAttributionEntity from '../../db/entities/RecipeAttribution'
 import AttributionSocialMediaEntity from '../../db/entities/AttributionSocialMedia'
-
-// const database = db.getDatabase()
-
 // TYPES
 import { RecipeInput, Recipe } from '../types'
 import { DataSource } from 'apollo-datasource'
 import { TYPES } from "../../inversifyTypes";
-export interface RecipeApiClass extends DataSource {
+export interface IRecipeAPI extends DataSource {
   initialize(config: any): Promise<void>
   findAllRecipes(): Promise<Array<Recipe>>
   createRecipe(arg0: RecipeInput): Promise<Recipe>
 }
 
 @injectable()
-export default class RecipeAPI implements RecipeApiClass {
+export default class RecipeAPI implements IRecipeAPI {
   context: any
   db: any
   @inject(TYPES.Database) private database: any

@@ -1,6 +1,6 @@
 // TYPES
 import { RecipeInput, Recipe } from '../types'
-// TODO - figure out why DataSources<RecipeApiClass> can't find any methods
+// TODO - figure out why DataSources<IRecipeAPI> can't find any methods
 // on the abstract class
 export default {
   Query: {
@@ -9,6 +9,8 @@ export default {
       __: any,
       { dataSources }: { dataSources: any }
     ): Promise<Array<Recipe>> => {
+      console.log('datasources', dataSources);
+
       const recipes = await dataSources.recipeAPI.findAllRecipes()
       return recipes
     }

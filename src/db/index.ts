@@ -7,11 +7,12 @@ import {
 } from 'typeorm'
 import { injectable } from "inversify";
 
+// ENTITIES
 import Recipe from './entities/Recipe'
 import RecipeAttribution from './entities/RecipeAttribution'
 import AttributionSocialMedia from './entities/AttributionSocialMedia'
 
-export interface DatabaseClass {
+export interface IDatabase {
   getDatabase(): Promise<Connection>
 }
 
@@ -19,7 +20,7 @@ export interface DatabaseClass {
  * Database manager class
  */
 @injectable()
-export class Database implements DatabaseClass {
+export class Database implements IDatabase {
   private connectionManager: ConnectionManager
   private connection: Connection
 
