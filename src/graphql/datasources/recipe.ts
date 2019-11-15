@@ -1,24 +1,25 @@
+import { injectable, inject } from "inversify"
 // DB Entities
-// import database from '../../db/'
 import RecipeEntity from '../../db/entities/Recipe'
 import RecipeAttributionEntity from '../../db/entities/RecipeAttribution'
 import AttributionSocialMediaEntity from '../../db/entities/AttributionSocialMedia'
-
 // TYPES
 import { RecipeInput, Recipe } from '../types'
 import { DataSource } from 'apollo-datasource'
-export abstract class RecipeApiClass extends DataSource {
-  database: any
-  context: any
-  abstract initialize(config: any): Promise<void>
-  abstract findAllRecipes(): Promise<Array<Recipe>>
-  abstract createRecipe(arg0: RecipeInput): Promise<Recipe>
+import { TYPES } from "../../inversifyTypes";
+export interface IRecipeAPI extends DataSource {
+  initialize(config: any): Promise<void>
+  findAllRecipes(): Promise<Array<Recipe>>
+  createRecipe(arg0: RecipeInput): Promise<Recipe>
 }
 
-export default class RecipeAPI extends RecipeApiClass {
-  public constructor(database: any) {
-    super()
-    this.database = database
+@injectable()
+export default class RecipeAPI implements IRecipeAPI {
+  context: any
+  db: any
+  @inject(TYPES.Database) private database: any
+  public constructor() {
+    // this.database = database
   }
   /**
    * This is a function that gets called by ApolloServer when being setup.
@@ -28,11 +29,11 @@ export default class RecipeAPI extends RecipeApiClass {
    */
   public async initialize(config: any) {
     this.context = config.context
-    // this.database = await database()
+    this.db = await this.database.getDatabase()
   }
 
   public async findAllRecipes() {
-    const recipes = await this.database.getRepository(RecipeEntity).find({
+    const recipes = await this.db.getRepository(RecipeEntity).find({
       relations: ['attribution', 'attribution.attributionSocialMedia']
     })
 
@@ -70,12 +71,12 @@ export default class RecipeAPI extends RecipeApiClass {
     attributionSocial.facebook = attribution.socialMedia.facebook || ''
 
     recipeAttribution.attributionSocialMedia = attributionSocial
-    const savedAttribution = await this.database
+    const savedAttribution = await this.db
       .getRepository(RecipeAttributionEntity)
       .save(recipeAttribution)
 
     recipe.attribution = savedAttribution
-    const savedRecipe = await this.database
+    const savedRecipe = await this.db
       .getRepository(RecipeEntity)
       .save(recipe)
 
