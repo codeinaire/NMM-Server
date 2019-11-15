@@ -1,15 +1,24 @@
 // TYPES
 import { RecipeInput, Recipe } from '../types'
-// TODO - figure out why DataSources<RecipeApiClass> can't find any methods
+import { IRecipeAPI } from '../datasources/recipe'
+
+// TODO - figure out why DataSources<IRecipeAPI> can't find any methods
 // on the abstract class
 export default {
   Query: {
     recipes: async (
       _: any,
       __: any,
-      { dataSources }: { dataSources: any }
+      {
+        dataSources: {
+          recipeAPI,
+          context: { log }
+        }
+      }: { dataSources: { recipeAPI: IRecipeAPI; context: any } }
     ): Promise<Array<Recipe>> => {
-      const recipes = await dataSources.recipeAPI.findAllRecipes()
+      log.info('Finding all recipes')
+      const recipes = await recipeAPI.findAllRecipes()
+      log.info('Found all recipes')
       return recipes
     }
   },
@@ -17,10 +26,17 @@ export default {
     createRecipe: async (
       _: any,
       { recipe }: { recipe: RecipeInput },
-      { dataSources }: { dataSources: any }
+      {
+        dataSources: {
+          recipeAPI,
+          context: { log }
+        }
+      }: { dataSources: { recipeAPI: IRecipeAPI; context: any } }
     ): Promise<Recipe> => {
-      const savedRecipe = await dataSources.recipeAPI.createRecipe(recipe)
-      return savedRecipe
+      log.info('Creating recipe')
+      const createdRecipe = await recipeAPI.createRecipe(recipe)
+      log.info('Recipe created')
+      return createdRecipe
     }
   }
 }

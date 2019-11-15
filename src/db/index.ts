@@ -4,72 +4,70 @@ import {
   ConnectionOptions,
   createConnection,
   getConnectionManager
-} from "typeorm";
+} from 'typeorm'
+import { injectable } from "inversify";
 
+// ENTITIES
 import Recipe from './entities/Recipe'
 import RecipeAttribution from './entities/RecipeAttribution'
 import AttributionSocialMedia from './entities/AttributionSocialMedia'
 
+export interface IDatabase {
+  getDatabase(): Promise<Connection>
+}
+
 /**
  * Database manager class
  */
-export class Database {
-  private connectionManager: ConnectionManager;
+@injectable()
+export class Database implements IDatabase {
+  private connectionManager: ConnectionManager
+  private connection: Connection
 
   constructor() {
-    this.connectionManager = getConnectionManager();
+    this.connectionManager = getConnectionManager()
   }
 
-  public async getConnection(): Promise<Connection> {
-    const CONNECTION_NAME = `default`;
-
-    let connection: Connection;
+  private async getConnection(): Promise<Connection> {
+    const CONNECTION_NAME = 'default'
 
     if (this.connectionManager.has(CONNECTION_NAME)) {
-      console.info(`Database.getConnection() - using existing connection ...`);
-      connection = await this.connectionManager.get(CONNECTION_NAME);
+      console.info('Database.getConnection() - using existing connection ...')
+      this.connection = await this.connectionManager.get(CONNECTION_NAME)
 
-      if (!connection.isConnected) {
-        connection = await connection.connect();
+      if (!this.connection.isConnected) {
+        this.connection = await this.connection.connect()
       }
     } else {
-      console.info(`Database.getConnection() - creating connection ...`);
+      console.info('Database.getConnection() - creating connection ...')
 
       const connectionOptions: ConnectionOptions = {
-        name: `default`,
-        type: `postgres`,
+        name: 'default',
+        type: 'postgres',
         port: 5432,
         synchronize: true,
-        logging: "all",
+        logging: 'all',
         host: process.env.DB_HOST,
         username: process.env.DB_USERNAME,
         database: process.env.DB_NAME,
         password: process.env.DB_PASSWORD,
-        entities: [
-          Recipe,
-          RecipeAttribution,
-          AttributionSocialMedia
-        ]
-      };
+        entities: [Recipe, RecipeAttribution, AttributionSocialMedia]
+      }
 
       // Don't need a pwd locally
       if (process.env.DB_PASSWORD) {
         Object.assign(connectionOptions, {
           password: process.env.DB_PASSWORD
-        });
+        })
       }
 
-      connection = await createConnection(connectionOptions);
+      this.connection = await createConnection(connectionOptions)
     }
 
-    return connection;
+    return this.connection
   }
-}
 
-// TODO - test to see if this does reuse a connection
-export default async () => {
-  const database = new Database();
-
-  const dbConn: Connection = await database.getConnection();
-  return dbConn;
+  public async getDatabase() {
+    return await this.getConnection()
+  }
 }

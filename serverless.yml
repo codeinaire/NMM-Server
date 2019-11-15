@@ -34,7 +34,7 @@ package:
 
 functions:
   graphql:
-    handler: src/main.graphql
+    handler: src/lambda.graphql
     events:
     - http:
         path: nmm-app
