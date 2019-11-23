@@ -1,7 +1,7 @@
 // DI stuff
 import { container } from './inversify.config'
 import { TYPES } from './inversifyTypes'
-import { IServer } from './server';
+import { IServer } from './types';
 
 const server = container.get<IServer>(TYPES.Server)
 

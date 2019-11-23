@@ -1,7 +1,7 @@
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string,
+  ID: number,
   String: string,
   Boolean: boolean,
   Int: number,
@@ -20,26 +20,13 @@ export type Article = {
 export type Attribution = {
    __typename?: 'Attribution',
   name: Scalars['String'],
-  url: Scalars['String'],
+  website: Scalars['String'],
   email: Scalars['String'],
   socialMedia?: Maybe<AttributionSocialMedia>,
 };
 
-export type AttributionInput = {
-  name: Scalars['String'],
-  email: Scalars['String'],
-  website: Scalars['String'],
-  socialMedia: AttributionSocialMediaInput,
-};
-
 export type AttributionSocialMedia = {
    __typename?: 'AttributionSocialMedia',
-  facebook?: Maybe<Scalars['String']>,
-  instagram?: Maybe<Scalars['String']>,
-  twitter?: Maybe<Scalars['String']>,
-};
-
-export type AttributionSocialMediaInput = {
   facebook?: Maybe<Scalars['String']>,
   instagram?: Maybe<Scalars['String']>,
   twitter?: Maybe<Scalars['String']>,
@@ -121,17 +108,18 @@ export type Recipe = {
 
 export type RecipeInput = {
   title: Scalars['String'],
-  attribution: AttributionInput,
+  name: Scalars['String'],
+  email: Scalars['String'],
+  website: Scalars['String'],
+  facebook?: Maybe<Scalars['String']>,
+  instagram?: Maybe<Scalars['String']>,
+  twitter?: Maybe<Scalars['String']>,
   ingredients: Scalars['String'],
   method: Scalars['String'],
   hashtags: Scalars['String'],
   difficulty: DifficultyEnum,
   cost: CostEnum,
   mealType: MealTypeEnum,
-  recipePhotos: RecipePhotoInput,
-};
-
-export type RecipePhotoInput = {
   lowResolution: Scalars['String'],
   standardResolution: Scalars['String'],
 };

@@ -5,16 +5,14 @@ import {
   createConnection,
   getConnectionManager
 } from 'typeorm'
-import { injectable } from "inversify";
+import { injectable } from 'inversify'
 
 // ENTITIES
 import Recipe from './entities/Recipe'
 import RecipeAttribution from './entities/RecipeAttribution'
 import AttributionSocialMedia from './entities/AttributionSocialMedia'
 
-export interface IDatabase {
-  getDatabase(): Promise<Connection>
-}
+import { IDatabase } from '../types'
 
 /**
  * Database manager class

@@ -4,20 +4,16 @@ import RecipeEntity from '../../db/entities/Recipe'
 import RecipeAttributionEntity from '../../db/entities/RecipeAttribution'
 import AttributionSocialMediaEntity from '../../db/entities/AttributionSocialMedia'
 // TYPES
-import { RecipeInput, Recipe } from '../types'
-import { DataSource } from 'apollo-datasource'
+import { RecipeInput } from '../types'
 import { TYPES } from "../../inversifyTypes";
-export interface IRecipeAPI extends DataSource {
-  initialize(config: any): Promise<void>
-  findAllRecipes(): Promise<Array<Recipe>>
-  createRecipe(arg0: RecipeInput): Promise<Recipe>
-}
+import { IRecipeAPI, IDatabase } from '../../types';
+import { Connection } from "typeorm"
 
 @injectable()
 export default class RecipeAPI implements IRecipeAPI {
-  context: any
-  db: any
-  @inject(TYPES.Database) private database: any
+  private context: any
+  private db: Connection
+  @inject(TYPES.Database) private database: IDatabase
   public constructor() {
     // this.database = database
   }
@@ -33,6 +29,8 @@ export default class RecipeAPI implements IRecipeAPI {
   }
 
   public async findAllRecipes() {
+    console.log('this.context',this.context)
+
     const recipes = await this.db.getRepository(RecipeEntity).find({
       relations: ['attribution', 'attribution.attributionSocialMedia']
     })
@@ -42,14 +40,20 @@ export default class RecipeAPI implements IRecipeAPI {
 
   public async createRecipe({
     title,
-    attribution,
+    name,
+    email,
+    website,
+    facebook,
+    instagram,
+    twitter,
     ingredients,
     method,
     hashtags,
     difficulty,
     cost,
     mealType,
-    recipePhotos
+    lowResolution,
+    standardResolution
   }: RecipeInput) {
     let recipe = new RecipeEntity()
     recipe.title = title
@@ -59,16 +63,18 @@ export default class RecipeAPI implements IRecipeAPI {
     recipe.difficulty = difficulty
     recipe.cost = cost
     recipe.mealType = mealType
-    recipe.lowResolution = recipePhotos.lowResolution
-    recipe.standardResolution = recipePhotos.standardResolution
+    recipe.lowResolution = lowResolution
+    recipe.standardResolution = standardResolution
 
     let recipeAttribution = new RecipeAttributionEntity()
-    recipeAttribution.name = attribution.name
-    recipeAttribution.email = attribution.email
-    recipeAttribution.website = attribution.website
+    recipeAttribution.name = name
+    recipeAttribution.email = email
+    recipeAttribution.website = website
 
     let attributionSocial = new AttributionSocialMediaEntity()
-    attributionSocial.facebook = attribution.socialMedia.facebook || ''
+    attributionSocial.facebook = facebook || ''
+    attributionSocial.instragram = instagram || ''
+    attributionSocial.twitter = twitter || ''
 
     recipeAttribution.attributionSocialMedia = attributionSocial
     const savedAttribution = await this.db
