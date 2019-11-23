@@ -39,7 +39,7 @@ export default gql`
 
   type Attribution {
     name: String!
-    url: String!
+    website: String!
     email: String!
     socialMedia: AttributionSocialMedia
   }
@@ -52,30 +52,18 @@ export default gql`
 
   input RecipeInput {
     title: String!
-    attribution: AttributionInput!
+    name: String!
+    email: String!
+    website: String!
+    facebook: String
+    instagram: String
+    twitter: String
     ingredients: String!
     method: String!
     hashtags: String!
     difficulty: DifficultyEnum!
     cost: CostEnum!
     mealType: MealTypeEnum!
-    recipePhotos: RecipePhotoInput!
-  }
-
-  input AttributionInput {
-    name: String!
-    email: String!
-    website: String!
-    socialMedia: AttributionSocialMediaInput!
-  }
-
-  input AttributionSocialMediaInput {
-    facebook: String
-    instagram: String
-    twitter: String
-  }
-
-  input RecipePhotoInput {
     lowResolution: String!
     standardResolution: String!
   }
