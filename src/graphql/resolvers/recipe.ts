@@ -1,8 +1,8 @@
 // TYPES
 import { RecipeInput, Recipe } from '../types'
-// import { IRecipeAPI } from '../../types'
+import { IResolverContext } from '../../types'
 
-// TODO - figure out why DataSources<IRecipeAPI> can't find any methods
+// TODO - figure out why context<IRecipeAPI> can't find any methods
 // on the abstract class
 export default {
   Query: {
@@ -10,16 +10,14 @@ export default {
       _: any,
       __: any,
       {
-        dataSources: {
-          recipeAPI
-        }
-      }: { dataSources: { recipeAPI: any}}
+        auth,
+        dataSources,
+        log
+      } : IResolverContext
     ): Promise<Array<Recipe>> => {
-      console.log('dataSources', recipeAPI );
-
-      recipeAPI.context.log.info('Finding all recipes')
-      const recipes = await recipeAPI.findAllRecipes()
-      recipeAPI.context.log.info('Found all recipes')
+      log.info('Finding all recipes')
+      const recipes = await dataSources.recipeAPI.findAllRecipes()
+      log.info('Found all recipes')
       return recipes
     }
   },
@@ -28,16 +26,14 @@ export default {
       _: any,
       { recipe }: { recipe: RecipeInput },
       {
-        dataSources: {
-          recipeAPI
-        }
-      }: { dataSources: { recipeAPI: any}}
+        auth,
+        dataSources,
+        log
+      } : IResolverContext
     ): Promise<Recipe> => {
-      console.log('dataSources', recipe);
-
-      recipeAPI.context.log.info('Creating recipe')
-      const createdRecipe = await recipeAPI.createRecipe(recipe)
-      recipeAPI.context.log.info('Recipe created')
+      log.info('Creating recipe')
+      const createdRecipe = await dataSources.recipeAPI.createRecipe(recipe)
+      log.info('Recipe created')
       return createdRecipe
     }
   }

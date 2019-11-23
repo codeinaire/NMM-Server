@@ -1,9 +1,33 @@
-import { Connection } from 'typeorm'
+import { Connection, ConnectionManager } from 'typeorm'
 import { ApolloServer } from 'apollo-server-lambda'
 import { DataSource } from 'apollo-datasource'
 import { APIGatewayProxyEvent, Context } from 'aws-lambda'
 import { RecipeInput, Recipe } from './graphql/types'
+import { LambdaLog } from 'lambda-log'
+import { JwksClient } from 'jwks-rsa'
 
+export interface IServer {
+  getApolloInstance(): ApolloServer
+}
+
+export interface IDatabase {
+  getDatabase(): Promise<Connection>
+}
+
+export interface ILogger {
+  getLogger(): LambdaLog
+  createContext(arg0: APIGatewayProxyEvent, arg1: Context): void
+}
+
+export interface IResolverContext {
+  event: APIGatewayProxyEvent
+  log: LambdaLog
+  auth: IAuthorisation
+  // TODO - fix the any type
+  dataSources: any
+}
+
+// AUTHORISATION
 export interface IVerifiedToken {
   iss: string
   sub: string
@@ -37,41 +61,19 @@ export interface IScopeAndId {
   scopes: Array<string>
 }
 
-export interface IAuth {
-  checkScopesAndResolve: (
+export interface IAuthorisation {
+  checkScopesAndResolve(
     arg0: APIGatewayProxyEvent,
-    arg1: Array<string>,
-  ) => Promise<string>
+    arg1: Array<string>
+  ): Promise<boolean>
 }
 
 export interface IModifiedObject {
   [name: string]: string
 }
 
-// SERVER
-export interface IServer {
-  getApolloInstance(): ApolloServer
-}
-
 // DATASOURCES
 export interface IRecipeAPI extends DataSource {
-  initialize(config: any): Promise<void>
   findAllRecipes(): Promise<Array<Recipe>>
   createRecipe(arg0: RecipeInput): Promise<Recipe>
-}
-
-// DB
-export interface IDatabase {
-  getDatabase(): Promise<Connection>
-}
-
-export interface ILogger {
-  // N.B. Using type any b/c the library isn't typed and
-  // I don't want to create a custom type for it
-  getLogger(): any
-  createContext(arg0: APIGatewayProxyEvent, arg1: Context):any
-}
-
-export interface IAuthorisation {
-  checkScopesAndResolve(arg0: APIGatewayProxyEvent, arg1: Array<string>): Promise<boolean>
 }

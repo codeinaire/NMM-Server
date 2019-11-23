@@ -2,15 +2,15 @@ import { injectable } from "inversify"
 import jwksClient, { JwksClient } from 'jwks-rsa'
 import jwt from 'jsonwebtoken'
 import util from 'util'
-
+// TYPES
 import { APIGatewayProxyEvent } from 'aws-lambda'
-import { IVerifiedToken, IDecodedToken, IScopeAndId } from '../types'
+import { IVerifiedToken, IDecodedToken, IScopeAndId, IAuthorisation } from '../types'
 
 @injectable()
-export class Authorisation {
-  private client: JwksClient
-  private audience: string
-  private issuer: string
+export class Authorisation implements IAuthorisation {
+  private readonly client: JwksClient
+  private readonly audience: string
+  private readonly issuer: string
 
   constructor() {
     this.client = jwksClient({

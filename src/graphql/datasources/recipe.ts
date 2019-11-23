@@ -8,6 +8,7 @@ import { RecipeInput } from '../types'
 import { TYPES } from "../../inversifyTypes";
 import { IRecipeAPI, IDatabase } from '../../types';
 import { Connection } from "typeorm"
+import { DataSourceConfig } from 'apollo-datasource'
 
 @injectable()
 export default class RecipeAPI implements IRecipeAPI {
@@ -23,7 +24,7 @@ export default class RecipeAPI implements IRecipeAPI {
    * like caches and context. We'll assign this.context to the request context
    * here, so we can know about the user making requests
    */
-  public async initialize(config: any) {
+  public async initialize(config: DataSourceConfig<any>) {
     this.context = config.context
     this.db = await this.database.getDatabase()
   }
