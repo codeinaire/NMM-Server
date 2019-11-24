@@ -1,7 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn } from "typeorm"
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToOne,
+  JoinColumn
+} from 'typeorm'
 
 import RecipeAttribution from './RecipeAttribution'
-
 
 export enum DifficultyEnum {
   Easy = 'Easy',
@@ -24,7 +31,6 @@ export enum MealTypeEnum {
 
 @Entity()
 export default class Recipe {
-
   @PrimaryGeneratedColumn()
   id: number
 
@@ -37,7 +43,7 @@ export default class Recipe {
   ingredients: string
 
   @Column({
-    type: 'text',
+    type: 'text'
   })
   method: string
 
@@ -77,8 +83,8 @@ export default class Recipe {
   attribution: RecipeAttribution
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 }

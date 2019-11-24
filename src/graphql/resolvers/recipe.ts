@@ -2,8 +2,6 @@
 import { RecipeInput, Recipe } from '../types'
 import { IResolverContext } from '../../types'
 
-// TODO - figure out why context<IRecipeAPI> can't find any methods
-// on the abstract class
 export default {
   Query: {
     recipes: async (
@@ -15,6 +13,7 @@ export default {
         log
       } : IResolverContext
     ): Promise<Array<Recipe>> => {
+      // TODO - add auth for recipe authors
       log.info('Finding all recipes')
       const recipes = await dataSources.recipeAPI.findAllRecipes()
       log.info('Found all recipes')

@@ -11,6 +11,7 @@ import { injectable } from 'inversify'
 import Recipe from './entities/Recipe'
 import RecipeAttribution from './entities/RecipeAttribution'
 import AttributionSocialMedia from './entities/AttributionSocialMedia'
+import UserProfile from './entities/UserProfile'
 
 import { IDatabase } from '../types'
 
@@ -49,7 +50,7 @@ export class Database implements IDatabase {
         username: process.env.DB_USERNAME,
         database: process.env.DB_NAME,
         password: process.env.DB_PASSWORD,
-        entities: [Recipe, RecipeAttribution, AttributionSocialMedia]
+        entities: [Recipe, RecipeAttribution, AttributionSocialMedia, UserProfile]
       }
 
       // Don't need a pwd locally

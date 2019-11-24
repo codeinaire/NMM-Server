@@ -2,7 +2,7 @@ import { Connection, ConnectionManager } from 'typeorm'
 import { ApolloServer } from 'apollo-server-lambda'
 import { DataSource } from 'apollo-datasource'
 import { APIGatewayProxyEvent, Context } from 'aws-lambda'
-import { RecipeInput, Recipe } from './graphql/types'
+import { RecipeInput, Recipe, UserProfile, UserProfileInput } from './graphql/types'
 import { LambdaLog } from 'lambda-log'
 import { JwksClient } from 'jwks-rsa'
 
@@ -76,4 +76,8 @@ export interface IModifiedObject {
 export interface IRecipeAPI extends DataSource {
   findAllRecipes(): Promise<Array<Recipe>>
   createRecipe(arg0: RecipeInput): Promise<Recipe>
+}
+
+export interface IUserAPI extends DataSource {
+  createUserProfile(arg0: UserProfileInput): Promise<UserProfile>
 }

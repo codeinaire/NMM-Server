@@ -1,7 +1,7 @@
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: number,
+  ID: number | string,
   String: string,
   Boolean: boolean,
   Int: number,
@@ -62,7 +62,7 @@ export type Mutation = {
    __typename?: 'Mutation',
   createArticles?: Maybe<Array<Maybe<Article>>>,
   createArticle?: Maybe<Article>,
-  createProfile?: Maybe<User>,
+  createProfile?: Maybe<UserProfile>,
   createRecipe?: Maybe<Recipe>,
 };
 
@@ -77,6 +77,11 @@ export type MutationCreateArticleArgs = {
 };
 
 
+export type MutationCreateProfileArgs = {
+  profile?: Maybe<UserProfileInput>
+};
+
+
 export type MutationCreateRecipeArgs = {
   recipe?: Maybe<RecipeInput>
 };
@@ -85,7 +90,7 @@ export type Query = {
    __typename?: 'Query',
   recipes: Array<Maybe<Recipe>>,
   articles?: Maybe<Array<Maybe<Article>>>,
-  me?: Maybe<User>,
+  me?: Maybe<UserProfile>,
 };
 
 export type Recipe = {
@@ -124,9 +129,22 @@ export type RecipeInput = {
   standardResolution: Scalars['String'],
 };
 
-export type User = {
-   __typename?: 'User',
+export type UserProfile = {
+   __typename?: 'UserProfile',
   id: Scalars['ID'],
-  points: Scalars['Int'],
-  recipeRead?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  totalPoints: Scalars['Int'],
+  challengeGoals: Scalars['Int'],
+  motivations: Scalars['String'],
+  username: Scalars['String'],
+  bio?: Maybe<Scalars['String']>,
+  profilePic?: Maybe<Scalars['String']>,
+};
+
+export type UserProfileInput = {
+  id: Scalars['ID'],
+  challengeGoals: Scalars['Int'],
+  motivations: Scalars['String'],
+  username: Scalars['String'],
+  bio?: Maybe<Scalars['String']>,
+  profilePic?: Maybe<Scalars['String']>,
 };
