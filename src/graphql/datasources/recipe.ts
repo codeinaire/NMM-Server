@@ -2,9 +2,9 @@ import { injectable, inject } from 'inversify'
 // DB Entities
 import RecipeEntity from '../../db/entities/Recipe'
 import RecipeAttributionEntity from '../../db/entities/RecipeAttribution'
-import AttributionSocialMediaEntity from '../../db/entities/AttributionSocialMedia'
+// import AttributionSocialMediaEntity from '../../db/entities/AttributionSocialMedia'
 // TYPES
-// import { RecipeInput } from '../types'
+import { RecipeInput } from '../types'
 import { TYPES } from '../../inversifyTypes'
 import { IRecipeAPI, IDatabase } from '../../types'
 import { Connection } from 'typeorm'
@@ -47,29 +47,42 @@ export default class RecipeAPI implements IRecipeAPI {
     console.log('this.context', this.context)
 
     const recipes = await this.db.getRepository(RecipeEntity).find({
-      relations: ['attribution', 'attribution.attributionSocialMedia']
+      relations: ['recipeAttribution']
     })
     console.log('recipes', recipes[0])
 
     return recipes
   }
 
-  public async createRecipe(args: any) {
+  public async createRecipe({
+    title,
+    ingredients,
+    method,
+    hashtags,
+    difficulty,
+    cost,
+    mealType,
+    lowResolution,
+    standardResolution,
+    name,
+    email,
+    website = 'Website information is not available.'
+  }: RecipeInput) {
     let recipe = new RecipeEntity()
-    recipe.title = args.title
-    recipe.ingredients = args.ingredients
-    recipe.method = args.method
-    recipe.hashtags = args.hashtags
-    recipe.difficulty = args.difficulty
-    recipe.cost = args.cost
-    recipe.mealType = args.mealType
-    recipe.lowResolution = args.lowResolution
-    recipe.standardResolution = args.standardResolution
+    recipe.title = title
+    recipe.ingredients = ingredients
+    recipe.method = method
+    recipe.hashtags = hashtags
+    recipe.difficulty = difficulty
+    recipe.cost = cost
+    recipe.mealType = mealType
+    recipe.lowResolution = lowResolution
+    recipe.standardResolution = standardResolution
 
-    // let recipeAttribution = new RecipeAttributionEntity()
-    // recipeAttribution.name = name
-    // recipeAttribution.email = email
-    // recipeAttribution.website = website!
+    let recipeAttribution = new RecipeAttributionEntity()
+    recipeAttribution.name = name
+    recipeAttribution.email = email
+    recipeAttribution.website = website!
 
     // let attributionSocial = new AttributionSocialMediaEntity()
     // attributionSocial.facebook = facebook!
@@ -81,7 +94,7 @@ export default class RecipeAPI implements IRecipeAPI {
     // //   .getRepository(RecipeAttributionEntity)
     // //   .save(recipeAttribution)
 
-    // recipe.recipeAttribution = recipeAttribution
+    recipe.recipeAttribution = recipeAttribution
     // // attributionSocial.recipeAttribution = recipeAttribution
     const savedRecipe = await this.db.getRepository(RecipeEntity).save(recipe)
 

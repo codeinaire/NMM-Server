@@ -40,7 +40,7 @@ export default gql`
 
   type Recipe {
     "**LIST && SHOW**"
-    id: ID!
+    id: ID
     title: String!
     difficulty: DifficultyEnum!
     cost: CostEnum!
@@ -56,7 +56,7 @@ export default gql`
   }
 
   type RecipeAttribution {
-    id: ID!
+    id: ID
     name: String!
     website: String
     email: String!
@@ -64,7 +64,7 @@ export default gql`
   }
 
   type AttributionSocialMedia {
-    id: ID!
+    id: ID
     facebook: String
     instagram: String
     twitter: String

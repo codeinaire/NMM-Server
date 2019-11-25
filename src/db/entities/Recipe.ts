@@ -74,10 +74,9 @@ export default class Recipe {
   @Column()
   standardResolution: string
 
-  @OneToOne(() => RecipeAttribution, {
+  @OneToOne(() => RecipeAttribution, recipeAttribution => recipeAttribution.recipe, {
     eager: true,
-    onDelete: 'CASCADE',
-    cascade: ['insert', 'remove']
+    cascade: true
   })
   @JoinColumn()
   recipeAttribution: RecipeAttribution

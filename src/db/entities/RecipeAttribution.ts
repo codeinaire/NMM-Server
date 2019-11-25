@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne } from "typeorm"
+import Recipe from './Recipe';
 
 @Entity()
 export default class RecipeAttribution {
@@ -13,6 +14,9 @@ export default class RecipeAttribution {
 
   @Column()
   email: string
+
+  @OneToOne(() => Recipe, recipe => recipe.recipeAttribution)
+  recipe: Recipe
 
   @CreateDateColumn()
   createdAt: Date

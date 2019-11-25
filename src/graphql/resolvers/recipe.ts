@@ -23,13 +23,15 @@ export default {
   Mutation: {
     createRecipe: async (
       _: any,
-      recipe: any,
+      { recipe }: { recipe:RecipeInput },
       {
         auth,
         dataSources,
         log
       } : IResolverContext
     ): Promise<Recipe> => {
+      console.log('recipe', recipe);
+
       log.info('Creating recipe')
       const createdRecipe = await dataSources.recipeAPI.createRecipe(recipe)
       log.info('Recipe created')

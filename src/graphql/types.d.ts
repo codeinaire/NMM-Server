@@ -19,7 +19,7 @@ export type Article = {
 
 export type AttributionSocialMedia = {
    __typename?: 'AttributionSocialMedia',
-  id: Scalars['ID'],
+  id?: Maybe<Scalars['ID']>,
   facebook?: Maybe<Scalars['String']>,
   instagram?: Maybe<Scalars['String']>,
   twitter?: Maybe<Scalars['String']>,
@@ -100,7 +100,7 @@ export type QueryMeArgs = {
 export type Recipe = {
    __typename?: 'Recipe',
   /** **LIST && SHOW** */
-  id: Scalars['ID'],
+  id?: Maybe<Scalars['ID']>,
   title: Scalars['String'],
   difficulty: DifficultyEnum,
   cost: CostEnum,
@@ -117,7 +117,7 @@ export type Recipe = {
 
 export type RecipeAttribution = {
    __typename?: 'RecipeAttribution',
-  id: Scalars['ID'],
+  id?: Maybe<Scalars['ID']>,
   name: Scalars['String'],
   website?: Maybe<Scalars['String']>,
   email: Scalars['String'],
