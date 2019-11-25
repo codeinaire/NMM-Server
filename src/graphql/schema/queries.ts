@@ -4,6 +4,6 @@ export default gql`
   type Query {
     recipes: [Recipe]!
     articles: [Article]
-    me: UserProfile
+    me(id: String!): UserProfile
   }
 `

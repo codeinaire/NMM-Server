@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import createJWKSMock from 'mock-jwks'
 import { Authorisation } from '../Authorisation'
 
@@ -185,6 +186,7 @@ function customMockedEvent(
         cognitoAuthenticationType: 'test string',
         cognitoIdentityId: 'test string',
         cognitoIdentityPoolId: 'test string',
+        principalOrgId: 'test string',
         sourceIp: 'test string',
         user: 'test string',
         userAgent: 'test string',

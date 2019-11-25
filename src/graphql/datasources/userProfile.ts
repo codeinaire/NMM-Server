@@ -1,16 +1,16 @@
 import { injectable, inject } from "inversify"
 // DB Entities
-import UserEntity from '../../db/entities/UserProfile'
+import UserProfileEntity from '../../db/entities/UserProfile'
 
 // TYPES
-import { UserProfileInput, UserProfile} from '../types'
+import { UserProfileInput } from '../types'
 import { TYPES } from "../../inversifyTypes";
-import { IUserAPI, IDatabase } from '../../types';
+import { IUserProfileAPI, IDatabase } from '../../types';
 import { Connection } from "typeorm"
 import { DataSourceConfig } from 'apollo-datasource'
 
 @injectable()
-export default class UserAPI implements IUserAPI {
+export default class UserProfileAPI implements IUserProfileAPI {
   private context: any
   private db: Connection
   @inject(TYPES.Database) private database: IDatabase
@@ -28,14 +28,16 @@ export default class UserAPI implements IUserAPI {
     this.db = await this.database.getDatabase()
   }
 
-  public async findAllRecipes() {
+  public async findUserProfile(verifiedId: string) {
     console.log('this.context',this.context)
 
-    const recipes = await this.db.getRepository(UserEntity).find({
-      relations: ['attribution', 'attribution.attributionSocialMedia']
+    const userProfile = await this.db.getRepository(UserProfileEntity).findOne({
+      where: {
+        id: verifiedId
+      }
     })
 
-    return recipes
+    return userProfile
   }
 
   public async createUserProfile({
@@ -45,14 +47,14 @@ export default class UserAPI implements IUserAPI {
     username,
     bio,
     profilePic
-  }: UserProfileInput): Promise<UserProfile> {
-    let userProfile = new UserEntity()
+  }: UserProfileInput) {
+    let userProfile = new UserProfileEntity()
     userProfile.id = id as string
     userProfile.motivations = motivations
     userProfile.challengeGoals = challengeGoals
     userProfile.username = username
-    userProfile.bio = bio
-    userProfile.profilePic = profilePic
+    userProfile.bio = bio as string
+    userProfile.profilePic = profilePic as string
 
     return userProfile
   }

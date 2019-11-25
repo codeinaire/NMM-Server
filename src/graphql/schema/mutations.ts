@@ -6,5 +6,6 @@ export default gql`
     createArticle(article: CreateArticle!): Article
     createProfile(profile: UserProfileInput): UserProfile
     createRecipe(recipe: RecipeInput): Recipe
+    deleteRecipe(title: String): Recipe
   }
 `

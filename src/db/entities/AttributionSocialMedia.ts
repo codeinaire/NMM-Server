@@ -1,27 +1,35 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  // OneToOne,
+  // JoinColumn
+} from 'typeorm'
+// import RecipeAttribution from './RecipeAttribution';
 
 @Entity()
 export default class AttributionSocialMedia {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({
-    nullable: true,
-    default: 'No Facebook details available.'
-  })
+  @Column()
   facebook: string
 
-  @Column({
-    nullable: true,
-    default: 'No Instagram details available.'
-  })
+  @Column()
   instragram: string
 
-  @Column({
-    nullable: true,
-    default: 'No Twitter details available'
-  })
+  @Column()
   twitter: string
+
+  // @OneToOne(() => RecipeAttribution, recipeAttribution => recipeAttribution,  {
+  //   eager: true,
+  //   onDelete: 'CASCADE',
+  //   cascade: ['insert', 'insert']
+  // })
+  // @JoinColumn()
+  // recipeAttribution: RecipeAttribution
 
   @CreateDateColumn()
   createdAt: Date

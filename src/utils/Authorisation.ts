@@ -2,6 +2,7 @@ import { injectable } from "inversify"
 import jwksClient, { JwksClient } from 'jwks-rsa'
 import jwt from 'jsonwebtoken'
 import util from 'util'
+import { ForbiddenError } from 'apollo-server-lambda'
 // TYPES
 import { APIGatewayProxyEvent } from 'aws-lambda'
 import { IVerifiedToken, IDecodedToken, IScopeAndId, IAuthorisation } from '../types'
@@ -37,14 +38,14 @@ export class Authorisation implements IAuthorisation {
   private extractBearerToken(event: APIGatewayProxyEvent): string {
     const tokenString = event.headers.authorization
     if (!tokenString) {
-      throw new Error(
+      throw new ForbiddenError(
         'Expected "event.headers.authorization" parameter to be set'
       )
     }
 
     const match = tokenString.match(/^Bearer (.*)$/)
     if (!match || match.length < 2) {
-      throw new Error(
+      throw new ForbiddenError(
         `Invalid Authorization token - ${tokenString} does not match "Bearer .*"`
       )
     }
@@ -61,7 +62,7 @@ export class Authorisation implements IAuthorisation {
       complete: true
     }) as IDecodedToken
     if (!decoded || !decoded.header || !decoded.header.kid) {
-      throw new Error('Invalid Token')
+      throw new ForbiddenError('Invalid Token')
     }
 
     const rsaOrCertSigningKey: string = await this.getSigningKey(decoded.header.kid)
@@ -87,24 +88,24 @@ export class Authorisation implements IAuthorisation {
   public async checkScopesAndResolve(
     event: APIGatewayProxyEvent,
     expectedScopes: Array<string>
-  ): Promise<boolean> {
-    const verifiedToken = await this.verifyToken(event)
+  ): Promise<string> {
+    const { principleId, scopes } = await this.verifyToken(event)
 
-    const scopes: Array<string> = verifiedToken.scopes
+    const verifiedscopes: Array<string> = scopes
 
     const NO_SCOPES = 0
-    if (scopes[0].length == NO_SCOPES) {
-      throw new Error('No scopes supplied!')
+    if (verifiedscopes[0].length == NO_SCOPES) {
+      throw new ForbiddenError('No scopes supplied!')
     }
 
     const scopesMatch = expectedScopes.some(
-      scope => scopes.indexOf(scope) !== -1
+      scope => verifiedscopes.indexOf(scope) !== -1
     )
 
     if (scopesMatch) {
-      return true
+      return principleId
     } else {
-      throw new Error('You are not authorized!')
+      throw new ForbiddenError('You are not authorized!')
     }
   }
 }

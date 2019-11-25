@@ -5,11 +5,11 @@ import Queries from './schema/queries';
 import Mutations from './schema/mutations';
 import Article from './schema/article';
 import Recipe from './schema/recipe';
-import UserProfilefrom './schema/user';
+import UserProfile from './schema/userProfile';
 // RESOLVERS
 import articleResolvers from './resolvers/article';
 import recipeResolvers from './resolvers/recipe';
-import userResolvers from './resolvers/user';
+import userProfileResolvers from './resolvers/userProfile';
 
 export default makeExecutableSchema({
   typeDefs: [
@@ -17,11 +17,11 @@ export default makeExecutableSchema({
     Mutations,
     Article,
     Recipe,
-    User
+    UserProfile
   ],
   resolvers: merge(
     recipeResolvers,
     articleResolvers,
-    userResolvers
+    userProfileResolvers
   )
 });

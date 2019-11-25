@@ -44,7 +44,7 @@ export class Database implements IDatabase {
         name: 'default',
         type: 'postgres',
         port: 5432,
-        synchronize: true,
+        synchronize: false,
         logging: 'all',
         host: process.env.DB_HOST,
         username: process.env.DB_USERNAME,

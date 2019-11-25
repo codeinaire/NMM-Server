@@ -80,7 +80,7 @@ export default class Recipe {
     cascade: ['insert', 'remove']
   })
   @JoinColumn()
-  attribution: RecipeAttribution
+  recipeAttribution: RecipeAttribution
 
   @CreateDateColumn()
   createdAt: Date

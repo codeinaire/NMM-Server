@@ -8,21 +8,24 @@ import { TYPES } from './inversifyTypes'
 import schema from './graphql/schema'
 // TYPES
 import { APIGatewayProxyEvent, Context } from 'aws-lambda'
-import { IRecipeAPI, IServer, ILogger, IAuthorisation } from './types';
+import { IRecipeAPI, IServer, ILogger, IAuthorisation, IUserProfileAPI } from './types';
 
 @injectable()
 export class Server implements IServer {
   private apolloServer: ApolloServer
-  private _recipeAPI: IRecipeAPI
-  private _logger: ILogger
-  private _authorisation: IAuthorisation
+  private readonly _recipeAPI: IRecipeAPI
+  private readonly _userProfileAPI: IUserProfileAPI
+  private readonly _logger: ILogger
+  private readonly _authorisation: IAuthorisation
 
   public constructor(
     @inject(TYPES.RecipeAPI) recipeAPI: IRecipeAPI,
+    @inject(TYPES.UserProfileAPI) userProfileAPI: IUserProfileAPI,
     @inject(TYPES.Logger) Logger: ILogger,
     @inject(TYPES.Authorisation) Authorisation: IAuthorisation
   ) {
     this._recipeAPI = recipeAPI
+    this._userProfileAPI = userProfileAPI
     this._logger = Logger
     this._authorisation = Authorisation
   }
@@ -30,7 +33,6 @@ export class Server implements IServer {
     return ({ event, context }: { event: APIGatewayProxyEvent, context: Context }) => {
       this._logger.createContext(event, context)
       const log = this._logger.getLogger()
-
 
       return {
         event,
@@ -42,7 +44,8 @@ export class Server implements IServer {
 
   private initDatasources() {
     return () => ({
-      recipeAPI: this._recipeAPI
+      recipeAPI: this._recipeAPI,
+      userProfileAPI: this._userProfileAPI
     })
   }
 

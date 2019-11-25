@@ -23,7 +23,7 @@ export default {
   Mutation: {
     createRecipe: async (
       _: any,
-      { recipe }: { recipe: RecipeInput },
+      recipe: any,
       {
         auth,
         dataSources,
@@ -34,6 +34,20 @@ export default {
       const createdRecipe = await dataSources.recipeAPI.createRecipe(recipe)
       log.info('Recipe created')
       return createdRecipe
-    }
+    },
+    deleteRecipe: async (
+      _: any,
+      title: string,
+      {
+        auth,
+        dataSources,
+        log
+      } : IResolverContext
+    ): Promise<Recipe> => {
+      log.info('Creating recipe')
+      const deletedRecipe = await dataSources.recipeAPI.deleteRecipe(title)
+      log.info('Recipe created')
+      return deletedRecipe
+    },
   }
 }

@@ -23,18 +23,11 @@ export default class UserProfile{
   @Column()
   username: string
 
-  @Column({
-    nullable: true,
-    default: 'This user likes to keep an aire of mystery about them'
-  })
-  bio: string | null | undefined
+  @Column()
+  bio: string
 
-  @Column({
-    nullable: true,
-    default:
-      'https://res.cloudinary.com/codeinaire/image/upload/v1574140567/nmm-recipes/up8fe19f1ikxauczdhhs.jpg'
-  })
-  profilePic: string | null | undefined
+  @Column()
+  profilePic: string
 
   @CreateDateColumn()
   createdAt: Date

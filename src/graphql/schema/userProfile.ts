@@ -1,7 +1,7 @@
 const { gql } = require('apollo-server-lambda');
 
 export default gql`
-  type UserProfile{
+  type UserProfile {
     id: ID!
     totalPoints: Int!
     challengeGoals: Int!
@@ -11,7 +11,7 @@ export default gql`
     profilePic: String
   }
 
-  input UserProfileInput{
+  input UserProfileInput {
     id: ID!
     challengeGoals: Int!
     motivations: String!

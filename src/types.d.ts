@@ -64,8 +64,9 @@ export interface IScopeAndId {
 export interface IAuthorisation {
   checkScopesAndResolve(
     arg0: APIGatewayProxyEvent,
-    arg1: Array<string>
-  ): Promise<boolean>
+    arg1: Array<string>,
+    arg3?: LambdaLog
+  ): Promise<string>
 }
 
 export interface IModifiedObject {
@@ -75,9 +76,11 @@ export interface IModifiedObject {
 // DATASOURCES
 export interface IRecipeAPI extends DataSource {
   findAllRecipes(): Promise<Array<Recipe>>
-  createRecipe(arg0: RecipeInput): Promise<Recipe>
+  createRecipe(args: any): Promise<Recipe>
+  deleteRecipe(arg0: string): Promise<Recipe>
 }
 
-export interface IUserAPI extends DataSource {
+export interface IUserProfileAPI extends DataSource {
   createUserProfile(arg0: UserProfileInput): Promise<UserProfile>
+  findUserProfile(arg0: string): Promise<UserProfile | undefined>
 }
