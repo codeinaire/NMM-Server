@@ -33,9 +33,9 @@ export default gql`
     lowResolution: String!
     standardResolution: String!
     website: String
-    # facebook: String
-    # instagram: String
-    # twitter: String
+    facebook: String
+    instagram: String
+    twitter: String
   }
 
   type Recipe {
@@ -60,7 +60,7 @@ export default gql`
     name: String!
     website: String
     email: String!
-    # attributionSocialMedia: AttributionSocialMedia!
+    attributionSocialMedia: AttributionSocialMedia!
   }
 
   type AttributionSocialMedia {

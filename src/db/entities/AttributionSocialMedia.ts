@@ -4,10 +4,9 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  // OneToOne,
-  // JoinColumn
+  OneToOne
 } from 'typeorm'
-// import RecipeAttribution from './RecipeAttribution';
+import RecipeAttribution from './RecipeAttribution';
 
 @Entity()
 export default class AttributionSocialMedia {
@@ -23,13 +22,8 @@ export default class AttributionSocialMedia {
   @Column()
   twitter: string
 
-  // @OneToOne(() => RecipeAttribution, recipeAttribution => recipeAttribution,  {
-  //   eager: true,
-  //   onDelete: 'CASCADE',
-  //   cascade: ['insert', 'insert']
-  // })
-  // @JoinColumn()
-  // recipeAttribution: RecipeAttribution
+  @OneToOne(() => RecipeAttribution, recipeAttribution => recipeAttribution.attributionSocialMedia)
+  recipeAttribution: RecipeAttribution
 
   @CreateDateColumn()
   createdAt: Date

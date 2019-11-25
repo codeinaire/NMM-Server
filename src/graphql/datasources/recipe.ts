@@ -2,7 +2,7 @@ import { injectable, inject } from 'inversify'
 // DB Entities
 import RecipeEntity from '../../db/entities/Recipe'
 import RecipeAttributionEntity from '../../db/entities/RecipeAttribution'
-// import AttributionSocialMediaEntity from '../../db/entities/AttributionSocialMedia'
+import AttributionSocialMediaEntity from '../../db/entities/AttributionSocialMedia'
 // TYPES
 import { RecipeInput } from '../types'
 import { TYPES } from '../../inversifyTypes'
@@ -40,6 +40,9 @@ export default class RecipeAPI implements IRecipeAPI {
     await this.db
       .getRepository(RecipeAttributionEntity)
       .remove(recipeToDelete.recipeAttribution)
+    await this.db
+      .getRepository(RecipeAttributionEntity)
+      .remove(recipeToDelete.recipeAttribution.attributionSocialMedia)
 
     return deletedRecipe
   }
@@ -48,9 +51,9 @@ export default class RecipeAPI implements IRecipeAPI {
     console.log('this.context', this.context)
 
     const recipes = await this.db.getRepository(RecipeEntity).find({
-      relations: ['recipeAttribution']
+      relations: ['recipeAttribution', 'attributionSocialMedia']
     })
-    console.log('recipes', recipes[0])
+    console.log('recipes', recipes)
 
     return recipes
   }
@@ -67,7 +70,10 @@ export default class RecipeAPI implements IRecipeAPI {
     standardResolution,
     name,
     email,
-    website = 'Website information is not available.'
+    website = 'Website information is not available.',
+    facebook = 'Facebook profile not available',
+    instagram = 'Instagram profile not available',
+    twitter = 'Twitter profile not available',
   }: RecipeInput) {
     let recipe = new RecipeEntity()
     recipe.title = title
@@ -85,18 +91,13 @@ export default class RecipeAPI implements IRecipeAPI {
     recipeAttribution.email = email
     recipeAttribution.website = website!
 
-    // let attributionSocial = new AttributionSocialMediaEntity()
-    // attributionSocial.facebook = facebook!
-    // attributionSocial.instragram = instagram!
-    // attributionSocial.twitter = twitter!
+    let attributionSocialMedia = new AttributionSocialMediaEntity()
+    attributionSocialMedia.facebook = facebook!
+    attributionSocialMedia.instragram = instagram!
+    attributionSocialMedia.twitter = twitter!
 
-    // // recipeAttribution.attributionSocialMedia = attributionSocial
-    // // const savedAttribution = await this.db
-    // //   .getRepository(RecipeAttributionEntity)
-    // //   .save(recipeAttribution)
-
+    recipeAttribution.attributionSocialMedia = attributionSocialMedia
     recipe.recipeAttribution = recipeAttribution
-    // // attributionSocial.recipeAttribution = recipeAttribution
     const savedRecipe = await this.db.getRepository(RecipeEntity).save(recipe)
 
     return savedRecipe

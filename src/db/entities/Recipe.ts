@@ -4,8 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne,
-  JoinColumn
+  ManyToOne
 } from 'typeorm'
 
 import RecipeAttribution from './RecipeAttribution'
@@ -74,11 +73,11 @@ export default class Recipe {
   @Column()
   standardResolution: string
 
-  @OneToOne(() => RecipeAttribution, recipeAttribution => recipeAttribution.recipe, {
+  @ManyToOne(() => RecipeAttribution, recipeAttribution => recipeAttribution.recipes, {
     eager: true,
-    cascade: true
+    cascade: true,
+    onDelete: 'CASCADE'
   })
-  @JoinColumn()
   recipeAttribution: RecipeAttribution
 
   @CreateDateColumn()

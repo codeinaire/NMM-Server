@@ -121,6 +121,7 @@ export type RecipeAttribution = {
   name: Scalars['String'],
   website?: Maybe<Scalars['String']>,
   email: Scalars['String'],
+  attributionSocialMedia: AttributionSocialMedia,
 };
 
 export type RecipeInput = {
@@ -136,6 +137,9 @@ export type RecipeInput = {
   lowResolution: Scalars['String'],
   standardResolution: Scalars['String'],
   website?: Maybe<Scalars['String']>,
+  facebook?: Maybe<Scalars['String']>,
+  instagram?: Maybe<Scalars['String']>,
+  twitter?: Maybe<Scalars['String']>,
 };
 
 export type UserProfile = {
