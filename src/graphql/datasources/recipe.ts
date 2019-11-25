@@ -30,17 +30,18 @@ export default class RecipeAPI implements IRecipeAPI {
   }
 
   public async deleteRecipe(title: string): Promise<any> {
-    console.log('title', title)
-
     const recipeToDelete: any = await this.db
       .getRepository(RecipeEntity)
       .findOne(title)
-    console.log('recipeToDelete', recipeToDelete)
-    const what = await this.db
+
+    const deletedRecipe = await this.db
       .getRepository(RecipeEntity)
       .remove(recipeToDelete)
-    console.log('what', what)
-    return recipeToDelete
+    await this.db
+      .getRepository(RecipeAttributionEntity)
+      .remove(recipeToDelete.recipeAttribution)
+
+    return deletedRecipe
   }
 
   public async findAllRecipes() {
