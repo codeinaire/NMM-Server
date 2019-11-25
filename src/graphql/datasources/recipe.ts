@@ -73,7 +73,7 @@ export default class RecipeAPI implements IRecipeAPI {
     website = 'Website information is not available.',
     facebook = 'Facebook profile not available',
     instagram = 'Instagram profile not available',
-    twitter = 'Twitter profile not available',
+    twitter = 'Twitter profile not available'
   }: RecipeInput) {
     let recipe = new RecipeEntity()
     recipe.title = title
@@ -86,18 +86,30 @@ export default class RecipeAPI implements IRecipeAPI {
     recipe.lowResolution = lowResolution
     recipe.standardResolution = standardResolution
 
-    let recipeAttribution = new RecipeAttributionEntity()
-    recipeAttribution.name = name
-    recipeAttribution.email = email
-    recipeAttribution.website = website!
+    const foundChef = await this.db
+      .getRepository(RecipeAttributionEntity)
+      .findOne({
+        where: { name },
+        relations: ['attributionSocialMedia']
+      })
 
-    let attributionSocialMedia = new AttributionSocialMediaEntity()
-    attributionSocialMedia.facebook = facebook!
-    attributionSocialMedia.instragram = instagram!
-    attributionSocialMedia.twitter = twitter!
+    if (foundChef) {
+      recipe.recipeAttribution = foundChef
+    } else {
+      let recipeAttribution = new RecipeAttributionEntity()
+      recipeAttribution.name = name
+      recipeAttribution.email = email
+      recipeAttribution.website = website!
 
-    recipeAttribution.attributionSocialMedia = attributionSocialMedia
-    recipe.recipeAttribution = recipeAttribution
+      let attributionSocialMedia = new AttributionSocialMediaEntity()
+      attributionSocialMedia.facebook = facebook!
+      attributionSocialMedia.instragram = instagram!
+      attributionSocialMedia.twitter = twitter!
+
+      recipeAttribution.attributionSocialMedia = attributionSocialMedia
+      recipe.recipeAttribution = recipeAttribution
+    }
+
     const savedRecipe = await this.db.getRepository(RecipeEntity).save(recipe)
 
     return savedRecipe
