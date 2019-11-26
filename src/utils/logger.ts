@@ -6,7 +6,7 @@ import { ILogger } from '../types'
 // N.B. Overkill with class, but want to practice with classes in this project
 @injectable()
 export class Logger implements ILogger {
-  // N.B. making log: LambdaLog gives me an error REF daily tech note 24/11/19
+  // N.B. making type log: LambdaLog gives me an error REF daily tech note 24/11/19
   // TODO - fix any TYPE for log
   private log: any
 
@@ -15,8 +15,8 @@ export class Logger implements ILogger {
   }
 
   createContext(event: APIGatewayProxyEvent, context: Context) {
-    this.log.options.meta.requestContext = event.requestContext
-    this.log.options.meta.awsRequestId = context.awsRequestId
+    // this.log.options.meta.requestContext = event.requestContext
+    // this.log.options.meta.awsRequestId = context.awsRequestId
     // TS issue https://github.com/Microsoft/TypeScript/issues/28067
     this.log.options.dev = (process.env.DEV_LOGGING as unknown) as boolean
   }

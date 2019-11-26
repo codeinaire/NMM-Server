@@ -12,7 +12,7 @@ import { DataSourceConfig } from 'apollo-datasource'
 
 @injectable()
 export default class RecipeAPI implements IRecipeAPI {
-  private context: any
+  // private context: any
   private db: Connection
   @inject(TYPES.Database) private database: IDatabase
   public constructor() {
@@ -25,44 +25,22 @@ export default class RecipeAPI implements IRecipeAPI {
    * here, so we can know about the user making requests
    */
   public async initialize(config: DataSourceConfig<any>) {
-    this.context = config.context
+    // this.context = config.context
     this.db = await this.database.getDatabase()
   }
 
-  public async deleteRecipe(title: string): Promise<any> {
-    const recipeToDelete: any = await this.db
-      .getRepository(RecipeEntity)
-      .findOne(title)
+  public async findAttribution() {
+    const attributions = await this.db.getRepository(RecipeAttributionEntity).findOne({
+      relations: ['attributionSocialMedia']
+    })
 
-    const deletedRecipe = await this.db
-      .getRepository(RecipeEntity)
-      .remove(recipeToDelete)
-    await this.db
-      .getRepository(RecipeAttributionEntity)
-      .remove(recipeToDelete.recipeAttribution)
-    await this.db
-      .getRepository(RecipeAttributionEntity)
-      .remove(recipeToDelete.recipeAttribution.attributionSocialMedia)
-
-    return deletedRecipe
+    return attributions
   }
 
   public async findAllRecipes() {
-    // console.log('this.context', this.context)
+    const recipes = await this.db.getRepository(RecipeEntity).find()
+    console.log('recipes', recipes);
 
-    const recipes = await this.db.getRepository(RecipeAttributionEntity).find({
-      relations: ['recipes','attributionSocialMedia']
-    })
-    // This returns the attributes with a list of recipes and the social media attributions which is basically what the first query does
-    // const recipes = await this.db
-    //   .getRepository(RecipeAttributionEntity)
-    //   .createQueryBuilder('recAtt')
-    //   .leftJoinAndSelect('recAtt.recipes','recipe')
-    //   .leftJoinAndSelect('recAtt.attributionSocialMedia','attSocMed').getMany()
-    // N.B. This returns recipe_attribution, recipe, & attribution_social_media as a flatten object
-    // const recipes = await this.db
-    //   .getRepository(RecipeAttributionEntity).query('SELECT * FROM ((recipe_attribution INNER JOIN recipe ON recipe_attribution.id = recipe."recipeAttributionId") INNER JOIN attribution_social_media ON recipe_attribution."attributionSocialMediaId" = attribution_social_media.id)')
-    console.log('recipes', recipes)
 
     return recipes
   }
@@ -122,5 +100,23 @@ export default class RecipeAPI implements IRecipeAPI {
     const savedRecipe = await this.db.getRepository(RecipeEntity).save(recipe)
 
     return savedRecipe
+  }
+
+  public async deleteRecipe(title: string): Promise<any> {
+    const recipeToDelete: any = await this.db
+      .getRepository(RecipeEntity)
+      .findOne(title)
+
+    const deletedRecipe = await this.db
+      .getRepository(RecipeEntity)
+      .remove(recipeToDelete)
+    await this.db
+      .getRepository(RecipeAttributionEntity)
+      .remove(recipeToDelete.recipeAttribution)
+    await this.db
+      .getRepository(RecipeAttributionEntity)
+      .remove(recipeToDelete.recipeAttribution.attributionSocialMedia)
+
+    return deletedRecipe
   }
 }

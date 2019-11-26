@@ -1,6 +1,10 @@
 // TYPES
 import { RecipeInput, Recipe } from '../types'
 import { IResolverContext } from '../../types'
+import { RecipeAttribution } from '../types'
+
+// Resolver args
+// fieldName: (parent, args, context, info) => data;
 
 export default {
   Query: {
@@ -14,9 +18,9 @@ export default {
       } : IResolverContext
     ): Promise<Array<Recipe>> => {
       // TODO - add auth for recipe authors
-      // log.info('Finding all recipes')
+      log.info('Finding all recipes')
       const recipes = await dataSources.recipeAPI.findAllRecipes()
-      // log.info('Found all recipes')
+      log.info('Found all recipes')
       return recipes
     }
   },
@@ -51,5 +55,21 @@ export default {
       log.info('Recipe created')
       return deletedRecipe
     },
+  },
+  Recipe: {
+    recipeAttribution: async (
+      parent: any,
+      __: any,
+      {
+        auth,
+        dataSources,
+        log
+      } : IResolverContext
+    ): Promise<RecipeAttribution> => {
+      log.info('Finding recipe attributions.', parent)
+      const attributions = await dataSources.recipeAPI.findAttribution()
+      log.info('Attributions founds.')
+      return attributions
+    }
   }
 }
