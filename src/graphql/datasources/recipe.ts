@@ -48,11 +48,20 @@ export default class RecipeAPI implements IRecipeAPI {
   }
 
   public async findAllRecipes() {
-    console.log('this.context', this.context)
+    // console.log('this.context', this.context)
 
-    const recipes = await this.db.getRepository(RecipeEntity).find({
-      relations: ['recipeAttribution', 'attributionSocialMedia']
+    const recipes = await this.db.getRepository(RecipeAttributionEntity).find({
+      relations: ['recipes','attributionSocialMedia']
     })
+    // This returns the attributes with a list of recipes and the social media attributions which is basically what the first query does
+    // const recipes = await this.db
+    //   .getRepository(RecipeAttributionEntity)
+    //   .createQueryBuilder('recAtt')
+    //   .leftJoinAndSelect('recAtt.recipes','recipe')
+    //   .leftJoinAndSelect('recAtt.attributionSocialMedia','attSocMed').getMany()
+    // N.B. This returns recipe_attribution, recipe, & attribution_social_media as a flatten object
+    // const recipes = await this.db
+    //   .getRepository(RecipeAttributionEntity).query('SELECT * FROM ((recipe_attribution INNER JOIN recipe ON recipe_attribution.id = recipe."recipeAttributionId") INNER JOIN attribution_social_media ON recipe_attribution."attributionSocialMediaId" = attribution_social_media.id)')
     console.log('recipes', recipes)
 
     return recipes
