@@ -17,14 +17,6 @@ export type Article = {
   type: Scalars['String'],
 };
 
-export type AttributionSocialMedia = {
-   __typename?: 'AttributionSocialMedia',
-  id?: Maybe<Scalars['ID']>,
-  facebook?: Maybe<Scalars['String']>,
-  instagram?: Maybe<Scalars['String']>,
-  twitter?: Maybe<Scalars['String']>,
-};
-
 export enum CostEnum {
   Budget = 'Budget',
   Moderate = 'Moderate',
@@ -121,13 +113,15 @@ export type RecipeAttribution = {
   name: Scalars['String'],
   website?: Maybe<Scalars['String']>,
   email: Scalars['String'],
-  attributionSocialMedia: AttributionSocialMedia,
+  facebook?: Maybe<Scalars['String']>,
+  instagram?: Maybe<Scalars['String']>,
+  twitter?: Maybe<Scalars['String']>,
 };
 
 export type RecipeInput = {
   title: Scalars['String'],
-  name: Scalars['String'],
   email: Scalars['String'],
+  name: Scalars['String'],
   ingredients: Scalars['String'],
   method: Scalars['String'],
   hashtags: Scalars['String'],

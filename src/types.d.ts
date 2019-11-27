@@ -75,7 +75,7 @@ export interface IModifiedObject {
 
 // DATASOURCES
 export interface IRecipeAPI extends DataSource {
-  findAttribution(): Promise<RecipeAttribution | undefined>
+  findAttribution(arg0: number): Promise<RecipeAttribution | undefined>
   findAllRecipes(): Promise<Array<Recipe>>
   createRecipe(args: any): Promise<Recipe>
   deleteRecipe(arg0: string): Promise<Recipe>

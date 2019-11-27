@@ -22,8 +22,8 @@ export default gql`
 
   input RecipeInput {
     title: String!
-    name: String!
     email: String!
+    name: String!
     ingredients: String!
     method: String!
     hashtags: String!
@@ -60,11 +60,6 @@ export default gql`
     name: String!
     website: String
     email: String!
-    attributionSocialMedia: AttributionSocialMedia!
-  }
-
-  type AttributionSocialMedia {
-    id: ID
     facebook: String
     instagram: String
     twitter: String

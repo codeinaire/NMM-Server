@@ -1,6 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, OneToMany, JoinColumn } from "typeorm"
-import Recipe from './Recipe';
-import AttributionSocialMedia from './AttributionSocialMedia';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany
+} from 'typeorm'
+import Recipe from './Recipe'
 
 @Entity()
 export default class RecipeAttribution {
@@ -16,15 +22,20 @@ export default class RecipeAttribution {
   @Column()
   email: string
 
-  @OneToMany(() => Recipe, recipe => recipe.recipeAttribution)
+  @OneToMany(
+    () => Recipe,
+    recipe => recipe.recipeAttribution
+  )
   recipes: Recipe[]
 
-  @OneToOne(() => AttributionSocialMedia, attributionSocialMedia => attributionSocialMedia.recipeAttribution, {
-    cascade: true,
-    onDelete: 'CASCADE'
-  })
-  @JoinColumn()
-  attributionSocialMedia: AttributionSocialMedia
+  @Column()
+  facebook: string
+
+  @Column()
+  instragram: string
+
+  @Column()
+  twitter: string
 
   @CreateDateColumn()
   createdAt: Date

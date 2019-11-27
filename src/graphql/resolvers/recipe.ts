@@ -2,6 +2,8 @@
 import { RecipeInput, Recipe } from '../types'
 import { IResolverContext } from '../../types'
 import { RecipeAttribution } from '../types'
+import RecipeEntity from '../../db/entities/Recipe';
+
 
 // Resolver args
 // fieldName: (parent, args, context, info) => data;
@@ -58,7 +60,7 @@ export default {
   },
   Recipe: {
     recipeAttribution: async (
-      parent: any,
+      { recipeAttributionId }: RecipeEntity,
       __: any,
       {
         auth,
@@ -66,9 +68,9 @@ export default {
         log
       } : IResolverContext
     ): Promise<RecipeAttribution> => {
-      log.info('Finding recipe attributions.', parent)
-      const attributions = await dataSources.recipeAPI.findAttribution()
-      log.info('Attributions founds.')
+      log.info('Finding recipe attributions.')
+      const attributions = await dataSources.recipeAPI.findAttribution(recipeAttributionId)
+      log.info('Attributions found.')
       return attributions
     }
   }

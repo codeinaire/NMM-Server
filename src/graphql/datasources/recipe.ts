@@ -2,7 +2,6 @@ import { injectable, inject } from 'inversify'
 // DB Entities
 import RecipeEntity from '../../db/entities/Recipe'
 import RecipeAttributionEntity from '../../db/entities/RecipeAttribution'
-import AttributionSocialMediaEntity from '../../db/entities/AttributionSocialMedia'
 // TYPES
 import { RecipeInput } from '../types'
 import { TYPES } from '../../inversifyTypes'
@@ -29,9 +28,9 @@ export default class RecipeAPI implements IRecipeAPI {
     this.db = await this.database.getDatabase()
   }
 
-  public async findAttribution() {
+  public async findAttribution(recipeAttributionId: number) {
     const attributions = await this.db.getRepository(RecipeAttributionEntity).findOne({
-      relations: ['attributionSocialMedia']
+      id: recipeAttributionId
     })
 
     return attributions
@@ -39,8 +38,6 @@ export default class RecipeAPI implements IRecipeAPI {
 
   public async findAllRecipes() {
     const recipes = await this.db.getRepository(RecipeEntity).find()
-    console.log('recipes', recipes);
-
 
     return recipes
   }
@@ -76,8 +73,7 @@ export default class RecipeAPI implements IRecipeAPI {
     const foundChef = await this.db
       .getRepository(RecipeAttributionEntity)
       .findOne({
-        where: { name },
-        relations: ['attributionSocialMedia']
+        where: { name }
       })
 
     if (foundChef) {
@@ -87,13 +83,10 @@ export default class RecipeAPI implements IRecipeAPI {
       recipeAttribution.name = name
       recipeAttribution.email = email
       recipeAttribution.website = website!
+      recipeAttribution.facebook = facebook!
+      recipeAttribution.instragram = instagram!
+      recipeAttribution.twitter = twitter!
 
-      let attributionSocialMedia = new AttributionSocialMediaEntity()
-      attributionSocialMedia.facebook = facebook!
-      attributionSocialMedia.instragram = instagram!
-      attributionSocialMedia.twitter = twitter!
-
-      recipeAttribution.attributionSocialMedia = attributionSocialMedia
       recipe.recipeAttribution = recipeAttribution
     }
 
@@ -113,9 +106,6 @@ export default class RecipeAPI implements IRecipeAPI {
     await this.db
       .getRepository(RecipeAttributionEntity)
       .remove(recipeToDelete.recipeAttribution)
-    await this.db
-      .getRepository(RecipeAttributionEntity)
-      .remove(recipeToDelete.recipeAttribution.attributionSocialMedia)
 
     return deletedRecipe
   }
