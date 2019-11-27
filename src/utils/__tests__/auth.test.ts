@@ -1,9 +1,7 @@
 import 'reflect-metadata'
 import createJWKSMock from 'mock-jwks'
 import { Authorisation } from '../Authorisation'
-
-import { APIGatewayProxyEvent } from 'aws-lambda'
-import { IModifiedObject } from '../../types'
+import { customMockedEvent } from '../../testUtils'
 
 const TOKEN_ISSUER = 'https://test-app.com/'
 
@@ -48,7 +46,7 @@ describe('Authorisation class', () => {
 
       await expect(
         authorisation.checkScopesAndResolve(mockedEvent, ['correct', 'scope'])
-      ).resolves.toEqual(true)
+      ).resolves.toEqual('test-user')
       await jwksMock.stop()
     })
   })
@@ -149,57 +147,3 @@ describe('Authorisation class', () => {
     })
   })
 })
-
-function customMockedEvent(
-  modificationObject: IModifiedObject
-): APIGatewayProxyEvent {
-  return {
-    body: '{"body": "mock body"}',
-    headers: {
-      mockHeaders: 'mock header',
-      authorization: `${modificationObject.authorization}`
-    },
-    httpMethod: 'POST',
-    multiValueHeaders: {
-      authorization: ['invalid token']
-    },
-    isBase64Encoded: false,
-    multiValueQueryStringParameters: null,
-    path: '/nmm-app',
-    pathParameters: null,
-    queryStringParameters: null,
-    requestContext: {
-      accountId: 'offlineContext_accountId',
-      apiId: 'offlineContext_apiId',
-      authorizer: {
-        principalId: 'offlineContext_authorizer_principalId',
-        claims: [Object]
-      },
-      httpMethod: 'POST',
-      identity: {
-        accessKey: 'test string',
-        accountId: 'test string',
-        apiKey: 'test string',
-        apiKeyId: 'test string',
-        caller: 'test string',
-        cognitoAuthenticationProvider: 'test string',
-        cognitoAuthenticationType: 'test string',
-        cognitoIdentityId: 'test string',
-        cognitoIdentityPoolId: 'test string',
-        principalOrgId: 'test string',
-        sourceIp: 'test string',
-        user: 'test string',
-        userAgent: 'test string',
-        userArn: 'test string'
-      },
-      path: 'test path',
-      requestId: 'offlineContext_requestId_ck1lg5mc8000j3aeh0hjq82sm',
-      requestTimeEpoch: 1570756990015,
-      resourceId: 'offlineContext_resourceId',
-      resourcePath: '/nmm-app',
-      stage: 'dev'
-    },
-    resource: '/nmm-app',
-    stageVariables: null
-  }
-}

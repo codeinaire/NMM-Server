@@ -6,11 +6,7 @@ import {
   getConnectionManager
 } from 'typeorm'
 import { injectable } from 'inversify'
-
-// ENTITIES
-import Recipe from './entities/Recipe'
-import RecipeAttribution from './entities/RecipeAttribution'
-import UserProfile from './entities/UserProfile'
+import { production, test, development } from './dbConnectionConfig'
 
 import { IDatabase } from '../types'
 
@@ -27,37 +23,28 @@ export class Database implements IDatabase {
   }
 
   private async getConnection(): Promise<Connection> {
-    const CONNECTION_NAME = 'default'
+    const currentEnv =
+        process.env.NODE_ENV == 'production'
+          ? 'production'
+          : process.env.NODE_ENV == 'test'
+          ? 'test'
+          : 'development'
+    const CONNECTION_NAME = currentEnv == 'development' ? 'default' : 'test'
 
     if (this.connectionManager.has(CONNECTION_NAME)) {
-      console.info('Database.getConnection() - using existing connection ...')
+      // TODO - maybe switch console.info out for Logger
+      console.info(`Using existing DB connection for ${currentEnv}`)
       this.connection = await this.connectionManager.get(CONNECTION_NAME)
 
       if (!this.connection.isConnected) {
         this.connection = await this.connection.connect()
       }
     } else {
-      console.info('Database.getConnection() - creating connection ...')
+      console.info(`Creating DB connection for ${currentEnv}`)
 
-      const connectionOptions: ConnectionOptions = {
-        name: 'default',
-        type: 'postgres',
-        port: 5432,
-        synchronize: true,
-        logging: 'all',
-        host: process.env.DB_HOST,
-        username: process.env.DB_USERNAME,
-        database: process.env.DB_NAME,
-        password: process.env.DB_PASSWORD,
-        entities: [Recipe, RecipeAttribution, UserProfile]
-      }
-
-      // Don't need a pwd locally
-      if (process.env.DB_PASSWORD) {
-        Object.assign(connectionOptions, {
-          password: process.env.DB_PASSWORD
-        })
-      }
+      let connectionOptions: ConnectionOptions = development
+      if (currentEnv == 'production') connectionOptions = production
+      if (currentEnv == 'test') connectionOptions = test
 
       this.connection = await createConnection(connectionOptions)
     }

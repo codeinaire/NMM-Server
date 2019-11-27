@@ -14,8 +14,8 @@ export default {
           event,
           ['profile']
         )
-        log.info(`Authorisation of user ${id} successful!`)
-        const userProfile = await dataSources.userProfileAPI.findUserProfile(id)
+        log.info(`Authorisation of user ${verifiedId} successful!`)
+        const userProfile = await dataSources.userProfileAPI.findUserProfile(verifiedId)
         return userProfile
       } catch (error) {
         log.error(`Couldn't find user: ${error}`)
