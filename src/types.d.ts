@@ -2,7 +2,13 @@ import { Connection, ConnectionManager } from 'typeorm'
 import { ApolloServer } from 'apollo-server-lambda'
 import { DataSource } from 'apollo-datasource'
 import { APIGatewayProxyEvent, Context } from 'aws-lambda'
-import { RecipeInput, Recipe, UserProfile, UserProfileInput, RecipeAttribution } from './graphql/types'
+import {
+  RecipeInput,
+  Recipe,
+  UserProfile,
+  UserProfileInput,
+  RecipeAttribution
+} from './graphql/types'
 import { LambdaLog } from 'lambda-log'
 import { JwksClient } from 'jwks-rsa'
 

@@ -1,9 +1,8 @@
 // TYPES
 import { RecipeInput, Recipe } from '../types'
 import { IResolverContext } from '../../types'
-import { RecipeAttribution } from '../types'
 import RecipeEntity from '../../db/entities/Recipe';
-
+import { RecipeAttribution } from '../types'
 
 // Resolver args
 // fieldName: (parent, args, context, info) => data;
