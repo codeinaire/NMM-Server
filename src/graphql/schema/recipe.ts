@@ -1,7 +1,7 @@
 const { gql } = require('apollo-server-lambda');
 
 export default gql`
-   enum DifficultyEnum {
+  enum DifficultyEnum {
     Easy
     Medium
     Hard
@@ -20,9 +20,27 @@ export default gql`
     Snack
   }
 
+  input RecipeInput {
+    title: String!
+    email: String!
+    name: String!
+    ingredients: String!
+    method: String!
+    hashtags: String!
+    difficulty: DifficultyEnum!
+    cost: CostEnum!
+    mealType: MealTypeEnum!
+    lowResolution: String!
+    standardResolution: String!
+    website: String
+    facebook: String
+    instagram: String
+    twitter: String
+  }
+
   type Recipe {
     "**LIST && SHOW**"
-    id: ID!
+    id: ID
     title: String!
     difficulty: DifficultyEnum!
     cost: CostEnum!
@@ -31,40 +49,19 @@ export default gql`
     "**LIST**"
     lowResolution: String!
     "**SHOW**"
-    attribution: Attribution!
+    recipeAttribution: RecipeAttribution!
     ingredients: String!
     method: String!
     standardResolution: String!
   }
 
-  type Attribution {
+  type RecipeAttribution {
+    id: ID
     name: String!
-    website: String!
+    website: String
     email: String!
-    socialMedia: AttributionSocialMedia
-  }
-
-  type AttributionSocialMedia {
     facebook: String
     instagram: String
     twitter: String
-  }
-
-  input RecipeInput {
-    title: String!
-    name: String!
-    email: String!
-    website: String!
-    facebook: String
-    instagram: String
-    twitter: String
-    ingredients: String!
-    method: String!
-    hashtags: String!
-    difficulty: DifficultyEnum!
-    cost: CostEnum!
-    mealType: MealTypeEnum!
-    lowResolution: String!
-    standardResolution: String!
   }
 `

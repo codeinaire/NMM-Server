@@ -1,44 +1,77 @@
 // TYPES
 import { RecipeInput, Recipe } from '../types'
-// import { IRecipeAPI } from '../../types'
+import { IResolverContext } from '../../types'
+import { RecipeAttribution } from '../types'
+import RecipeEntity from '../../db/entities/Recipe';
 
-// TODO - figure out why DataSources<IRecipeAPI> can't find any methods
-// on the abstract class
+
+// Resolver args
+// fieldName: (parent, args, context, info) => data;
+
 export default {
   Query: {
     recipes: async (
       _: any,
       __: any,
       {
-        dataSources: {
-          recipeAPI
-        }
-      }: { dataSources: { recipeAPI: any}}
+        auth,
+        dataSources,
+        log
+      } : IResolverContext
     ): Promise<Array<Recipe>> => {
-      console.log('dataSources', recipeAPI );
-
-      recipeAPI.context.log.info('Finding all recipes')
-      const recipes = await recipeAPI.findAllRecipes()
-      recipeAPI.context.log.info('Found all recipes')
+      // TODO - add auth for recipe authors
+      log.info('Finding all recipes')
+      const recipes = await dataSources.recipeAPI.findAllRecipes()
+      log.info('Found all recipes')
       return recipes
     }
   },
   Mutation: {
     createRecipe: async (
       _: any,
-      { recipe }: { recipe: RecipeInput },
+      { recipe }: { recipe:RecipeInput },
       {
-        dataSources: {
-          recipeAPI
-        }
-      }: { dataSources: { recipeAPI: any}}
+        auth,
+        dataSources,
+        log
+      } : IResolverContext
     ): Promise<Recipe> => {
-      console.log('dataSources', recipe);
+      console.log('recipe', recipe);
 
-      recipeAPI.context.log.info('Creating recipe')
-      const createdRecipe = await recipeAPI.createRecipe(recipe)
-      recipeAPI.context.log.info('Recipe created')
+      log.info('Creating recipe')
+      const createdRecipe = await dataSources.recipeAPI.createRecipe(recipe)
+      log.info('Recipe created')
       return createdRecipe
+    },
+    deleteRecipe: async (
+      _: any,
+      title: string,
+      {
+        auth,
+        dataSources,
+        log
+      } : IResolverContext
+    ): Promise<Recipe> => {
+      log.info('Creating recipe')
+      const deletedRecipe = await dataSources.recipeAPI.deleteRecipe(title)
+      log.info('Recipe created')
+      return deletedRecipe
+    },
+  },
+  Recipe: {
+    recipeAttribution: async (
+      { recipeAttributionId }: RecipeEntity,
+      __: any,
+      {
+        auth,
+        dataSources,
+        log
+      } : IResolverContext
+    ): Promise<RecipeAttribution> => {
+      log.info('Finding recipe attributions.')
+      const attributions = await dataSources.recipeAPI.findAttribution(recipeAttributionId)
+      log.info('Attributions found.')
+      return attributions
     }
   }
 }
