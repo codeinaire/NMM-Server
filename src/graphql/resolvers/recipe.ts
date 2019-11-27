@@ -4,9 +4,6 @@ import { IResolverContext } from '../../types'
 import RecipeEntity from '../../db/entities/Recipe';
 import { RecipeAttribution } from '../types'
 
-// Resolver args
-// fieldName: (parent, args, context, info) => data;
-
 export default {
   Query: {
     recipes: async (

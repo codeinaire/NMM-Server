@@ -45,16 +45,16 @@ export default class UserProfileAPI implements IUserProfileAPI {
     motivations,
     challengeGoals,
     username,
-    bio,
-    profilePic
+    bio = 'Fill in your bio for more points!',
+    profilePic = 'https://res.cloudinary.com/codeinaire/image/upload/v1574140567/nmm-recipes/up8fe19f1ikxauczdhhs.jpg'
   }: UserProfileInput) {
     let userProfile = new UserProfileEntity()
     userProfile.id = id as string
     userProfile.motivations = motivations
     userProfile.challengeGoals = challengeGoals
     userProfile.username = username
-    userProfile.bio = bio as string
-    userProfile.profilePic = profilePic as string
+    userProfile.bio = bio!
+    userProfile.profilePic = profilePic!
 
     return userProfile
   }
