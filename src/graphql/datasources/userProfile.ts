@@ -53,9 +53,13 @@ export default class UserProfileAPI implements IUserProfileAPI {
     userProfile.motivations = motivations
     userProfile.challengeGoals = challengeGoals
     userProfile.username = username
+    // TODO - create helper function to calculate total pointns
+    userProfile.totalPoints = 100
     userProfile.bio = bio!
     userProfile.profilePic = profilePic!
 
-    return userProfile
+    const savedUserProfile = await this.db.getRepository(UserProfileEntity).save(userProfile)
+
+    return savedUserProfile
   }
 }

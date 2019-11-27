@@ -25,7 +25,7 @@ export default {
   Mutation: {
     createRecipe: async (
       _: any,
-      { recipe }: { recipe:RecipeInput },
+      { recipe }: { recipe: RecipeInput },
       {
         auth,
         dataSources,

@@ -15,7 +15,7 @@ export default {
           ['profile']
         )
         log.info(`Authorisation of user ${id} successful!`)
-        const userProfile = await dataSources.userProfileAPI.findUserProfile(verifiedId)
+        const userProfile = await dataSources.userProfileAPI.findUserProfile(id)
         return userProfile
       } catch (error) {
         log.error(`Couldn't find user: ${error}`)
@@ -30,15 +30,13 @@ export default {
       { auth, dataSources, log, event }: IResolverContext
     ): Promise<UserProfile> => {
       try {
-        console.log('userProfileInput', userProfile);
-
         log.info(`Authorising user ${userProfile.id}...`)
-        // const verifiedId = await auth.checkScopesAndResolve(
-        //   event,
-        //   ['profile']
-        // )
+        const verifiedId = await auth.checkScopesAndResolve(
+          event,
+          ['profile']
+        )
         log.info(`Authorisation of user ${userProfile.id} successful!`)
-        // log.info(`Creating profile for user ${verifiedId}...`)
+        log.info(`Creating profile for user ${verifiedId}...`)
         const createdUserProfile = await dataSources.userProfileAPI.createUserProfile(userProfile)
         log.info(`User profile for ${createdUserProfile.id} created.`)
         return createdUserProfile
