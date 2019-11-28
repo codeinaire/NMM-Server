@@ -22,7 +22,7 @@ export interface IDatabase {
 
 export interface ILogger {
   getLogger(): LambdaLog
-  createContext(arg0: APIGatewayProxyEvent, arg1: Context): void
+  createContext(arg0?: APIGatewayProxyEvent, arg1?: Context): void
 }
 
 export interface IResolverContext {
