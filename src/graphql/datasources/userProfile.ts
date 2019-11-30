@@ -29,8 +29,7 @@ export default class UserProfileAPI implements IUserProfileAPI {
   }
 
   public async findUserProfile(verifiedId: string) {
-    console.log('this.context',this.context)
-
+    this.context
     const userProfile = await this.db.getRepository(UserProfileEntity).findOne({
       where: {
         id: verifiedId
@@ -45,17 +44,25 @@ export default class UserProfileAPI implements IUserProfileAPI {
     motivations,
     challengeGoals,
     username,
-    bio,
-    profilePic
+    bio = 'Fill in your bio for more points!',
+    profilePic = 'https://res.cloudinary.com/codeinaire/image/upload/v1574140567/nmm-recipes/up8fe19f1ikxauczdhhs.jpg'
   }: UserProfileInput) {
     let userProfile = new UserProfileEntity()
     userProfile.id = id as string
     userProfile.motivations = motivations
     userProfile.challengeGoals = challengeGoals
     userProfile.username = username
-    userProfile.bio = bio as string
-    userProfile.profilePic = profilePic as string
+    // TODO - create helper function to calculate total pointns
+    userProfile.totalPoints = 100
+    userProfile.bio = bio!
+    userProfile.profilePic = profilePic!
 
-    return userProfile
+    const savedUserProfile = await this.db.getRepository(UserProfileEntity).save(userProfile)
+
+    return savedUserProfile
+  }
+
+  public async closeDbConnection() {
+    await this.db.close()
   }
 }

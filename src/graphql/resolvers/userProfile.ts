@@ -1,5 +1,5 @@
 import { IResolverContext } from '../../types'
-import { UserProfile } from '../types'
+import { UserProfile, UserProfileInput } from '../types';
 
 export default {
   Query: {
@@ -14,8 +14,8 @@ export default {
           event,
           ['profile']
         )
-        log.info(`Authorisation of user ${id} successful!`)
-        const userProfile = await dataSources.userAPI.findUserProfile(verifiedId)
+        log.info(`Authorisation of user ${verifiedId} successful!`)
+        const userProfile = await dataSources.userProfileAPI.findUserProfile(verifiedId)
         return userProfile
       } catch (error) {
         log.error(`Couldn't find user: ${error}`)
@@ -26,19 +26,24 @@ export default {
   Mutation: {
     createProfile: async (
       _: any,
-      { id }: { id: string },
+      { userProfile }: { userProfile: UserProfileInput },
       { auth, dataSources, log, event }: IResolverContext
     ): Promise<UserProfile> => {
-      const verifiedId = await auth.checkScopesAndResolve(
-        event,
-        ['profile']
-      )
-      console.log('This is USER RESOLVER', verifiedId)
-      const result = await dataSources.userAPI.createUserProfile(
-        verifiedId
-      )
-      console.log('This is RESULT', result)
-      return result
+      try {
+        log.info(`Authorising user ${userProfile.id}...`)
+        const verifiedId = await auth.checkScopesAndResolve(
+          event,
+          ['profile']
+        )
+        log.info(`Authorisation of user ${userProfile.id} successful!`)
+        log.info(`Creating profile for user ${verifiedId}...`)
+        const createdUserProfile = await dataSources.userProfileAPI.createUserProfile(userProfile)
+        log.info(`User profile for ${createdUserProfile.id} created.`)
+        return createdUserProfile
+      } catch (error) {
+        log.error(`Couldn't find user: ${error}`)
+        return error
+      }
     }
   }
 }

@@ -1,12 +1,8 @@
 // TYPES
 import { RecipeInput, Recipe } from '../types'
 import { IResolverContext } from '../../types'
-import { RecipeAttribution } from '../types'
 import RecipeEntity from '../../db/entities/Recipe';
-
-
-// Resolver args
-// fieldName: (parent, args, context, info) => data;
+import { RecipeAttribution } from '../types'
 
 export default {
   Query: {
@@ -29,7 +25,7 @@ export default {
   Mutation: {
     createRecipe: async (
       _: any,
-      { recipe }: { recipe:RecipeInput },
+      { recipe }: { recipe: RecipeInput },
       {
         auth,
         dataSources,

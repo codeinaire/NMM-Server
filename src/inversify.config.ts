@@ -4,7 +4,7 @@ import RecipeAPI from './graphql/datasources/recipe'
 import UserProfileAPI from './graphql/datasources/userProfile'
 import { Database } from './db'
 import { Server } from './server'
-import { Logger } from './utils/Logger'
+import Logger from './utils/Logger'
 import { Authorisation } from './utils/Authorisation'
 
 import { IRecipeAPI, IUserProfileAPI, IServer, IDatabase, ILogger, IAuthorisation } from './types'

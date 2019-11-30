@@ -1,33 +1,13 @@
 import 'reflect-metadata'
 import createJWKSMock from 'mock-jwks'
-import { Authorisation } from '../Authorisation'
 
-import { APIGatewayProxyEvent } from 'aws-lambda'
-import { IModifiedObject } from '../../types'
+import { Authorisation } from '../Authorisation'
+import { customMockedEvent, setUpTakeDownEnvs } from '../../testUtils'
 
 const TOKEN_ISSUER = 'https://test-app.com/'
 
 describe('Authorisation class', () => {
-  const ENVS = {
-    audience: '',
-    issuer: '',
-    jwsUri: ''
-  }
-  beforeAll(() => {
-    ENVS.audience = process.env.AUDIENCE || ''
-    ENVS.issuer = process.env.TOKEN_ISSUER || ''
-    ENVS.jwsUri = process.env.JWS_URI || ''
-
-    process.env.JWS_URI = 'https://test-app.com/.well-known/jwks.json'
-    process.env.TOKEN_ISSUER = 'https://test-app.com/'
-    process.env.AUDIENCE = 'https://test-app.com/test/'
-  })
-
-  afterAll(() => {
-    process.env.AUDIENCE = ENVS.audience
-    process.env.TOKEN_ISSUER = ENVS.issuer
-    process.env.JWS_URI = ENVS.jwsUri
-  })
+  setUpTakeDownEnvs()
 
   describe('[Auth.checkScopesAndResolve()] is given an event with a [VALID] Bearer authorization token & [VALID & CORRECT] scope', () => {
     it('Returned - true', async () => {
@@ -48,7 +28,7 @@ describe('Authorisation class', () => {
 
       await expect(
         authorisation.checkScopesAndResolve(mockedEvent, ['correct', 'scope'])
-      ).resolves.toEqual(true)
+      ).resolves.toEqual('test-user')
       await jwksMock.stop()
     })
   })
@@ -149,57 +129,3 @@ describe('Authorisation class', () => {
     })
   })
 })
-
-function customMockedEvent(
-  modificationObject: IModifiedObject
-): APIGatewayProxyEvent {
-  return {
-    body: '{"body": "mock body"}',
-    headers: {
-      mockHeaders: 'mock header',
-      authorization: `${modificationObject.authorization}`
-    },
-    httpMethod: 'POST',
-    multiValueHeaders: {
-      authorization: ['invalid token']
-    },
-    isBase64Encoded: false,
-    multiValueQueryStringParameters: null,
-    path: '/nmm-app',
-    pathParameters: null,
-    queryStringParameters: null,
-    requestContext: {
-      accountId: 'offlineContext_accountId',
-      apiId: 'offlineContext_apiId',
-      authorizer: {
-        principalId: 'offlineContext_authorizer_principalId',
-        claims: [Object]
-      },
-      httpMethod: 'POST',
-      identity: {
-        accessKey: 'test string',
-        accountId: 'test string',
-        apiKey: 'test string',
-        apiKeyId: 'test string',
-        caller: 'test string',
-        cognitoAuthenticationProvider: 'test string',
-        cognitoAuthenticationType: 'test string',
-        cognitoIdentityId: 'test string',
-        cognitoIdentityPoolId: 'test string',
-        principalOrgId: 'test string',
-        sourceIp: 'test string',
-        user: 'test string',
-        userAgent: 'test string',
-        userArn: 'test string'
-      },
-      path: 'test path',
-      requestId: 'offlineContext_requestId_ck1lg5mc8000j3aeh0hjq82sm',
-      requestTimeEpoch: 1570756990015,
-      resourceId: 'offlineContext_resourceId',
-      resourcePath: '/nmm-app',
-      stage: 'dev'
-    },
-    resource: '/nmm-app',
-    stageVariables: null
-  }
-}

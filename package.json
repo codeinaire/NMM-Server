@@ -9,7 +9,7 @@
     "lint": "eslint --ext .ts --ignore-path .gitignore .",
     "start": "node .webpack/service/src/main",
     "seed": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed",
-    "test": "jest",
+    "test": "NODE_ENV=test jest",
     "typeorm": "ts-node ./node_modules/.bin/typeorm",
     "gen-ts-types": "graphql-codegen"
   },

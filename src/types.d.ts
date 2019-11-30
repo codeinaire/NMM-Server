@@ -1,11 +1,23 @@
 import { Connection, ConnectionManager } from 'typeorm'
 import { ApolloServer } from 'apollo-server-lambda'
-import { DataSource } from 'apollo-datasource'
+import { DataSource, DataSourceConfig } from 'apollo-datasource'
 import { APIGatewayProxyEvent, Context } from 'aws-lambda'
-import { RecipeInput, Recipe, UserProfile, UserProfileInput, RecipeAttribution } from './graphql/types'
+import {
+  RecipeInput,
+  Recipe,
+  UserProfile,
+  UserProfileInput,
+  RecipeAttribution
+} from './graphql/types'
 import { LambdaLog } from 'lambda-log'
 import { JwksClient } from 'jwks-rsa'
 
+export interface IEnvs {
+  audience: string
+  issuer: string
+  jwsUri: string
+  silentLogger: boolean
+}
 export interface IServer {
   getApolloInstance(): ApolloServer
 }
@@ -16,7 +28,7 @@ export interface IDatabase {
 
 export interface ILogger {
   getLogger(): LambdaLog
-  createContext(arg0: APIGatewayProxyEvent, arg1: Context): void
+  createContext(arg0?: APIGatewayProxyEvent, arg1?: Context): void
 }
 
 export interface IResolverContext {
@@ -84,4 +96,6 @@ export interface IRecipeAPI extends DataSource {
 export interface IUserProfileAPI extends DataSource {
   createUserProfile(arg0: UserProfileInput): Promise<UserProfile>
   findUserProfile(arg0: string): Promise<UserProfile | undefined>
+  initialize(arg0?: DataSourceConfig<any>): void
+  closeDbConnection(): void
 }
