@@ -1,31 +1,13 @@
 import 'reflect-metadata'
 import createJWKSMock from 'mock-jwks'
+
 import { Authorisation } from '../Authorisation'
-import { customMockedEvent } from '../../testUtils'
+import { customMockedEvent, setUpTakeDownEnvs } from '../../testUtils'
 
 const TOKEN_ISSUER = 'https://test-app.com/'
 
 describe('Authorisation class', () => {
-  const ENVS = {
-    audience: '',
-    issuer: '',
-    jwsUri: ''
-  }
-  beforeAll(() => {
-    ENVS.audience = process.env.AUDIENCE || ''
-    ENVS.issuer = process.env.TOKEN_ISSUER || ''
-    ENVS.jwsUri = process.env.JWS_URI || ''
-
-    process.env.JWS_URI = 'https://test-app.com/.well-known/jwks.json'
-    process.env.TOKEN_ISSUER = 'https://test-app.com/'
-    process.env.AUDIENCE = 'https://test-app.com/test/'
-  })
-
-  afterAll(() => {
-    process.env.AUDIENCE = ENVS.audience
-    process.env.TOKEN_ISSUER = ENVS.issuer
-    process.env.JWS_URI = ENVS.jwsUri
-  })
+  setUpTakeDownEnvs()
 
   describe('[Auth.checkScopesAndResolve()] is given an event with a [VALID] Bearer authorization token & [VALID & CORRECT] scope', () => {
     it('Returned - true', async () => {

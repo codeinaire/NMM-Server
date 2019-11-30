@@ -29,8 +29,7 @@ export default class UserProfileAPI implements IUserProfileAPI {
   }
 
   public async findUserProfile(verifiedId: string) {
-    console.log('this.context',this.context)
-
+    this.context
     const userProfile = await this.db.getRepository(UserProfileEntity).findOne({
       where: {
         id: verifiedId
@@ -61,5 +60,9 @@ export default class UserProfileAPI implements IUserProfileAPI {
     const savedUserProfile = await this.db.getRepository(UserProfileEntity).save(userProfile)
 
     return savedUserProfile
+  }
+
+  public async closeDbConnection() {
+    await this.db.close()
   }
 }

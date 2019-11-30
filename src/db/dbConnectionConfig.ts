@@ -19,13 +19,13 @@ export const production: ConnectionOptions = {
 }
 
 export const test: ConnectionOptions = {
-  name: 'default',
+  name: 'test',
   type: 'postgres',
   host: 'localhost',
-  port: 5432,
-  username: 'no-meat-may',
-  password: 'aoeui12345',
-  database: 'no-meat-may',
+  port: 5433,
+  username: 'test-no-meat-may',
+  password: '',
+  database: 'test-no-meat-may',
   synchronize: true,
   logging: false,
   dropSchema: true,

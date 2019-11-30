@@ -5,11 +5,14 @@ import {
   createConnection,
   getConnectionManager
 } from 'typeorm'
-import { injectable } from 'inversify'
+// Dependency injection
+import { injectable, inject } from "inversify"
+import { TYPES } from '../inversifyTypes'
+
 import { production, test, development } from './dbConnectionConfig'
 
-import { IDatabase } from '../types'
-
+import { IDatabase, ILogger } from '../types'
+import { LambdaLog } from 'lambda-log';
 /**
  * Database manager class
  */
@@ -17,30 +20,31 @@ import { IDatabase } from '../types'
 export class Database implements IDatabase {
   private connectionManager: ConnectionManager
   private connection: Connection
+  private readonly _logger: LambdaLog
 
-  constructor() {
+  constructor(@inject(TYPES.Logger) Logger: ILogger) {
+    this._logger = Logger.getLogger()
     this.connectionManager = getConnectionManager()
   }
 
   private async getConnection(): Promise<Connection> {
     const currentEnv =
-        process.env.NODE_ENV == 'production'
-          ? 'production'
-          : process.env.NODE_ENV == 'test'
-          ? 'test'
-          : 'development'
+      process.env.NODE_ENV == 'production'
+        ? 'production'
+        : process.env.NODE_ENV == 'test'
+        ? 'test'
+        : 'development'
     const CONNECTION_NAME = currentEnv == 'development' ? 'default' : 'test'
 
     if (this.connectionManager.has(CONNECTION_NAME)) {
-      // TODO - maybe switch console.info out for Logger
-      console.info(`Using existing DB connection for ${currentEnv}`)
+      this._logger.info(`Using existing DB connection for ${currentEnv}`)
       this.connection = await this.connectionManager.get(CONNECTION_NAME)
 
       if (!this.connection.isConnected) {
         this.connection = await this.connection.connect()
       }
     } else {
-      console.info(`Creating DB connection for ${currentEnv}`)
+      this._logger.info(`Creating DB connection for ${currentEnv}`)
 
       let connectionOptions: ConnectionOptions = development
       if (currentEnv == 'production') connectionOptions = production

@@ -12,13 +12,13 @@ export default class Logger implements ILogger {
 
   public constructor() {
     this.log = log
+    this.log.options.dev = process.env.DEV_LOGGING
+    this.log.options.silent = process.env.SILENT_LOGGING
   }
 
   createContext(event?: APIGatewayProxyEvent, context?: Context) {
-    // this.log.options.meta.requestContext = event.requestContext
-    // this.log.options.meta.awsRequestId = context.awsRequestId
-    // TS issue https://github.com/Microsoft/TypeScript/issues/28067
-    this.log.options.dev = (process.env.DEV_LOGGING as unknown) as boolean
+    this.log.options.meta.requestContext = event!.requestContext
+    this.log.options.meta.awsRequestId = context!.awsRequestId
   }
 
   getLogger() {
