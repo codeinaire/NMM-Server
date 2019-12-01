@@ -5,7 +5,7 @@ import UserProfileEntity from '../../db/entities/UserProfile'
 // TYPES
 import { UserProfileInput } from '../types'
 import { TYPES } from "../../inversifyTypes";
-import { IUserProfileAPI, IDatabase } from '../../types';
+import { IUserProfileAPI, IDatabase, ICalculatePoints } from '../../types';
 import { Connection } from "typeorm"
 import { DataSourceConfig } from 'apollo-datasource'
 
@@ -13,9 +13,10 @@ import { DataSourceConfig } from 'apollo-datasource'
 export default class UserProfileAPI implements IUserProfileAPI {
   private context: any
   private db: Connection
+  private readonly _calculatePointns: ICalculatePoints
   @inject(TYPES.Database) private database: IDatabase
-  public constructor() {
-    // this.database = database
+  public constructor(@inject(TYPES.CalculatePoints) calculatePoints: ICalculatePoints) {
+    this._calculatePointns = calculatePoints
   }
   /**
    * This is a function that gets called by ApolloServer when being setup.
@@ -39,23 +40,28 @@ export default class UserProfileAPI implements IUserProfileAPI {
     return userProfile
   }
 
-  public async createUserProfile({
-    id,
-    motivations,
-    challengeGoals,
-    username,
-    bio = 'Fill in your bio for more points!',
-    profilePic = 'https://res.cloudinary.com/codeinaire/image/upload/v1574140567/nmm-recipes/up8fe19f1ikxauczdhhs.jpg'
-  }: UserProfileInput) {
+  public async createUserProfile(userProfileInput: UserProfileInput, challengeType: string) {
+    const {
+      id,
+      motivations,
+      challengeGoals,
+      username,
+      bio = '',
+      profilePic = ''
+    } = userProfileInput
+
+    const calculatedPoints = this._calculatePointns.calculate(userProfileInput, challengeType)
+
     let userProfile = new UserProfileEntity()
     userProfile.id = id as string
     userProfile.motivations = motivations
     userProfile.challengeGoals = challengeGoals
     userProfile.username = username
     // TODO - create helper function to calculate total pointns
-    userProfile.totalPoints = 100
-    userProfile.bio = bio!
-    userProfile.profilePic = profilePic!
+    userProfile.bio = bio || 'Fill in your bio for more points!'
+    userProfile.profilePic = profilePic || 'https://res.cloudinary.com/codeinaire/image/upload/v1574140567/nmm-recipes/up8fe19f1ikxauczdhhs.jpg'
+
+    userProfile.totalPoints = calculatedPoints
 
     const savedUserProfile = await this.db.getRepository(UserProfileEntity).save(userProfile)
 

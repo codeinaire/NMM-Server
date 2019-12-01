@@ -13,8 +13,11 @@ export default {
         auth,
         dataSources,
         log
-      } : IResolverContext
+      } : IResolverContext,
+      info: any
     ): Promise<Array<Recipe>> => {
+      console.log('info', info);
+
       // TODO - add auth for recipe authors
       log.info('Finding all recipes')
       const recipes = await dataSources.recipeAPI.findAllRecipes()

@@ -94,8 +94,16 @@ export interface IRecipeAPI extends DataSource {
 }
 
 export interface IUserProfileAPI extends DataSource {
-  createUserProfile(arg0: UserProfileInput): Promise<UserProfile>
-  findUserProfile(arg0: string): Promise<UserProfile | undefined>
+  createUserProfile(arg0: UserProfileInput, arg1?: string): Promise<UserProfile>
+  findUserProfile(arg0: string, arg1?: string): Promise<UserProfile | undefined>
   initialize(arg0?: DataSourceConfig<any>): void
   closeDbConnection(): void
+}
+
+export interface ICalculatePoints {
+  calculate(arg0: ChallengeObject, arg1: string): number
+}
+
+interface ChallengeObject {
+  [index: string]: any
 }

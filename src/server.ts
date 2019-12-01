@@ -11,7 +11,7 @@ import { APIGatewayProxyEvent, Context } from 'aws-lambda'
 import { IRecipeAPI, IServer, ILogger, IAuthorisation, IUserProfileAPI } from './types';
 
 @injectable()
-export class Server implements IServer {
+export default class Server implements IServer {
   private apolloServer: ApolloServer
   private readonly _recipeAPI: IRecipeAPI
   private readonly _userProfileAPI: IUserProfileAPI
