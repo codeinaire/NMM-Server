@@ -107,7 +107,7 @@ describe('Resolvers - [UserProfile]', () => {
       expect(res).toHaveProperty('challengeGoals',mockCompleteUserProfileInput.challengeGoals)
       expect(res).toHaveProperty('motivations', mockCompleteUserProfileInput.motivations)
       expect(res).toHaveProperty('profilePic', mockCompleteUserProfileInput.profilePic)
-      expect(res).toHaveProperty('totalPoints', mockMaxTotalPoints )
+      expect(res).toHaveProperty('totalPoints', mockMaxTotalPoints)
 
       await jwksMock.stop()
     })

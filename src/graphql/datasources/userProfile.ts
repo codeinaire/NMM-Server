@@ -13,10 +13,10 @@ import { DataSourceConfig } from 'apollo-datasource'
 export default class UserProfileAPI implements IUserProfileAPI {
   private context: any
   private db: Connection
-  private readonly _calculatePointns: ICalculatePoints
+  private readonly _calculatePoints: ICalculatePoints
   @inject(TYPES.Database) private database: IDatabase
   public constructor(@inject(TYPES.CalculatePoints) calculatePoints: ICalculatePoints) {
-    this._calculatePointns = calculatePoints
+    this._calculatePoints = calculatePoints
   }
   /**
    * This is a function that gets called by ApolloServer when being setup.
@@ -50,7 +50,7 @@ export default class UserProfileAPI implements IUserProfileAPI {
       profilePic
     } = userProfileInput
 
-    const calculatedPoints = this._calculatePointns.calculate(userProfileInput, challengeType)
+    const calculatedPoints = this._calculatePoints.calculate(userProfileInput, challengeType)
 
     let userProfile = new UserProfileEntity()
     userProfile.id = id as string

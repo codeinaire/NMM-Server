@@ -30,14 +30,14 @@ export default {
       { auth, dataSources, log, event }: IResolverContext
     ): Promise<UserProfile> => {
       try {
-        // log.info(`Authorising user ${userProfile.id}...`)
-        // const verifiedId = await auth.checkScopesAndResolve(
-        //   event,
-        //   ['profile']
-        // )
-        // log.info(`Authorisation of user ${userProfile.id} successful!`)
+        log.info(`Authorising user ${userProfile.id}...`)
+        const verifiedId = await auth.checkScopesAndResolve(
+          event,
+          ['profile']
+        )
+        log.info(`Authorisation of user ${userProfile.id} successful!`)
 
-        // log.info(`Creating profile for user ${verifiedId}...`)
+        log.info(`Creating profile for user ${verifiedId}...`)
         const createdUserProfile = await dataSources.userProfileAPI.createUserProfile(userProfile, 'createUserProfile')
 
         log.info(`User profile for ${createdUserProfile.id} created.`)
