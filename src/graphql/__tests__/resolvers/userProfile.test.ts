@@ -4,23 +4,12 @@ import createJWKSMock from 'mock-jwks'
 import { container } from '../../../inversify.config'
 import { TYPES } from '../../../inversifyTypes'
 import { IUserProfileAPI } from '../../../types'
-import { setUpTakeDownEnvs } from '../../../testUtils'
+import { setUpTakeDownEnvs } from '../../../testUtils/testEnvsSetup'
 import { Authorisation } from '../../../utils/Authorisation'
 import log from '../../../utils/Logger'
-
 // TYPES
 import userProfileResolver from '../../resolvers/userProfile'
-import { customMockedEvent } from '../../../testUtils'
-
-const mockUserProfile = {
-  id: 'testuserid',
-  totalPoints: 100,
-  challengeGoals: 5,
-  motivations: 'environment,animals',
-  username: 'test user',
-  bio: 'default test bio',
-  profilePic: 'default test profile pc'
-}
+import { mockCustomEvent, mockCompleteUserProfileInput, mockMaxTotalPoints } from '../../../testUtils/testMocks'
 
 const TOKEN_ISSUER = 'https://test-app.com/'
 
@@ -38,7 +27,7 @@ describe('Resolvers - [UserProfile]', () => {
         sub: 'testuserid',
         scope: 'profile'
       })
-      const mockedEvent = customMockedEvent({
+      const mockedEvent = mockCustomEvent({
         authorization: `Bearer ${accessToken}`
       })
 
@@ -52,7 +41,7 @@ describe('Resolvers - [UserProfile]', () => {
       }
 
       mockContext.dataSources.userProfileAPI.findUserProfile.mockReturnValueOnce(
-        [mockUserProfile]
+        [mockCompleteUserProfileInput]
       )
 
       const res = await userProfileResolver.Query.me(
@@ -61,11 +50,12 @@ describe('Resolvers - [UserProfile]', () => {
         mockContext
       )
 
-      expect(res).toEqual([mockUserProfile])
+      expect(res).toEqual([mockCompleteUserProfileInput])
       await jwksMock.stop()
     })
   })
 
+  // * N.B. This needs Test DB connection to pass * \\
   describe('Mutation', () => {
     const userProfileAPI = container.get<IUserProfileAPI>(TYPES.UserProfileAPI)
     afterEach(() => {
@@ -81,7 +71,7 @@ describe('Resolvers - [UserProfile]', () => {
         sub: 'testuserid',
         scope: 'profile'
       })
-      const mockedEvent = customMockedEvent({
+      const mockedEvent = mockCustomEvent({
         authorization: `Bearer ${accessToken}`
       })
 
@@ -105,19 +95,19 @@ describe('Resolvers - [UserProfile]', () => {
 
       const res = await userProfileResolver.Mutation.createProfile(
         null,
-        { userProfile: mockUserProfile },
+        { userProfile: mockCompleteUserProfileInput },
         mockContext
       )
 
       expect(res).toHaveProperty('updatedAt')
       expect(res).toHaveProperty('createdAt')
-      expect(res).toHaveProperty('id', mockUserProfile.id)
-      expect(res).toHaveProperty('username', mockUserProfile.username)
-      expect(res).toHaveProperty('bio', mockUserProfile.bio)
-      expect(res).toHaveProperty('challengeGoals',mockUserProfile.challengeGoals)
-      expect(res).toHaveProperty('motivations', mockUserProfile.motivations)
-      expect(res).toHaveProperty('profilePic', mockUserProfile.profilePic)
-      expect(res).toHaveProperty('totalPoints', mockUserProfile.totalPoints)
+      expect(res).toHaveProperty('id', mockCompleteUserProfileInput.id)
+      expect(res).toHaveProperty('username', mockCompleteUserProfileInput.username)
+      expect(res).toHaveProperty('bio', mockCompleteUserProfileInput.bio)
+      expect(res).toHaveProperty('challengeGoals',mockCompleteUserProfileInput.challengeGoals)
+      expect(res).toHaveProperty('motivations', mockCompleteUserProfileInput.motivations)
+      expect(res).toHaveProperty('profilePic', mockCompleteUserProfileInput.profilePic)
+      expect(res).toHaveProperty('totalPoints', mockMaxTotalPoints )
 
       await jwksMock.stop()
     })

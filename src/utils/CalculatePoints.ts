@@ -32,9 +32,10 @@ export default class CalculatePoints implements ICalculatePoints {
   }
 
   public calculate(challengeObject: IChallengeObject, challengeType: string, currentSumTotalPoints = 0) {
+    if (!challengeType) throw new Error('No challengeType provided!')
 
     switch (challengeType) {
-      case 'createProfile' || 'updateProfile':
+      case 'createUserProfile' || 'updateProfile':
         return this.calculateUserProfilePoints(challengeObject, currentSumTotalPoints)
       default:
         return 100

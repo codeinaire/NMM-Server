@@ -61,7 +61,7 @@ export default class UserProfileAPI implements IUserProfileAPI {
     userProfile.bio = bio || 'Fill in your bio for more points!'
     userProfile.profilePic = profilePic || 'https://res.cloudinary.com/codeinaire/image/upload/v1574140567/nmm-recipes/up8fe19f1ikxauczdhhs.jpg'
 
-    userProfile.totalPoints = calculatedPoints
+    userProfile.totalPoints = calculatedPoints as number
 
     const savedUserProfile = await this.db.getRepository(UserProfileEntity).save(userProfile)
 
