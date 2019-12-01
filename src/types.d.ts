@@ -101,9 +101,9 @@ export interface IUserProfileAPI extends DataSource {
 }
 
 export interface ICalculatePoints {
-  calculate(arg0: ChallengeObject, arg1: string): number
+  calculate(arg0: IChallengeObject, arg1: string, arg2?: number): number
 }
 
-interface ChallengeObject {
+interface IChallengeObject {
   [index: string]: any
 }

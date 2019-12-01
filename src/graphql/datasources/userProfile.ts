@@ -46,8 +46,8 @@ export default class UserProfileAPI implements IUserProfileAPI {
       motivations,
       challengeGoals,
       username,
-      bio = '',
-      profilePic = ''
+      bio,
+      profilePic
     } = userProfileInput
 
     const calculatedPoints = this._calculatePointns.calculate(userProfileInput, challengeType)
@@ -57,7 +57,7 @@ export default class UserProfileAPI implements IUserProfileAPI {
     userProfile.motivations = motivations
     userProfile.challengeGoals = challengeGoals
     userProfile.username = username
-    // TODO - create helper function to calculate total pointns
+    // Default values if not filled in
     userProfile.bio = bio || 'Fill in your bio for more points!'
     userProfile.profilePic = profilePic || 'https://res.cloudinary.com/codeinaire/image/upload/v1574140567/nmm-recipes/up8fe19f1ikxauczdhhs.jpg'
 
