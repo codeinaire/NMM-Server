@@ -18,7 +18,7 @@ export class Authorisation implements IAuthorisation {
       cache: true,
       rateLimit: true,
       jwksRequestsPerMinute: 10,
-      jwksUri: process.env.JWS_URI || ''
+      jwksUri: process.env.JWKS_URI || ''
     })
     this.audience = process.env.AUDIENCE || ''
     this.issuer = process.env.TOKEN_ISSUER || ''

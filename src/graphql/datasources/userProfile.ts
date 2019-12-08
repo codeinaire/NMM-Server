@@ -11,12 +11,17 @@ import { DataSourceConfig } from 'apollo-datasource'
 
 @injectable()
 export default class UserProfileAPI implements IUserProfileAPI {
+  private readonly DEFAULT_LOW_RES_PROFILE_PIC_URL = 'https://res.cloudinary.com/codeinaire/image/upload/v1575760488/nmm-profile-pics/y7vzfciewvobndehwe9e.jpg'
+  private readonly DEFAULT_STD_RES_PROFILE_PIC_URL = 'https://res.cloudinary.com/codeinaire/image/upload/c_scale,q_auto,w_640/v1575760488/nmm-profile-pics/y7vzfciewvobndehwe9e.jpg'
+  private readonly DEFAULT_BIO_INFO = 'Fill in your bio for more points!'
+  private readonly DEFAULT_CHALLENGE_QUOTE = 'What is a quote that inspires you to change?'
+
+  private readonly calculatePoints: ICalculatePoints
   private context: any
   private db: Connection
-  private readonly _calculatePoints: ICalculatePoints
   @inject(TYPES.Database) private database: IDatabase
   public constructor(@inject(TYPES.CalculatePoints) calculatePoints: ICalculatePoints) {
-    this._calculatePoints = calculatePoints
+    this.calculatePoints = calculatePoints
   }
   /**
    * This is a function that gets called by ApolloServer when being setup.
@@ -47,19 +52,22 @@ export default class UserProfileAPI implements IUserProfileAPI {
       challengeGoals,
       username,
       bio,
-      profilePic
+      lowResProfile,
+      standardResolution,
+      challengeQuote
     } = userProfileInput
 
-    const calculatedPoints = this._calculatePoints.calculate(userProfileInput, challengeType)
+    const calculatedPoints = this.calculatePoints.calculate(userProfileInput, challengeType)
 
     let userProfile = new UserProfileEntity()
     userProfile.id = id as string
     userProfile.motivations = motivations
     userProfile.challengeGoals = challengeGoals
     userProfile.username = username
-    // Default values if not filled in
-    userProfile.bio = bio || 'Fill in your bio for more points!'
-    userProfile.profilePic = profilePic || 'https://res.cloudinary.com/codeinaire/image/upload/v1574140567/nmm-recipes/up8fe19f1ikxauczdhhs.jpg'
+    userProfile.bio = bio || this.DEFAULT_BIO_INFO
+    userProfile.lowResProfile = lowResProfile || this.DEFAULT_LOW_RES_PROFILE_PIC_URL
+    userProfile.standardResolution = standardResolution || this.DEFAULT_STD_RES_PROFILE_PIC_URL
+    userProfile.challengeQuote = challengeQuote || this.DEFAULT_CHALLENGE_QUOTE
 
     userProfile.totalPoints = calculatedPoints as number
 

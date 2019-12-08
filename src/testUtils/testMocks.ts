@@ -1,22 +1,23 @@
 import { APIGatewayProxyEvent } from 'aws-lambda'
 import { IModifiedObject } from '../types'
 
-export const mockMaxTotalPoints = 85
+export const mockMaxTotalPoints = 95
 
-export const mockPartialUserProfileInput = {
+export const mockMinUserProfileInput = {
   id: 'testuserid',
   challengeGoals: 5,
   motivations: 'environment,animals',
-  username: 'test user',
+  username: 'test user'
 }
 
-export const mockCompleteUserProfileInput = {
+export const mockMaxUserProfileInput = {
   id: 'testuserid',
   challengeGoals: 5,
   motivations: 'environment,animals',
   username: 'test user',
   bio: 'default test bio',
-  profilePic: 'default test profile pc'
+  profilePic: 'default test profile pc',
+  challengeQuote: 'test quote'
 }
 
 export const mockedRequestContext = {
@@ -47,7 +48,8 @@ export const mockedRequestContext = {
     cognitoIdentityId: 'test string',
     cognitoIdentityPoolId: 'test pool'
   },
-  invokedFunctionArn: 'offline_invokedFunctionArn_for_no-meat-may-app-dev-graphql',
+  invokedFunctionArn:
+    'offline_invokedFunctionArn_for_no-meat-may-app-dev-graphql',
   logGroupName: 'offline_logGroupName_for_no-meat-may-app-dev-graphql',
   logStreamName: 'offline_logStreamName_for_no-meat-may-app-dev-graphql',
   memoryLimitInMB: 1233,

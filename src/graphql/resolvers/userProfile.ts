@@ -24,21 +24,21 @@ export default {
     }
   },
   Mutation: {
-    createProfile: async (
+    createUserProfile: async (
       _: any,
-      { userProfile }: { userProfile: UserProfileInput },
+      { userProfileInput }: { userProfileInput: UserProfileInput },
       { auth, dataSources, log, event }: IResolverContext
     ): Promise<UserProfile> => {
       try {
-        log.info(`Authorising user ${userProfile.id}...`)
+        log.info(`Authorising user ${userProfileInput.id}...`)
         const verifiedId = await auth.checkScopesAndResolve(
           event,
           ['profile']
         )
-        log.info(`Authorisation of user ${userProfile.id} successful!`)
+        log.info(`Authorisation of user ${userProfileInput.id} successful!`)
 
         log.info(`Creating profile for user ${verifiedId}...`)
-        const createdUserProfile = await dataSources.userProfileAPI.createUserProfile(userProfile, 'createUserProfile')
+        const createdUserProfile = await dataSources.userProfileAPI.createUserProfile(userProfileInput, 'createUserProfile')
 
         log.info(`User profile for ${createdUserProfile.id} created.`)
         return createdUserProfile

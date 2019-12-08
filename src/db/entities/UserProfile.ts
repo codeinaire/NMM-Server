@@ -27,7 +27,13 @@ export default class UserProfile{
   bio: string
 
   @Column()
-  profilePic: string
+  lowResProfile: string
+
+  @Column()
+  standardResolution: string
+
+  @Column()
+  challengeQuote: string
 
   @CreateDateColumn()
   createdAt: Date

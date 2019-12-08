@@ -33,6 +33,8 @@ export default class Server implements IServer {
     return ({ event, context }: { event: APIGatewayProxyEvent, context: Context }) => {
       this._logger.createContext(event, context)
       const log = this._logger.getLogger()
+      console.log('process.env.SILENT_LOGGING in server', process.env.SILENT_LOGGING);
+
 
       return {
         event,

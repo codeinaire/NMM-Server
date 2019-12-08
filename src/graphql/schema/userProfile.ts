@@ -8,7 +8,9 @@ export default gql`
     motivations: String!
     username: String!
     bio: String
-    profilePic: String
+    lowResProfile: String
+    standardResolution: String
+    challengeQuote: String
   }
 
   input UserProfileInput {
@@ -17,6 +19,8 @@ export default gql`
     motivations: String!
     username: String!
     bio: String
-    profilePic: String
+    lowResProfile: String
+    standardResolution: String
+    challengeQuote: String
   }
 `
