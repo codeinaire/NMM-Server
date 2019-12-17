@@ -1,11 +1,16 @@
-import { injectable } from "inversify"
+import { injectable } from 'inversify'
 import jwksClient, { JwksClient } from 'jwks-rsa'
 import jwt from 'jsonwebtoken'
 import util from 'util'
 import { ForbiddenError } from 'apollo-server-lambda'
 // TYPES
 import { APIGatewayProxyEvent } from 'aws-lambda'
-import { IVerifiedToken, IDecodedToken, IScopeAndId, IAuthorisation } from '../types'
+import {
+  IVerifiedToken,
+  IDecodedToken,
+  IScopeAndId,
+  IAuthorisation
+} from '../types'
 
 @injectable()
 export class Authorisation implements IAuthorisation {
@@ -18,7 +23,7 @@ export class Authorisation implements IAuthorisation {
       cache: true,
       rateLimit: true,
       jwksRequestsPerMinute: 10,
-      jwksUri: process.env.JWS_URI || ''
+      jwksUri: process.env.JWKS_URI || ''
     })
     this.audience = process.env.AUDIENCE || ''
     this.issuer = process.env.TOKEN_ISSUER || ''
@@ -53,9 +58,7 @@ export class Authorisation implements IAuthorisation {
     return match[1]
   }
 
-  private async verifyToken (
-    event: APIGatewayProxyEvent
-  ): Promise<IScopeAndId> {
+  private async verifyToken(event: APIGatewayProxyEvent): Promise<IScopeAndId> {
     const token = this.extractBearerToken(event)
 
     const decoded: IDecodedToken = jwt.decode(token, {
@@ -65,7 +68,9 @@ export class Authorisation implements IAuthorisation {
       throw new ForbiddenError('Invalid Token')
     }
 
-    const rsaOrCertSigningKey: string = await this.getSigningKey(decoded.header.kid)
+    const rsaOrCertSigningKey: string = await this.getSigningKey(
+      decoded.header.kid
+    )
 
     const jwtOptions = {
       audience: this.audience,

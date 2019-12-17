@@ -3,12 +3,11 @@ import {
   Column,
   PrimaryColumn,
   CreateDateColumn,
-  UpdateDateColumn,
-  // BeforeInsert
+  UpdateDateColumn
 } from 'typeorm'
 
 @Entity()
-export default class UserProfile{
+export default class UserProfile {
   @PrimaryColumn()
   id: string
 
@@ -28,16 +27,17 @@ export default class UserProfile{
   bio: string
 
   @Column()
-  profilePic: string
+  lowResProfile: string
+
+  @Column()
+  standardResolution: string
+
+  @Column()
+  challengeQuote: string
 
   @CreateDateColumn()
   createdAt: Date
 
   @UpdateDateColumn()
   updatedAt: Date
-
-  // @BeforeInsert()
-  // addId() {
-  //   // not sure what to implement, but I may need to implement something here to insert the auth0 id
-  // }
 }

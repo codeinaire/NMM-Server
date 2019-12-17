@@ -25,4 +25,3 @@ export default class Logger implements ILogger {
     return this.log
   }
 }
-

@@ -2,7 +2,8 @@ import 'reflect-metadata'
 import createJWKSMock from 'mock-jwks'
 
 import { Authorisation } from '../Authorisation'
-import { customMockedEvent, setUpTakeDownEnvs } from '../../testUtils'
+import { mockCustomEvent } from '../../testUtils/testMocks'
+import { setUpTakeDownEnvs } from '../../testUtils/testEnvsSetup'
 
 const TOKEN_ISSUER = 'https://test-app.com/'
 
@@ -10,7 +11,7 @@ describe('Authorisation class', () => {
   setUpTakeDownEnvs()
 
   describe('[Auth.checkScopesAndResolve()] is given an event with a [VALID] Bearer authorization token & [VALID & CORRECT] scope', () => {
-    it('Returned - true', async () => {
+    it('Returns - test user', async () => {
       const authorisation = new Authorisation()
 
       const jwksMock = createJWKSMock(TOKEN_ISSUER)
@@ -22,7 +23,7 @@ describe('Authorisation class', () => {
         sub: 'test-user',
         scope: 'correct scope'
       })
-      const mockedEvent = customMockedEvent({
+      const mockedEvent = mockCustomEvent({
         authorization: `Bearer ${accessToken}`
       })
 
@@ -35,9 +36,9 @@ describe('Authorisation class', () => {
 
   describe('[Auth.checkScopesAndResolve()] ERRORS', () => {
     describe('Given an event with an [INVALID] authorisation Bearer token', () => {
-      it('Returned - Error: Invalid Token', async () => {
+      it('Returns - Error: Invalid Token', async () => {
         const authorisation = new Authorisation()
-        const mockedEvent = customMockedEvent({
+        const mockedEvent = mockCustomEvent({
           authorization: 'Bearer invalid token'
         })
 
@@ -48,9 +49,9 @@ describe('Authorisation class', () => {
     })
 
     describe('Given an event with [NO] authorisation Bearer token', () => {
-      it('Returned - Expected "event.headers.authorization" parameter to be set', () => {
+      it('Returns - Expected "event.headers.authorization" parameter to be set', () => {
         const authorisation = new Authorisation()
-        const mockedEvent = customMockedEvent({
+        const mockedEvent = mockCustomEvent({
           authorization: ''
         })
 
@@ -65,9 +66,9 @@ describe('Authorisation class', () => {
     })
 
     describe('Given an event with an [EMPTY] authorisation token', () => {
-      it(`Returned - Invalid Authorization token - '' does not match "Bearer .*"`, () => {
+      it(`Returns - Invalid Authorization token - '' does not match "Bearer .*"`, () => {
         const authorisation = new Authorisation()
-        const mockedEvent = customMockedEvent({
+        const mockedEvent = mockCustomEvent({
           authorization: 'Bearer'
         })
 
@@ -82,7 +83,7 @@ describe('Authorisation class', () => {
     })
 
     describe('Given an event with an [EMPTY] scope', () => {
-      it('Returned - No scopes supplied!', async () => {
+      it('Returns - No scopes supplied!', async () => {
         const authorisation = new Authorisation()
         const jwksMock = createJWKSMock(TOKEN_ISSUER)
         await jwksMock.start()
@@ -93,7 +94,7 @@ describe('Authorisation class', () => {
           sub: 'test-user',
           scope: ''
         })
-        const mockedEvent = customMockedEvent({
+        const mockedEvent = mockCustomEvent({
           authorization: `Bearer ${accessToken}`
         })
 
@@ -105,7 +106,7 @@ describe('Authorisation class', () => {
     })
 
     describe('Given an event with an [INCORRECT] scope', () => {
-      it('Returned - You are not authorized!', async () => {
+      it('Returns - You are not authorized!', async () => {
         const authorisation = new Authorisation()
         const jwksMock = createJWKSMock(TOKEN_ISSUER)
         await jwksMock.start()
@@ -117,7 +118,7 @@ describe('Authorisation class', () => {
           scope: 'incorrect scope'
         })
 
-        const mockedEvent = customMockedEvent({
+        const mockedEvent = mockCustomEvent({
           authorization: `Bearer ${accessToken}`
         })
 

@@ -1,6 +1,6 @@
-import Recipe from './entities/Recipe';
-import RecipeAttribution from './entities/RecipeAttribution';
-import UserProfile from './entities/UserProfile';
+import Recipe from './entities/Recipe'
+import RecipeAttribution from './entities/RecipeAttribution'
+import UserProfile from './entities/UserProfile'
 
 import { ConnectionOptions } from 'typeorm'
 

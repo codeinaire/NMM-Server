@@ -10,12 +10,10 @@ export default {
       _: any,
       __: any,
       {
-        auth,
         dataSources,
         log
       } : IResolverContext
     ): Promise<Array<Recipe>> => {
-      // TODO - add auth for recipe authors
       log.info('Finding all recipes')
       const recipes = await dataSources.recipeAPI.findAllRecipes()
       log.info('Found all recipes')
@@ -27,13 +25,10 @@ export default {
       _: any,
       { recipe }: { recipe: RecipeInput },
       {
-        auth,
         dataSources,
         log
       } : IResolverContext
     ): Promise<Recipe> => {
-      console.log('recipe', recipe);
-
       log.info('Creating recipe')
       const createdRecipe = await dataSources.recipeAPI.createRecipe(recipe)
       log.info('Recipe created')
@@ -59,7 +54,6 @@ export default {
       { recipeAttributionId }: RecipeEntity,
       __: any,
       {
-        auth,
         dataSources,
         log
       } : IResolverContext

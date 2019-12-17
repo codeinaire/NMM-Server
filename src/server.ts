@@ -2,16 +2,22 @@ require('dotenv').config()
 import 'reflect-metadata'
 import { ApolloServer } from 'apollo-server-lambda'
 // Dependency injection
-import { injectable, inject } from "inversify"
+import { injectable, inject } from 'inversify'
 import { TYPES } from './inversifyTypes'
 // GRAPHQL
 import schema from './graphql/schema'
 // TYPES
 import { APIGatewayProxyEvent, Context } from 'aws-lambda'
-import { IRecipeAPI, IServer, ILogger, IAuthorisation, IUserProfileAPI } from './types';
+import {
+  IRecipeAPI,
+  IServer,
+  ILogger,
+  IAuthorisation,
+  IUserProfileAPI
+} from './types'
 
 @injectable()
-export class Server implements IServer {
+export default class Server implements IServer {
   private apolloServer: ApolloServer
   private readonly _recipeAPI: IRecipeAPI
   private readonly _userProfileAPI: IUserProfileAPI
@@ -30,7 +36,13 @@ export class Server implements IServer {
     this._authorisation = Authorisation
   }
   private initContext() {
-    return ({ event, context }: { event: APIGatewayProxyEvent, context: Context }) => {
+    return ({
+      event,
+      context
+    }: {
+      event: APIGatewayProxyEvent
+      context: Context
+    }) => {
       this._logger.createContext(event, context)
       const log = this._logger.getLogger()
 
