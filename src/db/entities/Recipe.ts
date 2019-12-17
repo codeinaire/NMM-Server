@@ -77,11 +77,15 @@ export default class Recipe {
   @Column('int', { nullable: true })
   recipeAttributionId: number
 
-  @ManyToOne(() => RecipeAttribution, recipeAttribution => recipeAttribution.recipes, {
-    cascade: true,
-    onDelete: 'CASCADE'
-  })
-  @JoinColumn({ name: 'recipeAttributionId'})
+  @ManyToOne(
+    () => RecipeAttribution,
+    recipeAttribution => recipeAttribution.recipes,
+    {
+      cascade: true,
+      onDelete: 'CASCADE'
+    }
+  )
+  @JoinColumn({ name: 'recipeAttributionId' })
   recipeAttribution: RecipeAttribution
 
   @CreateDateColumn()

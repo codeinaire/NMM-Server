@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server-lambda');
+const { gql } = require('apollo-server-lambda')
 
 export default gql`
   enum DifficultyEnum {
