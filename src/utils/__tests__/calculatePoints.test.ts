@@ -2,7 +2,7 @@ import 'reflect-metadata'
 
 import { container } from '../../inversify.config'
 import { TYPES } from '../../inversifyTypes'
-import { ICalculatePoints } from '../../types';
+import { ICalculatePoints } from '../../types'
 
 const calculatePoints = container.get<ICalculatePoints>(TYPES.CalculatePoints)
 
@@ -39,9 +39,7 @@ describe('CalculatePoints class', () => {
   describe('For [USER PROFILE] is given [EMPTY] challenge type [ERROR]', () => {
     it('Returns - No challengeType provided!', () => {
       const error = calculatePoints.calculate(mockMinUserProfileInput, '')
-      expect(
-        error
-      ).toEqual('Error: No challengeType provided!')
+      expect(error).toEqual('Error: No challengeType provided!')
     })
   })
 })

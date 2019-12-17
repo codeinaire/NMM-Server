@@ -7,7 +7,7 @@ import {
 } from 'typeorm'
 
 @Entity()
-export default class UserProfile{
+export default class UserProfile {
   @PrimaryColumn()
   id: string
 

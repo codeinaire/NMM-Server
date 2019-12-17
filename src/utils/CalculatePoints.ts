@@ -1,4 +1,4 @@
-import { inject, injectable } from "inversify"
+import { inject, injectable } from 'inversify'
 import { TYPES } from '../inversifyTypes'
 
 import { LambdaLog } from 'lambda-log'
@@ -27,7 +27,10 @@ export default class CalculatePoints implements ICalculatePoints {
    * @param currentSumTotalPoints - how many points on a user profile
    * @returns - new sum total of points
    */
-  private calculateUserProfilePoints(userProfile: IChallengeObject, currentSumTotalPoints: number) {
+  private calculateUserProfilePoints(
+    userProfile: IChallengeObject,
+    currentSumTotalPoints: number
+  ) {
     const POINTS_PER_USER_PROFILE_ITEM = 10
     const MAX_COMPLETABLE_ITEMS = 7
 
@@ -35,20 +38,33 @@ export default class CalculatePoints implements ICalculatePoints {
     const itemsSumTotal = completedItems * POINTS_PER_USER_PROFILE_ITEM
     let sumTotalPoints = currentSumTotalPoints + itemsSumTotal
 
-    if (completedItems == MAX_COMPLETABLE_ITEMS) sumTotalPoints += this.ALL_ITEMS_COMPLETED_BONUS
+    if (completedItems == MAX_COMPLETABLE_ITEMS) {
+      sumTotalPoints += this.ALL_ITEMS_COMPLETED_BONUS
+    }
 
     return sumTotalPoints
   }
 
-  public calculate(challengeObject: IChallengeObject, challengeType: string, currentSumTotalPoints = 0) {
+  public calculate(
+    challengeObject: IChallengeObject,
+    challengeType: string,
+    currentSumTotalPoints = 0
+  ) {
     if (!challengeType) throw new Error('No challengeType provided!')
 
     switch (challengeType) {
       case 'createUserProfile' || 'updateProfile':
-        console.log('challengeObject', challengeObject);
+        console.log('challengeObject', challengeObject)
 
-        this.logger.info(`Calculating points for user profile items: ${JSON.stringify(challengeObject)}`)
-        const sumTotalPoints = this.calculateUserProfilePoints(challengeObject, currentSumTotalPoints)
+        this.logger.info(
+          `Calculating points for user profile items: ${JSON.stringify(
+            challengeObject
+          )}`
+        )
+        const sumTotalPoints = this.calculateUserProfilePoints(
+          challengeObject,
+          currentSumTotalPoints
+        )
         this.logger.info(`Calculated points: ${sumTotalPoints}`)
         return sumTotalPoints
       default:

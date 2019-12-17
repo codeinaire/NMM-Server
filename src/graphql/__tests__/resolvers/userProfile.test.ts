@@ -9,7 +9,11 @@ import { Authorisation } from '../../../utils/Authorisation'
 import log from '../../../utils/Logger'
 // TYPES
 import userProfileResolver from '../../resolvers/userProfile'
-import { mockCustomEvent, mockMaxUserProfileInput, mockMaxTotalPoints } from '../../../testUtils/testMocks'
+import {
+  mockCustomEvent,
+  mockMaxUserProfileInput,
+  mockMaxTotalPoints
+} from '../../../testUtils/testMocks'
 
 const TOKEN_ISSUER = 'https://test-app.com/'
 
@@ -104,9 +108,18 @@ describe('Resolvers - [UserProfile]', () => {
       expect(res).toHaveProperty('id', mockMaxUserProfileInput.id)
       expect(res).toHaveProperty('username', mockMaxUserProfileInput.username)
       expect(res).toHaveProperty('bio', mockMaxUserProfileInput.bio)
-      expect(res).toHaveProperty('challengeGoals',mockMaxUserProfileInput.challengeGoals)
-      expect(res).toHaveProperty('motivations', mockMaxUserProfileInput.motivations)
-      expect(res).toHaveProperty('profilePic', mockMaxUserProfileInput.profilePic)
+      expect(res).toHaveProperty(
+        'challengeGoals',
+        mockMaxUserProfileInput.challengeGoals
+      )
+      expect(res).toHaveProperty(
+        'motivations',
+        mockMaxUserProfileInput.motivations
+      )
+      expect(res).toHaveProperty(
+        'profilePic',
+        mockMaxUserProfileInput.profilePic
+      )
       expect(res).toHaveProperty('totalPoints', mockMaxTotalPoints)
 
       await jwksMock.stop()
