@@ -97,9 +97,9 @@ describe('Resolvers - [UserProfile]', () => {
         auth: new Authorisation()
       }
 
-      const res = await userProfileResolver.Mutation.createProfile(
+      const res = await userProfileResolver.Mutation.createUserProfile(
         null,
-        { userProfile: mockMaxUserProfileInput },
+        { userProfileInput: mockMaxUserProfileInput },
         mockContext
       )
 
