@@ -15,7 +15,7 @@ import { JwksClient } from 'jwks-rsa'
 export interface IEnvs {
   audience: string
   issuer: string
-  jwsUri: string
+  jwksUri: string
   silentLogger: boolean
 }
 export interface IServer {
