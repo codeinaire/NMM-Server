@@ -10,15 +10,25 @@ import {
 
 import Recipe from './Recipe'
 
+export enum ChallengeDifficultyEnum {
+  Easy = 1,
+  Medium = 1.15,
+  Hard = 1.3
+}
+
 export enum TypeEnum {
-  Recipe = 'Recipe'
+  Recipe = 'Recipe',
+  Article = 'Article'
 }
 
 export enum SectionsCompletedEnum {
+  None = 'None',
   Ingredients = 'Ingredients',
   Method = 'Method',
-  ShareFriendsImage = 'ShareFriendsImage',
-  ShareRecipe = 'ShareRecipe'
+  SharedFriendsImage = 'SharedFriendsImage',
+  SharedRecipe = 'SharedRecipe',
+  ReadArticle = 'ReadArticle',
+  SharedArticle ='SharedArticle'
 }
 
 @Entity()
@@ -28,33 +38,43 @@ export default class Challenge {
 
   @Column({
     type: 'enum',
-    enum: TypeEnum
+    enum: TypeEnum,
+    default: TypeEnum.Recipe
   })
   type: TypeEnum
 
-  @Column()
+  @Column({
+    type: 'enum',
+    enum: ChallengeDifficultyEnum,
+    default: ChallengeDifficultyEnum.Easy
+  })
+  difficulty: ChallengeDifficultyEnum
+
+  @Column({ nullable: true })
   maxAwardablePoints: number
 
-  @Column()
+  @Column({ nullable: true })
   awardedPoints: number
 
-  @Column()
+  @Column({ nullable: true })
   maxSectionsCompletable: number
 
   @Column({
     type: 'enum',
     array: true,
-    default: '{}',
+    default: '{None}',
     enum: SectionsCompletedEnum
   })
   sectionsCompleted: SectionsCompletedEnum[]
 
   @Column({
-    type: 'character varying',
-    array: true,
-    default: '{}'
+    type: 'simple-json',
+    nullable: true
   })
-  sharedFriendsImages: string[]
+  sharedFriendsImages: {
+    lowResShareFriendsImage: string
+    standardResolution: string
+  }
 
   @Column('int', { nullable: true })
   recipeId: number

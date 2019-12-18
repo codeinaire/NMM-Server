@@ -3,6 +3,7 @@ import { ApolloServer } from 'apollo-server-lambda'
 import { DataSource, DataSourceConfig } from 'apollo-datasource'
 import { APIGatewayProxyEvent, Context } from 'aws-lambda'
 import {
+  Challenge,
   RecipeInput,
   Recipe,
   UserProfile,
@@ -98,6 +99,10 @@ export interface IUserProfileAPI extends DataSource {
   findUserProfile(arg0: string, arg1?: string): Promise<UserProfile | undefined>
   initialize(arg0?: DataSourceConfig<any>): void
   closeDbConnection(): void
+}
+
+export interface IChallengeAPI extends DataSource {
+  findChallenge(): Promise<Challenge | undefined>
 }
 
 export interface ICalculatePoints {

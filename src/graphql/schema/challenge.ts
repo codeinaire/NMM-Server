@@ -1,33 +1,48 @@
 const { gql } = require('apollo-server-lambda')
 
 export default gql`
+  enum ChallengeDifficultyEnum {
+    Easy
+    Medium
+    Hard
+  }
+
   enum TypeEnum {
     Recipe
+    Article
   }
 
   enum SectionsCompletedEnum {
+    None
     Ingredients
     Method
-    ShareFriendsImage
-    ShareRecipe
+    SharedFriendsImage
+    SharedRecipe
+    ReadArticle
+    SharedArticle
   }
 
-  input ChallangeInput {
-    type
+  input ChallengeInput {
+    type: TypeEnum!
+    sectionsCompleted: [SectionsCompletedEnum]!
+    difficulty: ChallengeDifficultyEnum!
+    lowResShareFriendsImage: String
+    standardResolution: String
   }
 
-  type Challange {
-    id: ID
-    type: TypeEnum
+  type Challenge {
+    id: ID!
+    type: TypeEnum!
+    difficulty: ChallengeDifficultyEnum!
     maxAwardablePoints: Int
     awardedPoints: Int
     maxSectionsCompletable: Int
-    sectionsCompleted: [SectionsCompletedEnum]
+    sectionsCompleted: [SectionsCompletedEnum!]!
     sharedFriendsImages: SharedFriendsImage
   }
 
   type SharedFriendsImage {
-    lowResolution: String
+    lowResShareFriendsImage: String
     standardResolution: String
   }
 `

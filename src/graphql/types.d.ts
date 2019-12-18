@@ -17,6 +17,32 @@ export type Article = {
   type: Scalars['String'],
 };
 
+export type Challenge = {
+   __typename?: 'Challenge',
+  id: Scalars['ID'],
+  type: TypeEnum,
+  difficulty: ChallengeDifficultyEnum,
+  maxAwardablePoints?: Maybe<Scalars['Int']>,
+  awardedPoints?: Maybe<Scalars['Int']>,
+  maxSectionsCompletable?: Maybe<Scalars['Int']>,
+  sectionsCompleted: Array<SectionsCompletedEnum>,
+  sharedFriendsImages?: Maybe<SharedFriendsImage>,
+};
+
+export enum ChallengeDifficultyEnum {
+  Easy = '1',
+  Medium = '1.15',
+  Hard = '1.3'
+}
+
+export type ChallengeInput = {
+  type: TypeEnum,
+  sectionsCompleted: Array<Maybe<SectionsCompletedEnum>>,
+  difficulty: ChallengeDifficultyEnum,
+  lowResShareFriendsImage?: Maybe<Scalars['String']>,
+  standardResolution?: Maybe<Scalars['String']>,
+};
+
 export enum CostEnum {
   Budget = 'Budget',
   Moderate = 'Moderate',
@@ -79,6 +105,7 @@ export type MutationDeleteRecipeArgs = {
 
 export type Query = {
    __typename?: 'Query',
+  challenge?: Maybe<Challenge>,
   recipes: Array<Maybe<Recipe>>,
   articles?: Maybe<Array<Maybe<Article>>>,
   me?: Maybe<UserProfile>,
@@ -135,6 +162,27 @@ export type RecipeInput = {
   instagram?: Maybe<Scalars['String']>,
   twitter?: Maybe<Scalars['String']>,
 };
+
+export enum SectionsCompletedEnum {
+  None = 'None',
+  Ingredients = 'Ingredients',
+  Method = 'Method',
+  SharedFriendsImage = 'SharedFriendsImage',
+  SharedRecipe = 'SharedRecipe',
+  ReadArticle = 'ReadArticle',
+  SharedArticle = 'SharedArticle'
+}
+
+export type SharedFriendsImage = {
+   __typename?: 'SharedFriendsImage',
+  lowResShareFriendsImage?: Maybe<Scalars['String']>,
+  standardResolution?: Maybe<Scalars['String']>,
+};
+
+export enum TypeEnum {
+  Recipe = 'Recipe',
+  Article = 'Article'
+}
 
 export type UserProfile = {
    __typename?: 'UserProfile',
