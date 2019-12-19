@@ -2,10 +2,19 @@ import Recipe from './entities/Recipe'
 import RecipeAttribution from './entities/RecipeAttribution'
 import UserProfile from './entities/UserProfile'
 import Challenge from './entities/Challenge'
+import UncompletedChallenge from './entities/UncompletedChallenge'
+import CompletedChallenge from './entities/CompletedChallenge'
 
 import { ConnectionOptions } from 'typeorm'
 
-const entities = [Recipe, RecipeAttribution, UserProfile, Challenge]
+const entities = [
+  Recipe,
+  RecipeAttribution,
+  UserProfile,
+  Challenge,
+  CompletedChallenge,
+  UncompletedChallenge
+]
 
 export const production: ConnectionOptions = {
   name: 'default',

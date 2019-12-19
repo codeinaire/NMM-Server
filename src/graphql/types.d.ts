@@ -39,7 +39,7 @@ export type ChallengeInput = {
   type: TypeEnum,
   sectionsCompleted: Array<Maybe<SectionsCompletedEnum>>,
   difficulty: ChallengeDifficultyEnum,
-  lowResShareFriendsImage?: Maybe<Scalars['String']>,
+  lowResSharedFriendsImage?: Maybe<Scalars['String']>,
   standardResolution?: Maybe<Scalars['String']>,
 };
 
@@ -175,7 +175,7 @@ export enum SectionsCompletedEnum {
 
 export type SharedFriendsImage = {
    __typename?: 'SharedFriendsImage',
-  lowResShareFriendsImage?: Maybe<Scalars['String']>,
+  lowResSharedFriendsImage?: Maybe<Scalars['String']>,
   standardResolution?: Maybe<Scalars['String']>,
 };
 

@@ -7,7 +7,6 @@
       "@typescript-eslint",
       "prettier"
   ],
-  "ignorePatterns": ["src/graphql/types.d.ts"],
   "rules": {
       "prettier/prettier": [
           "error",

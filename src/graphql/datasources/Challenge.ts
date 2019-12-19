@@ -30,16 +30,10 @@ export default class ChallengeAPI implements IChallengeAPI {
    * findChallenge
    */
   public async findChallenge() {
-    console.log('calculatePoints,', this.calculatePoints);
-
     const challenge = await this.db.getRepository(ChallengeEntity).findOne({
-      id: 1
+      id
     })
-
-    console.log('challenge', challenge);
-
 
     return challenge
   }
-
 }

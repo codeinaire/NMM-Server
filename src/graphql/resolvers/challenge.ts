@@ -1,4 +1,4 @@
-import { Challenge } from '../types';
+import { Challenge } from '../types'
 import { IResolverContext } from '../../types'
 
 export default {

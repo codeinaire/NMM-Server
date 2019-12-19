@@ -26,7 +26,7 @@ export default gql`
     type: TypeEnum!
     sectionsCompleted: [SectionsCompletedEnum]!
     difficulty: ChallengeDifficultyEnum!
-    lowResShareFriendsImage: String
+    lowResSharedFriendsImage: String
     standardResolution: String
   }
 
@@ -42,7 +42,7 @@ export default gql`
   }
 
   type SharedFriendsImage {
-    lowResShareFriendsImage: String
+    lowResSharedFriendsImage: String
     standardResolution: String
   }
 `

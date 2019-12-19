@@ -28,7 +28,7 @@ export enum SectionsCompletedEnum {
   SharedFriendsImage = 'SharedFriendsImage',
   SharedRecipe = 'SharedRecipe',
   ReadArticle = 'ReadArticle',
-  SharedArticle ='SharedArticle'
+  SharedArticle = 'SharedArticle'
 }
 
 @Entity()
@@ -72,7 +72,7 @@ export default class Challenge {
     nullable: true
   })
   sharedFriendsImages: {
-    lowResShareFriendsImage: string
+    lowResSharedFriendsImage: string
     standardResolution: string
   }
 
