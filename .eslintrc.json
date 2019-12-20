@@ -18,8 +18,8 @@
           }
       ],
       "curly": [
-        "error",
-        "multi"
+          "error",
+          "multi-line"
       ],
       "camelcase": 2
   },
