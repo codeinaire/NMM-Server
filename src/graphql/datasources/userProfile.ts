@@ -11,14 +11,6 @@ import { DataSourceConfig } from 'apollo-datasource'
 
 @injectable()
 export default class UserProfileAPI implements IUserProfileAPI {
-  private readonly DEFAULT_LOW_RES_PROFILE_PIC_URL =
-    'https://res.cloudinary.com/codeinaire/image/upload/v1575760488/nmm-profile-pics/y7vzfciewvobndehwe9e.jpg'
-  private readonly DEFAULT_STD_RES_PROFILE_PIC_URL =
-    'https://res.cloudinary.com/codeinaire/image/upload/c_scale,q_auto,w_640/v1575760488/nmm-profile-pics/y7vzfciewvobndehwe9e.jpg'
-  private readonly DEFAULT_BIO_INFO = 'Fill in your bio for more points!'
-  private readonly DEFAULT_CHALLENGE_QUOTE =
-    'What is a quote that inspires you to change?'
-
   private readonly calculatePoints: ICalculatePoints
   private context: any
   private db: Connection
@@ -75,12 +67,14 @@ export default class UserProfileAPI implements IUserProfileAPI {
     userProfile.motivations = motivations
     userProfile.challengeGoals = challengeGoals
     userProfile.username = username
-    userProfile.bio = bio || this.DEFAULT_BIO_INFO
-    userProfile.lowResProfile =
-      lowResProfile || this.DEFAULT_LOW_RES_PROFILE_PIC_URL
-    userProfile.standardResolution =
-      standardResolution || this.DEFAULT_STD_RES_PROFILE_PIC_URL
-    userProfile.challengeQuote = challengeQuote || this.DEFAULT_CHALLENGE_QUOTE
+    // N.B. If no value given, default value set in DB.
+    if (typeof bio == 'string') userProfile.bio = bio
+    if (typeof standardResolution == 'string')
+      userProfile.standardResolution = standardResolution
+    if (typeof challengeQuote == 'string')
+      userProfile.challengeQuote = challengeQuote
+    if (typeof lowResProfile == 'string')
+      userProfile.lowResProfile = lowResProfile
 
     userProfile.totalPoints = calculatedPoints as number
 
