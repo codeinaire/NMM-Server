@@ -2,10 +2,9 @@ import { inject, injectable } from 'inversify'
 import { TYPES } from '../inversifyTypes'
 
 import { LambdaLog } from 'lambda-log'
-import { ILogger } from '../types'
 
+import { ILogger, ICalculatePoints } from '../types'
 import { ChallengeInput, UserProfileInput } from '../graphql/types'
-import { ICalculatePoints, CalculatePointsInput } from '../types'
 
 @injectable()
 export default class CalculatePoints implements ICalculatePoints {
@@ -81,7 +80,7 @@ export default class CalculatePoints implements ICalculatePoints {
   }
 
   public calculate(
-    challengeObject: CalculatePointsInput,
+    challengeObject: any,
     challengeType: string,
     currentSumTotalPoints = 0
   ) {

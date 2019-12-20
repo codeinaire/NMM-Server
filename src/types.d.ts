@@ -117,7 +117,7 @@ export interface ICalculatePoints {
     arg0: T,
     arg1: string,
     arg2?: number
-  ): number | string
+  ): number
 }
 
 interface IChallengeObject {

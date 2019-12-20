@@ -1,7 +1,10 @@
 import { injectable, inject } from 'inversify'
 // DB Entities
 import ChallengeEntity from '../../db/entities/Challenge'
-import UserProfile from '../../db/entities/UserProfile'
+import UserProfileEntity from '../../db/entities/UserProfile'
+import RecipeEntity from '../../db/entities/Recipe'
+import CompletedChallengeEntity from '../../db/entities/CompletedChallenge'
+import UncompletedChallengeEntity from '../../db/entities/UncompletedChallenge'
 
 // TYPES
 import { ChallengeInput, TypeEnum } from '../types'
@@ -43,20 +46,73 @@ export default class ChallengeAPI implements IChallengeAPI {
     challengeType: TypeEnum,
     verifiedUser: string
   ) {
-    const [userProfileObject] = await this.db.getRepository(UserProfile).find({
-      select: ['totalPoints'],
-      where: {
-        id: verifiedUser
-      }
-    })
+    const MAX_RECIPE_SECTIONS_COMPLETABLE = 4
+    const {
+      type,
+      sectionsCompleted,
+      difficulty,
+      lowResSharedFriendsImage,
+      standardResolution,
+      recipeId
+    } = challengeInput
+
+    console.log(
+      'challengeInput',
+      challengeInput,
+      typeof lowResSharedFriendsImage
+    )
+
+    const [userProfileObject] = await this.db
+      .getRepository(UserProfileEntity)
+      .find({
+        select: ['totalPoints'],
+        where: {
+          id: verifiedUser
+        }
+      })
 
     const calculatedPoints = this.calculatePoints.calculate(
       challengeInput,
       challengeType,
       userProfileObject.totalPoints
     )
-    console.log('calculatedPoints', calculatedPoints)
+    let challenge = new ChallengeEntity()
+    challenge.awardedPoints = calculatedPoints
 
-    return 100
+    challenge.type = type
+    challenge.difficulty = difficulty
+    if (!sectionsCompleted) challenge.sectionsCompleted = sectionsCompleted
+    if (typeof lowResSharedFriendsImage == 'string')
+      challenge.sharedFriendsImages.lowResSharedFriendsImage = lowResSharedFriendsImage
+    if (typeof standardResolution == 'string')
+      challenge.sharedFriendsImages.standardResolution = standardResolution
+    if (type == 'Recipe')
+      challenge.maxSectionsCompletable = MAX_RECIPE_SECTIONS_COMPLETABLE
+
+    const recipe = await this.db.getRepository(RecipeEntity).findOne(recipeId)
+    if (recipe) challenge.recipe = recipe
+
+    const savedChallenge = await this.db
+      .getRepository(ChallengeEntity)
+      .save(challenge)
+
+    const numberOfSectionsCompleted = sectionsCompleted.length
+    if (numberOfSectionsCompleted == MAX_RECIPE_SECTIONS_COMPLETABLE) {
+      let completedChallenge = new CompletedChallengeEntity()
+      completedChallenge.userProfile = userProfileObject
+      completedChallenge.challenge = savedChallenge
+      await this.db
+        .getRepository(CompletedChallengeEntity)
+        .save(completedChallenge)
+    } else {
+      let uncompletedChallenge = new UncompletedChallengeEntity()
+      uncompletedChallenge.userProfile = userProfileObject
+      uncompletedChallenge.challenge = savedChallenge
+      await this.db
+        .getRepository(UncompletedChallengeEntity)
+        .save(uncompletedChallenge)
+    }
+
+    return savedChallenge
   }
 }

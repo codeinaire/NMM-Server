@@ -41,6 +41,7 @@ export type ChallengeInput = {
   difficulty: ChallengeDifficultyEnum,
   lowResSharedFriendsImage?: Maybe<Scalars['String']>,
   standardResolution?: Maybe<Scalars['String']>,
+  recipeId: Scalars['Int'],
 };
 
 export enum CostEnum {
@@ -83,6 +84,7 @@ export type Mutation = {
   createUserProfile?: Maybe<UserProfile>,
   createRecipe?: Maybe<Recipe>,
   deleteRecipe?: Maybe<Recipe>,
+  createChallenge?: Maybe<Scalars['String']>,
 };
 
 
@@ -108,6 +110,11 @@ export type MutationCreateRecipeArgs = {
 
 export type MutationDeleteRecipeArgs = {
   title?: Maybe<Scalars['String']>
+};
+
+
+export type MutationCreateChallengeArgs = {
+  challengeInput?: Maybe<ChallengeInput>
 };
 
 export type Query = {

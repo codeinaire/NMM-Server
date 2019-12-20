@@ -28,6 +28,7 @@ export default gql`
     difficulty: ChallengeDifficultyEnum!
     lowResSharedFriendsImage: String
     standardResolution: String
+    recipeId: Int!
   }
 
   type Challenge {
