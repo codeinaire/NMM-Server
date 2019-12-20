@@ -23,26 +23,16 @@ export default class UserProfile {
   @Column()
   username: string
 
-  @Column({
-    default: 'Fill in your bio for more points!'
-  })
+  @Column()
   bio: string
 
-  @Column({
-    default:
-      'https://res.cloudinary.com/codeinaire/image/upload/v1575760488/nmm-profile-pics/y7vzfciewvobndehwe9e.jpg'
-  })
+  @Column()
   lowResProfile: string
 
-  @Column({
-    default:
-      'https://res.cloudinary.com/codeinaire/image/upload/c_scale,q_auto,w_640/v1575760488/nmm-profile-pics/y7vzfciewvobndehwe9e.jpg'
-  })
+  @Column()
   standardResolution: string
 
-  @Column({
-    default: 'What is a quote that inspires you to grow?'
-  })
+  @Column()
   challengeQuote: string
 
   @CreateDateColumn()
