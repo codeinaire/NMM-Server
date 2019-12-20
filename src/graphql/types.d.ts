@@ -69,6 +69,13 @@ export enum MealTypeEnum {
   Snack = 'Snack'
 }
 
+export enum MotivationsEnum {
+  Environment = 'Environment',
+  AnimalWelfare = 'AnimalWelfare',
+  FoodSecurity = 'FoodSecurity',
+  PersonalHealth = 'PersonalHealth'
+}
+
 export type Mutation = {
    __typename?: 'Mutation',
   createArticles?: Maybe<Array<Maybe<Article>>>,
@@ -189,7 +196,7 @@ export type UserProfile = {
   id?: Maybe<Scalars['ID']>,
   totalPoints: Scalars['Int'],
   challengeGoals: Scalars['Int'],
-  motivations: Scalars['String'],
+  motivations: Array<MotivationsEnum>,
   username: Scalars['String'],
   bio?: Maybe<Scalars['String']>,
   lowResProfile?: Maybe<Scalars['String']>,
@@ -200,7 +207,7 @@ export type UserProfile = {
 export type UserProfileInput = {
   id: Scalars['ID'],
   challengeGoals: Scalars['Int'],
-  motivations: Scalars['String'],
+  motivations: Array<MotivationsEnum>,
   username: Scalars['String'],
   bio?: Maybe<Scalars['String']>,
   lowResProfile?: Maybe<Scalars['String']>,
