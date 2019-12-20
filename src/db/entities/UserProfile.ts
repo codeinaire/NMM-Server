@@ -6,6 +6,13 @@ import {
   UpdateDateColumn
 } from 'typeorm'
 
+enum MotivationsEnum {
+  Environment = 'Environment',
+  AnimalWelfare = 'Animal Welfare',
+  FoodSecurity = 'Food Security',
+  PersonalHealth = 'Personal Health'
+}
+
 @Entity()
 export default class UserProfile {
   @PrimaryColumn()
@@ -18,10 +25,14 @@ export default class UserProfile {
   challengeGoals: number
 
   @Column()
-  motivations: string
-
-  @Column()
   username: string
+
+  @Column({
+    type: 'enum',
+    array: true,
+    enum: MotivationsEnum
+  })
+  motivations: MotivationsEnum[]
 
   @Column({
     default: 'Fill in your bio for more points!'
