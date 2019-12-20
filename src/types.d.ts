@@ -4,11 +4,13 @@ import { DataSource, DataSourceConfig } from 'apollo-datasource'
 import { APIGatewayProxyEvent, Context } from 'aws-lambda'
 import {
   Challenge,
+  ChallengeInput,
   RecipeInput,
   Recipe,
   UserProfile,
   UserProfileInput,
-  RecipeAttribution
+  RecipeAttribution,
+  TypeEnum
 } from './graphql/types'
 import { LambdaLog } from 'lambda-log'
 import { JwksClient } from 'jwks-rsa'
@@ -103,11 +105,16 @@ export interface IUserProfileAPI extends DataSource {
 
 export interface IChallengeAPI extends DataSource {
   findChallenge(): Promise<Challenge | undefined>
+  createChallenge(
+    arg0: ChallengeInput,
+    arg1: TypeEnum,
+    arg2: string
+  ): Promise<any>
 }
 
 export interface ICalculatePoints {
-  calculate(
-    arg0: IChallengeObject,
+  calculate<T extends ChallengeInput | UserProfileInput>(
+    arg0: T,
     arg1: string,
     arg2?: number
   ): number | string
