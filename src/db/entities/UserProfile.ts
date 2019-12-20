@@ -41,7 +41,7 @@ export default class UserProfile {
   standardResolution: string
 
   @Column({
-    default: "What's a quote that inspires you to grow?"
+    default: 'What is a quote that inspires you to grow?'
   })
   challengeQuote: string
 
