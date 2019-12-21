@@ -35,7 +35,7 @@ export default class ChallengeAPI implements IChallengeAPI {
    */
   public async findChallenge() {
     const challenge = await this.db.getRepository(ChallengeEntity).findOne({
-      id: 1
+      id: 4
     })
 
     return challenge
@@ -47,6 +47,8 @@ export default class ChallengeAPI implements IChallengeAPI {
     verifiedUser: string
   ) {
     const MAX_RECIPE_SECTIONS_COMPLETABLE = 4
+    const POINTS_PER_SECTION_COMPLETED = 10
+    const ALL_SECTIONS_COMPLETED_BONUS = 25
     const {
       type,
       sectionsCompleted,
@@ -65,7 +67,6 @@ export default class ChallengeAPI implements IChallengeAPI {
     const [userProfileObject] = await this.db
       .getRepository(UserProfileEntity)
       .find({
-        select: ['totalPoints'],
         where: {
           id: verifiedUser
         }
@@ -77,17 +78,30 @@ export default class ChallengeAPI implements IChallengeAPI {
       userProfileObject.totalPoints
     )
     let challenge = new ChallengeEntity()
-    challenge.awardedPoints = calculatedPoints
 
     challenge.type = type
     challenge.difficulty = difficulty
-    if (!sectionsCompleted) challenge.sectionsCompleted = sectionsCompleted
-    if (typeof lowResSharedFriendsImage == 'string')
-      challenge.sharedFriendsImages.lowResSharedFriendsImage = lowResSharedFriendsImage
-    if (typeof standardResolution == 'string')
-      challenge.sharedFriendsImages.standardResolution = standardResolution
-    if (type == 'Recipe')
+    if (!!sectionsCompleted) challenge.sectionsCompleted = sectionsCompleted
+    if (type == 'Recipe') {
+      challenge.maxAwardablePoints =
+        POINTS_PER_SECTION_COMPLETED * MAX_RECIPE_SECTIONS_COMPLETABLE +
+        ALL_SECTIONS_COMPLETED_BONUS
       challenge.maxSectionsCompletable = MAX_RECIPE_SECTIONS_COMPLETABLE
+    }
+    challenge.awardedPoints = calculatedPoints
+
+    let sharedFriendsImages = {
+      lowResSharedFriendsImage: '',
+      standardResolution: ''
+    }
+    if (typeof lowResSharedFriendsImage == 'string') {
+      sharedFriendsImages.lowResSharedFriendsImage = lowResSharedFriendsImage
+      challenge.sharedFriendsImages = sharedFriendsImages
+    }
+    if (typeof standardResolution == 'string') {
+      sharedFriendsImages.standardResolution = standardResolution
+      challenge.sharedFriendsImages = sharedFriendsImages
+    }
 
     const recipe = await this.db.getRepository(RecipeEntity).findOne(recipeId)
     if (recipe) challenge.recipe = recipe
@@ -112,6 +126,7 @@ export default class ChallengeAPI implements IChallengeAPI {
         .getRepository(UncompletedChallengeEntity)
         .save(uncompletedChallenge)
     }
+    if (type == 'Recipe') delete savedChallenge.recipe
 
     return savedChallenge
   }

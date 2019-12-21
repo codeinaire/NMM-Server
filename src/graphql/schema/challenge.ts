@@ -24,7 +24,7 @@ export default gql`
 
   input ChallengeInput {
     type: TypeEnum!
-    sectionsCompleted: [SectionsCompletedEnum]!
+    sectionsCompleted: [SectionsCompletedEnum!]!
     difficulty: ChallengeDifficultyEnum!
     lowResSharedFriendsImage: String
     standardResolution: String
