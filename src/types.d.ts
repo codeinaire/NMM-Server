@@ -113,8 +113,8 @@ export interface IChallengeAPI extends DataSource {
 }
 
 export interface ICalculatePoints {
-  calculate<T extends ChallengeInput | UserProfileInput>(
-    arg0: T,
+  calculate(
+    arg0: ChallengeInput | UserProfileInput,
     arg1: string,
     arg2?: number
   ): number

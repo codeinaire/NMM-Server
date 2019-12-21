@@ -58,11 +58,22 @@ export default class ChallengeAPI implements IChallengeAPI {
       recipeId
     } = challengeInput
 
-    console.log(
-      'challengeInput',
+    const calculatedPoints = this.calculatePoints.calculate(
       challengeInput,
-      typeof lowResSharedFriendsImage
+      challengeType
     )
+
+    await this.db
+      .createQueryBuilder()
+      .update(UserProfileEntity)
+      .set({
+        totalPoints: () => `'totalPoints' = 'totalPoints' + ${calculatedPoints}`
+      })
+      .where('id = :id', { id: verifiedUser })
+
+    // update OrderDetails
+    // set Quantity = Quantity + 6
+    // where OrderDetailID = 1
 
     const [userProfileObject] = await this.db
       .getRepository(UserProfileEntity)
@@ -72,13 +83,8 @@ export default class ChallengeAPI implements IChallengeAPI {
         }
       })
 
-    const calculatedPoints = this.calculatePoints.calculate(
-      challengeInput,
-      challengeType,
-      userProfileObject.totalPoints
-    )
     let challenge = new ChallengeEntity()
-
+    challenge.awardedPoints = calculatedPoints
     challenge.type = type
     challenge.difficulty = difficulty
     if (!!sectionsCompleted) challenge.sectionsCompleted = sectionsCompleted
@@ -88,7 +94,6 @@ export default class ChallengeAPI implements IChallengeAPI {
         ALL_SECTIONS_COMPLETED_BONUS
       challenge.maxSectionsCompletable = MAX_RECIPE_SECTIONS_COMPLETABLE
     }
-    challenge.awardedPoints = calculatedPoints
 
     let sharedFriendsImages = {
       lowResSharedFriendsImage: '',

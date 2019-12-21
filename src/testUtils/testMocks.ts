@@ -1,19 +1,34 @@
 import { APIGatewayProxyEvent } from 'aws-lambda'
 import { IModifiedObject } from '../types'
+import {
+  MotivationsEnum,
+  TypeEnum,
+  SectionsCompletedEnum,
+  ChallengeDifficultyEnum
+} from '../graphql/types'
 
 export const mockMaxTotalPoints = 95
+
+export const mockPartialCompletionRecipeChallenge = {
+  type: TypeEnum.Recipe,
+  sectionsCompleted: [SectionsCompletedEnum.Ingredients],
+  difficulty: ChallengeDifficultyEnum.Easy,
+  lowResSharedFriendsImage: 'test low res image',
+  standardResolution: 'test stand res image',
+  recipeId: 1
+}
 
 export const mockMinUserProfileInput = {
   id: 'testuserid',
   challengeGoals: 5,
-  motivations: 'environment,animals',
+  motivations: [MotivationsEnum.AnimalWelfare, MotivationsEnum.Environment],
   username: 'test user'
 }
 
 export const mockMaxUserProfileInput = {
   id: 'testuserid',
   challengeGoals: 5,
-  motivations: 'environment,animals',
+  motivations: [MotivationsEnum.AnimalWelfare, MotivationsEnum.Environment],
   username: 'test user',
   bio: 'default test bio',
   profilePic: 'default test profile pc',
