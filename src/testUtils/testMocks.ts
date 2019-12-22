@@ -9,12 +9,26 @@ import {
 
 export const mockMaxTotalPoints = 95
 
+export const mockCompletionRecipeChallenge = {
+  type: TypeEnum.Recipe,
+  sectionsCompleted: [
+    SectionsCompletedEnum.Ingredients,
+    SectionsCompletedEnum.Method,
+    SectionsCompletedEnum.SharedFriendsImage,
+    SectionsCompletedEnum.SharedRecipe
+  ],
+  difficulty: ChallengeDifficultyEnum.Easy,
+  lowResSharedFriendsImage: 'test low res image',
+  standardResolution: 'test stand res image',
+  recipeId: 1
+}
+
 export const mockPartialCompletionRecipeChallenge = {
   type: TypeEnum.Recipe,
   sectionsCompleted: [SectionsCompletedEnum.Ingredients],
   difficulty: ChallengeDifficultyEnum.Easy,
-  lowResSharedFriendsImage: 'test low res image',
-  standardResolution: 'test stand res image',
+  lowResSharedFriendsImage: '',
+  standardResolution: '',
   recipeId: 1
 }
 

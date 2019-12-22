@@ -1,11 +1,10 @@
-import { Connection, ConnectionManager } from 'typeorm'
+import { Connection } from 'typeorm'
 import { ApolloServer } from 'apollo-server-lambda'
 import { DataSource, DataSourceConfig } from 'apollo-datasource'
 import { APIGatewayProxyEvent, Context } from 'aws-lambda'
 import {
   Challenge,
   ChallengeInput,
-  RecipeInput,
   Recipe,
   UserProfile,
   UserProfileInput,
@@ -13,7 +12,6 @@ import {
   TypeEnum
 } from './graphql/types'
 import { LambdaLog } from 'lambda-log'
-import { JwksClient } from 'jwks-rsa'
 
 export interface IEnvs {
   audience: string
@@ -118,8 +116,4 @@ export interface ICalculatePoints {
     arg1: string,
     arg2?: number
   ): number
-}
-
-interface IChallengeObject {
-  [index: string]: any
 }

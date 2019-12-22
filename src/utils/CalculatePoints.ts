@@ -56,27 +56,24 @@ export default class CalculatePoints implements ICalculatePoints {
    * If all are completed the user is rewarded an extra 25 points.
    *
    * @param { sectionsCompleted, difficultly } - ChallengeInput object
-   * @param currentSumTotalPoints - how many points on a user's profile
    * @returns sumTotalPoints - new sum total of points
    */
-  private calculateRecipeChallengePoints(
-    { sectionsCompleted, difficulty }: ChallengeInput,
-    currentSumTotalPoints: number
-  ) {
+  private calculateRecipeChallengePoints({
+    sectionsCompleted,
+    difficulty
+  }: ChallengeInput) {
     const MAX_COMPLETABLE_ITEMS = 4
 
     const completedSections = sectionsCompleted.length
-    const sectionsCompletedSumTotal =
+    let sectionsCompletedSumTotal =
       completedSections *
       this.POINTS_PER_SECTION_COMPLETED *
       ((difficulty as unknown) as number)
 
-    let sumTotalPoints = currentSumTotalPoints + sectionsCompletedSumTotal
-
     if (completedSections == MAX_COMPLETABLE_ITEMS)
-      sumTotalPoints += this.ALL_SECTIONS_COMPLETED_BONUS
+      sectionsCompletedSumTotal += this.ALL_SECTIONS_COMPLETED_BONUS
 
-    return sumTotalPoints
+    return sectionsCompletedSumTotal
   }
 
   public calculate(
@@ -104,10 +101,7 @@ export default class CalculatePoints implements ICalculatePoints {
           `Calculating points for recipe challenge with items:
             ${challengeObject.sectionsCompleted.toString()}`
         )
-        sumTotalPoints = this.calculateRecipeChallengePoints(
-          challengeObject,
-          currentSumTotalPoints
-        )
+        sumTotalPoints = this.calculateRecipeChallengePoints(challengeObject)
         this.logger.info(`Calculated points: ${sumTotalPoints}`)
         return sumTotalPoints
       default:

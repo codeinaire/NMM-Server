@@ -9,20 +9,28 @@ import UncompletedChallengeEntity from '../../db/entities/UncompletedChallenge'
 // TYPES
 import { ChallengeInput, TypeEnum } from '../types'
 import { TYPES } from '../../inversifyTypes'
-import { IChallengeAPI, IDatabase, ICalculatePoints } from '../../types'
+import {
+  ILogger,
+  IChallengeAPI,
+  IDatabase,
+  ICalculatePoints
+} from '../../types'
 import { Connection } from 'typeorm'
 import { DataSourceConfig } from 'apollo-datasource'
 
 @injectable()
 export default class ChallengeAPI implements IChallengeAPI {
   private readonly calculatePoints: ICalculatePoints
+  private readonly logger: ILogger
   // private context: any
   private db: Connection
   @inject(TYPES.Database) private database: IDatabase
   public constructor(
-    @inject(TYPES.CalculatePoints) calculatePoints: ICalculatePoints
+    @inject(TYPES.CalculatePoints) calculatePoints: ICalculatePoints,
+    @inject(TYPES.Logger) Logger: ILogger
   ) {
-    this.calculatePoints = calculatePoints
+    // eslint-disable-next-line prettier/prettier
+    ;(this.calculatePoints = calculatePoints), (this.logger = Logger)
   }
 
   public async initialize(config: DataSourceConfig<any>) {
@@ -58,31 +66,26 @@ export default class ChallengeAPI implements IChallengeAPI {
       recipeId
     } = challengeInput
 
+    // Calculate challenge points, update UserProfileEntity
+    // with new total, & get updated UserProfile object
     const calculatedPoints = this.calculatePoints.calculate(
       challengeInput,
       challengeType
     )
 
     await this.db
-      .createQueryBuilder()
-      .update(UserProfileEntity)
-      .set({
-        totalPoints: () => `'totalPoints' = 'totalPoints' + ${calculatedPoints}`
-      })
-      .where('id = :id', { id: verifiedUser })
-
-    // update OrderDetails
-    // set Quantity = Quantity + 6
-    // where OrderDetailID = 1
-
-    const [userProfileObject] = await this.db
       .getRepository(UserProfileEntity)
-      .find({
-        where: {
-          id: verifiedUser
-        }
-      })
+      .increment({ id: verifiedUser }, 'totalPoints', calculatedPoints)
 
+    const updatedUserProfileObject = await this.db
+      .getRepository(UserProfileEntity)
+      .findOne(verifiedUser)
+    if (updatedUserProfileObject == undefined) {
+      this.logger.getLogger().error('UserProfile not found')
+      throw new Error('UserProfile not found')
+    }
+
+    // Create/Update ChallengeEntity
     let challenge = new ChallengeEntity()
     challenge.awardedPoints = calculatedPoints
     challenge.type = type
@@ -115,22 +118,24 @@ export default class ChallengeAPI implements IChallengeAPI {
       .getRepository(ChallengeEntity)
       .save(challenge)
 
+    // Create/Update Un/CompleteChallengeEntity
     const numberOfSectionsCompleted = sectionsCompleted.length
     if (numberOfSectionsCompleted == MAX_RECIPE_SECTIONS_COMPLETABLE) {
       let completedChallenge = new CompletedChallengeEntity()
-      completedChallenge.userProfile = userProfileObject
+      completedChallenge.userProfile = updatedUserProfileObject
       completedChallenge.challenge = savedChallenge
       await this.db
         .getRepository(CompletedChallengeEntity)
         .save(completedChallenge)
     } else {
       let uncompletedChallenge = new UncompletedChallengeEntity()
-      uncompletedChallenge.userProfile = userProfileObject
+      uncompletedChallenge.userProfile = updatedUserProfileObject
       uncompletedChallenge.challenge = savedChallenge
       await this.db
         .getRepository(UncompletedChallengeEntity)
         .save(uncompletedChallenge)
     }
+    // Remove Recipe object from returned object
     if (type == 'Recipe') delete savedChallenge.recipe
 
     return savedChallenge
