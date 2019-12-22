@@ -9,6 +9,7 @@ import {
 } from 'typeorm'
 
 import Recipe from './Recipe'
+import UserProfile from './UserProfile'
 
 export enum ChallengeDifficultyEnum {
   Easy = 1,
@@ -82,6 +83,20 @@ export default class Challenge {
   @ManyToOne(() => Recipe, { cascade: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'recipeId' })
   recipe: Recipe
+
+  @Column('int', { nullable: true })
+  userProfileId: string
+
+  @ManyToOne(
+    () => UserProfile,
+    userProfile => userProfile.challenges,
+    {
+      cascade: true,
+      onDelete: 'CASCADE'
+    }
+  )
+  @JoinColumn({ name: 'userProfileId' })
+  userProfile: UserProfile
 
   @CreateDateColumn()
   createdAt: Date

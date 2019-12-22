@@ -15,23 +15,28 @@ export default {
     }
   },
   Mutation: {
-    createChallenge: async (
+    createOrUpdateChallenge: async (
       _: any,
       { challengeInput }: { challengeInput: ChallengeInput },
       { auth, dataSources, log, event }: IResolverContext
     ): Promise<Challenge> => {
-      console.log('challengeInput', challengeInput)
+      try {
+        // log.info(`Authorising user to create challenge...`)
+        // const verifiedId = await auth.checkScopesAndResolve(event, ['profile'])
+        // log.info(`Authorisation of user ${verifiedId} successful!`)
 
-      log.info('Finding challenge')
-      // TODO - add auth
-      const verifiedUser = '1'
-      const createdChallenge = await dataSources.challengeAPI.createChallenge(
-        challengeInput,
-        challengeInput.type,
-        verifiedUser
-      )
-      log.info('Found challenge')
-      return createdChallenge
+        // log.info(`Creating challenge for ${verifiedId}`)
+        const createdChallenge = await dataSources.challengeAPI.createChallenge(
+          challengeInput,
+          challengeInput.type,
+          '1'
+        )
+        log.info('Challenge created')
+        return createdChallenge
+      } catch (error) {
+        log.error(`Couldn't create challenge: ${error}`)
+        return error
+      }
     }
   },
   ChallengeDifficultyEnum: {

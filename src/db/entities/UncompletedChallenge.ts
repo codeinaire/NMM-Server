@@ -17,10 +17,10 @@ export default class UncompletedChallenge {
   id: number
 
   @Column('int', { nullable: true })
-  userId: number
+  userProfileId: string
 
   @ManyToOne(() => UserProfile, { cascade: true, onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'userProfileId' })
   userProfile: UserProfile
 
   @Column('int', { nullable: true })

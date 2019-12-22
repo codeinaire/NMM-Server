@@ -10,6 +10,6 @@ export default gql`
     createRecipe(recipe: RecipeInput): Recipe
     deleteRecipe(title: String): Recipe
 
-    createChallenge(challengeInput: ChallengeInput): Challenge
+    createOrUpdateChallenge(challengeInput: ChallengeInput): Challenge
   }
 `

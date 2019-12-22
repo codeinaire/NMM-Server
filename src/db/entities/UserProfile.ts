@@ -3,8 +3,11 @@ import {
   Column,
   PrimaryColumn,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  OneToMany
 } from 'typeorm'
+
+import Challenge from './Challenge'
 
 enum MotivationsEnum {
   Environment = 'Environment',
@@ -55,6 +58,12 @@ export default class UserProfile {
     default: 'What is a quote that inspires you to grow?'
   })
   challengeQuote: string
+
+  @OneToMany(
+    () => Challenge,
+    challenge => challenge.userProfile
+  )
+  challenges: Challenge[]
 
   @CreateDateColumn()
   createdAt: Date

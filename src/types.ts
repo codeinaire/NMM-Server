@@ -103,7 +103,7 @@ export interface IUserProfileAPI extends DataSource {
 
 export interface IChallengeAPI extends DataSource {
   findChallenge(): Promise<Challenge | undefined>
-  createChallenge(
+  createOrUpdateChallenge(
     arg0: ChallengeInput,
     arg1: TypeEnum,
     arg2: string

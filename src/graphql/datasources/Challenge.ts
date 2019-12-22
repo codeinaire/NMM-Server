@@ -49,7 +49,7 @@ export default class ChallengeAPI implements IChallengeAPI {
     return challenge
   }
 
-  public async createChallenge(
+  public async createOrUpdateChallenge(
     challengeInput: ChallengeInput,
     challengeType: TypeEnum,
     verifiedUser: string
@@ -73,9 +73,14 @@ export default class ChallengeAPI implements IChallengeAPI {
       challengeType
     )
 
-    await this.db
+    const ERROR_NO_AFFECTED_ROWS = 0
+    const updatedUserProfile = await this.db
       .getRepository(UserProfileEntity)
       .increment({ id: verifiedUser }, 'totalPoints', calculatedPoints)
+    if (updatedUserProfile.affected == ERROR_NO_AFFECTED_ROWS) {
+      this.logger.getLogger().error('UserProfile totalPoints not updated')
+      throw new Error('UserProfile totalPoints not update. Try again!')
+    }
 
     const updatedUserProfileObject = await this.db
       .getRepository(UserProfileEntity)
@@ -85,8 +90,13 @@ export default class ChallengeAPI implements IChallengeAPI {
       throw new Error('UserProfile not found')
     }
 
+    let challenge: ChallengeEntity | undefined
+    challenge = await this.db
+      .getRepository(ChallengeEntity)
+      .findOne({ userProfileId: verifiedUser, recipeId })
     // Create/Update ChallengeEntity
-    let challenge = new ChallengeEntity()
+    if (challenge == undefined) challenge = new ChallengeEntity()
+    challenge.userProfile = updatedUserProfileObject
     challenge.awardedPoints = calculatedPoints
     challenge.type = type
     challenge.difficulty = difficulty
@@ -127,13 +137,25 @@ export default class ChallengeAPI implements IChallengeAPI {
       await this.db
         .getRepository(CompletedChallengeEntity)
         .save(completedChallenge)
-    } else {
-      let uncompletedChallenge = new UncompletedChallengeEntity()
-      uncompletedChallenge.userProfile = updatedUserProfileObject
-      uncompletedChallenge.challenge = savedChallenge
+      // Delete uncompleted entity when challenge complete
       await this.db
         .getRepository(UncompletedChallengeEntity)
-        .save(uncompletedChallenge)
+        .delete({ userProfileId: verifiedUser, challengeId: savedChallenge.id })
+    } else {
+      let uncompletedChallenge = await this.db
+        .getRepository(UncompletedChallengeEntity)
+        .findOne({
+          userProfileId: verifiedUser,
+          challengeId: savedChallenge.id
+        })
+      if (uncompletedChallenge == undefined) {
+        uncompletedChallenge = new UncompletedChallengeEntity()
+        uncompletedChallenge.userProfile = updatedUserProfileObject
+        uncompletedChallenge.challenge = savedChallenge
+        await this.db
+          .getRepository(UncompletedChallengeEntity)
+          .save(uncompletedChallenge)
+      }
     }
     // Remove Recipe object from returned object
     if (type == 'Recipe') delete savedChallenge.recipe
