@@ -117,8 +117,8 @@ describe('Resolvers - [UserProfile]', () => {
         mockMaxUserProfileInput.motivations
       )
       expect(res).toHaveProperty(
-        'profilePic',
-        mockMaxUserProfileInput.profilePic
+        'standardResolution',
+        mockMaxUserProfileInput.standardResolution
       )
       expect(res).toHaveProperty('totalPoints', mockMaxTotalPoints)
 

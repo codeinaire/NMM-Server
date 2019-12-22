@@ -8,9 +8,9 @@ import {
 
 enum MotivationsEnum {
   Environment = 'Environment',
-  AnimalWelfare = 'Animal Welfare',
-  FoodSecurity = 'Food Security',
-  PersonalHealth = 'Personal Health'
+  AnimalWelfare = 'AnimalWelfare',
+  FoodSecurity = 'FoodSecurity',
+  PersonalHealth = 'PersonalHealth'
 }
 
 @Entity()

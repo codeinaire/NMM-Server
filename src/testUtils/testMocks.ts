@@ -45,7 +45,7 @@ export const mockMaxUserProfileInput = {
   motivations: [MotivationsEnum.AnimalWelfare, MotivationsEnum.Environment],
   username: 'test user',
   bio: 'default test bio',
-  profilePic: 'default test profile pc',
+  standardResolution: 'default test profile image',
   challengeQuote: 'test quote'
 }
 

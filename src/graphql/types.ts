@@ -19,6 +19,7 @@ export type Article = {
 
 export type Challenge = {
    __typename?: 'Challenge',
+  id: Scalars['ID'],
   type: TypeEnum,
   difficulty: ChallengeDifficultyEnum,
   maxAwardablePoints?: Maybe<Scalars['Int']>,
@@ -26,7 +27,6 @@ export type Challenge = {
   maxSectionsCompletable?: Maybe<Scalars['Int']>,
   sectionsCompleted: Array<SectionsCompletedEnum>,
   sharedFriendsImages?: Maybe<SharedFriendsImage>,
-  id: Scalars['ID'],
 };
 
 export enum ChallengeDifficultyEnum {
@@ -84,7 +84,7 @@ export type Mutation = {
   createUserProfile?: Maybe<UserProfile>,
   createRecipe?: Maybe<Recipe>,
   deleteRecipe?: Maybe<Recipe>,
-  createChallenge?: Maybe<Scalars['String']>,
+  createChallenge?: Maybe<Challenge>,
 };
 
 

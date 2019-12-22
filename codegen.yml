@@ -1,7 +1,7 @@
 require: ts-node/register
 schema: './src/graphql/schema/*.ts'
 generates:
-  ./src/graphql/types.d.ts:
+  ./src/graphql/types.ts:
     config:
       scalars:
         ID: number | string
