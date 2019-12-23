@@ -21,15 +21,17 @@ export default {
       { auth, dataSources, log, event }: IResolverContext
     ): Promise<Challenge> => {
       try {
-        // log.info(`Authorising user to create challenge...`)
-        // const verifiedId = await auth.checkScopesAndResolve(event, ['profile'])
-        // log.info(`Authorisation of user ${verifiedId} successful!`)
+        log.info(`Authorising user to create challenge...`)
+        const verifiedId = await auth.checkScopesAndResolve(event, [
+          'challenge'
+        ])
+        log.info(`Authorisation of user ${verifiedId} successful!`)
 
-        // log.info(`Creating challenge for ${verifiedId}`)
+        log.info(`Creating challenge for ${verifiedId}`)
         const createdChallenge = await dataSources.challengeAPI.createChallenge(
           challengeInput,
           challengeInput.type,
-          '1'
+          verifiedId
         )
         log.info('Challenge created')
         return createdChallenge

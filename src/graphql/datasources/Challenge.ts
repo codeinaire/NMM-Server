@@ -30,7 +30,8 @@ export default class ChallengeAPI implements IChallengeAPI {
     @inject(TYPES.Logger) Logger: ILogger
   ) {
     // eslint-disable-next-line prettier/prettier
-    ;(this.calculatePoints = calculatePoints), (this.logger = Logger)
+    this.calculatePoints = calculatePoints
+    this.logger = Logger
   }
 
   public async initialize(config: DataSourceConfig<any>) {
