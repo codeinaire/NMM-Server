@@ -138,7 +138,7 @@ export type Recipe = {
   difficulty: DifficultyEnum,
   cost: CostEnum,
   mealType: MealTypeEnum,
-  hashtags: Scalars['String'],
+  hashtags: Array<Scalars['String']>,
   /** **LIST** */
   lowResolution: Scalars['String'],
   /** **SHOW** */
@@ -165,7 +165,7 @@ export type RecipeInput = {
   name: Scalars['String'],
   ingredients: Scalars['String'],
   method: Scalars['String'],
-  hashtags: Scalars['String'],
+  hashtags: Array<Scalars['String']>,
   difficulty: DifficultyEnum,
   cost: CostEnum,
   mealType: MealTypeEnum,

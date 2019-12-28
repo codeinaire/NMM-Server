@@ -26,7 +26,7 @@ export default gql`
     name: String!
     ingredients: String!
     method: String!
-    hashtags: String!
+    hashtags: [String!]!
     difficulty: DifficultyEnum!
     cost: CostEnum!
     mealType: MealTypeEnum!
@@ -45,7 +45,7 @@ export default gql`
     difficulty: DifficultyEnum!
     cost: CostEnum!
     mealType: MealTypeEnum!
-    hashtags: String!
+    hashtags: [String!]!
     "**LIST**"
     lowResolution: String!
     "**SHOW**"
