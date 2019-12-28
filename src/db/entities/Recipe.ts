@@ -47,8 +47,8 @@ export default class Recipe {
   })
   method: string
 
-  @Column()
-  hashtags: string
+  @Column('simple-array', { nullable: true })
+  hashtags: string[]
 
   @Column({
     type: 'enum',
