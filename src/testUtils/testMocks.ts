@@ -4,12 +4,14 @@ import {
   MotivationsEnum,
   TypeEnum,
   SectionsCompletedEnum,
-  ChallengeDifficultyEnum
+  ChallengeDifficultyEnum,
+  ChallengeInput,
+  UserProfileInput
 } from '../graphql/types'
 
 export const mockMaxTotalPoints = 95
 
-export const mockCompletionRecipeChallenge = {
+export const mockCompletionRecipeChallenge: ChallengeInput = {
   type: TypeEnum.Recipe,
   sectionsCompleted: [
     SectionsCompletedEnum.Ingredients,
@@ -23,7 +25,7 @@ export const mockCompletionRecipeChallenge = {
   recipeId: 1
 }
 
-export const mockPartialCompletionRecipeChallenge = {
+export const mockPartialCompletionRecipeChallenge: ChallengeInput = {
   type: TypeEnum.Recipe,
   sectionsCompleted: [SectionsCompletedEnum.Ingredients],
   difficulty: ChallengeDifficultyEnum.Easy,
@@ -32,14 +34,14 @@ export const mockPartialCompletionRecipeChallenge = {
   recipeId: 1
 }
 
-export const mockMinUserProfileInput = {
+export const mockMinUserProfileInput: UserProfileInput = {
   id: 'testuserid',
   challengeGoals: 5,
   motivations: [MotivationsEnum.AnimalWelfare, MotivationsEnum.Environment],
   username: 'test user'
 }
 
-export const mockMaxUserProfileInput = {
+export const mockMaxUserProfileInput: UserProfileInput = {
   id: 'testuserid',
   challengeGoals: 5,
   motivations: [MotivationsEnum.AnimalWelfare, MotivationsEnum.Environment],

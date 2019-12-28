@@ -28,7 +28,7 @@ export default {
         log.info(`Authorisation of user ${verifiedId} successful!`)
 
         log.info(`Creating challenge for ${verifiedId}`)
-        const createdChallenge = await dataSources.challengeAPI.createChallenge(
+        const createdChallenge = await dataSources.challengeAPI.createOrUpdateChallenge(
           challengeInput,
           challengeInput.type,
           verifiedId
@@ -37,7 +37,7 @@ export default {
         return createdChallenge
       } catch (error) {
         log.error(`Couldn't create challenge: ${error}`)
-        return error
+        throw new Error(error)
       }
     }
   },

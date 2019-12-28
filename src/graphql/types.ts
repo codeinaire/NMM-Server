@@ -84,7 +84,7 @@ export type Mutation = {
   createUserProfile?: Maybe<UserProfile>,
   createRecipe?: Maybe<Recipe>,
   deleteRecipe?: Maybe<Recipe>,
-  createChallenge?: Maybe<Challenge>,
+  createOrUpdateChallenge?: Maybe<Challenge>,
 };
 
 
@@ -113,7 +113,7 @@ export type MutationDeleteRecipeArgs = {
 };
 
 
-export type MutationCreateChallengeArgs = {
+export type MutationCreateOrUpdateChallengeArgs = {
   challengeInput?: Maybe<ChallengeInput>
 };
 

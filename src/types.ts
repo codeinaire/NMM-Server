@@ -107,7 +107,9 @@ export interface IChallengeAPI extends DataSource {
     arg0: ChallengeInput,
     arg1: TypeEnum,
     arg2: string
-  ): Promise<any>
+  ): Promise<Challenge>
+  closeDbConnection(): void
+  initialize(arg0?: DataSourceConfig<any>): void
 }
 
 export interface ICalculatePoints {

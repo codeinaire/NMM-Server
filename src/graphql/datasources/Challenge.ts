@@ -80,7 +80,7 @@ export default class ChallengeAPI implements IChallengeAPI {
       .increment({ id: verifiedUser }, 'totalPoints', calculatedPoints)
     if (updatedUserProfile.affected == ERROR_NO_AFFECTED_ROWS) {
       this.logger.getLogger().error('UserProfile totalPoints not updated')
-      throw new Error('UserProfile totalPoints not update. Try again!')
+      throw new Error('UserProfile totalPoints not updated. Try again!')
     }
 
     const updatedUserProfileObject = await this.db
@@ -162,5 +162,9 @@ export default class ChallengeAPI implements IChallengeAPI {
     if (type == 'Recipe') delete savedChallenge.recipe
 
     return savedChallenge
+  }
+
+  public async closeDbConnection() {
+    await this.db.close()
   }
 }
