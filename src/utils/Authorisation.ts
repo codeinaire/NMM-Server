@@ -42,18 +42,16 @@ export class Authorisation implements IAuthorisation {
 
   private extractBearerToken(event: APIGatewayProxyEvent): string {
     const tokenString = event.headers.authorization
-    if (!tokenString) {
+    if (!tokenString)
       throw new ForbiddenError(
         'Expected "event.headers.authorization" parameter to be set'
       )
-    }
 
     const match = tokenString.match(/^Bearer (.*)$/)
-    if (!match || match.length < 2) {
+    if (!match || match.length < 2)
       throw new ForbiddenError(
         `Invalid Authorization token - ${tokenString} does not match "Bearer .*"`
       )
-    }
 
     return match[1]
   }
@@ -64,9 +62,8 @@ export class Authorisation implements IAuthorisation {
     const decoded: IDecodedToken = jwt.decode(token, {
       complete: true
     }) as IDecodedToken
-    if (!decoded || !decoded.header || !decoded.header.kid) {
+    if (!decoded || !decoded.header || !decoded.header.kid)
       throw new ForbiddenError('Invalid Token')
-    }
 
     const rsaOrCertSigningKey: string = await this.getSigningKey(
       decoded.header.kid
@@ -99,19 +96,15 @@ export class Authorisation implements IAuthorisation {
     const verifiedscopes: Array<string> = scopes
 
     const NO_SCOPES = 0
-    if (verifiedscopes[0].length == NO_SCOPES) {
+    if (verifiedscopes[0].length == NO_SCOPES)
       throw new ForbiddenError('No scopes supplied!')
-    }
 
     const scopesMatch = expectedScopes.some(
       scope => verifiedscopes.indexOf(scope) !== -1
     )
 
-    if (scopesMatch) {
-      return principleId
-    } else {
-      throw new ForbiddenError('You are not authorized!')
-    }
+    if (scopesMatch) return principleId
+    else throw new ForbiddenError('You are not authorized!')
   }
 }
 

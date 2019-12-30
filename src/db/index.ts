@@ -6,13 +6,13 @@ import {
   getConnectionManager
 } from 'typeorm'
 // Dependency injection
-import { injectable, inject } from "inversify"
+import { injectable, inject } from 'inversify'
 import { TYPES } from '../inversifyTypes'
 
 import { production, test, development } from './dbConnectionConfig'
 
 import { IDatabase, ILogger } from '../types'
-import { LambdaLog } from 'lambda-log';
+import { LambdaLog } from 'lambda-log'
 /**
  * Database manager class
  */
@@ -40,9 +40,8 @@ export class Database implements IDatabase {
       this._logger.info(`Using existing DB connection for ${currentEnv}`)
       this.connection = await this.connectionManager.get(CONNECTION_NAME)
 
-      if (!this.connection.isConnected) {
+      if (!this.connection.isConnected)
         this.connection = await this.connection.connect()
-      }
     } else {
       this._logger.info(`Creating DB connection for ${currentEnv}`)
 
