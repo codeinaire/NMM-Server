@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-lambda';
+import { gql } from 'apollo-server-lambda'
 
 export default gql`
   type Mutation {
@@ -9,5 +9,7 @@ export default gql`
 
     createRecipe(recipe: RecipeInput): Recipe
     deleteRecipe(title: String): Recipe
+
+    createOrUpdateChallenge(challengeInput: ChallengeInput): Challenge
   }
 `

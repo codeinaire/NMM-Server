@@ -1,22 +1,53 @@
 import { APIGatewayProxyEvent } from 'aws-lambda'
 import { IModifiedObject } from '../types'
+import {
+  MotivationsEnum,
+  TypeEnum,
+  SectionsCompletedEnum,
+  ChallengeDifficultyEnum,
+  ChallengeInput,
+  UserProfileInput
+} from '../graphql/types'
 
 export const mockMaxTotalPoints = 95
 
-export const mockMinUserProfileInput = {
+export const mockCompletionRecipeChallenge: ChallengeInput = {
+  type: TypeEnum.Recipe,
+  sectionsCompleted: [
+    SectionsCompletedEnum.Ingredients,
+    SectionsCompletedEnum.Method,
+    SectionsCompletedEnum.SharedFriendsImage,
+    SectionsCompletedEnum.SharedRecipe
+  ],
+  difficulty: ChallengeDifficultyEnum.Easy,
+  lowResSharedFriendsImage: 'test low res image',
+  standardResolution: 'test stand res image',
+  recipeId: 1
+}
+
+export const mockPartialCompletionRecipeChallenge: ChallengeInput = {
+  type: TypeEnum.Recipe,
+  sectionsCompleted: [SectionsCompletedEnum.Ingredients],
+  difficulty: ChallengeDifficultyEnum.Easy,
+  lowResSharedFriendsImage: '',
+  standardResolution: '',
+  recipeId: 1
+}
+
+export const mockMinUserProfileInput: UserProfileInput = {
   id: 'testuserid',
   challengeGoals: 5,
-  motivations: 'environment,animals',
+  motivations: [MotivationsEnum.AnimalWelfare, MotivationsEnum.Environment],
   username: 'test user'
 }
 
-export const mockMaxUserProfileInput = {
+export const mockMaxUserProfileInput: UserProfileInput = {
   id: 'testuserid',
   challengeGoals: 5,
-  motivations: 'environment,animals',
+  motivations: [MotivationsEnum.AnimalWelfare, MotivationsEnum.Environment],
   username: 'test user',
   bio: 'default test bio',
-  profilePic: 'default test profile pc',
+  standardResolution: 'default test profile image',
   challengeQuote: 'test quote'
 }
 

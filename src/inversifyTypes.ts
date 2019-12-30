@@ -5,7 +5,8 @@ const TYPES = {
   Server: Symbol.for('Server'),
   Logger: Symbol.for('Logger'),
   Authorisation: Symbol.for('Authorisation'),
-  CalculatePoints: Symbol.for('CalculatePoints')
+  CalculatePoints: Symbol.for('CalculatePoints'),
+  ChallengeAPI: Symbol.for('ChallengeAPI')
 }
 
 export { TYPES }

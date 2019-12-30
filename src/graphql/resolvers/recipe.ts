@@ -1,7 +1,7 @@
 // TYPES
 import { RecipeInput, Recipe } from '../types'
 import { IResolverContext } from '../../types'
-import RecipeEntity from '../../db/entities/Recipe';
+import RecipeEntity from '../../db/entities/Recipe'
 import { RecipeAttribution } from '../types'
 
 export default {
@@ -9,10 +9,7 @@ export default {
     recipes: async (
       _: any,
       __: any,
-      {
-        dataSources,
-        log
-      } : IResolverContext
+      { dataSources, log }: IResolverContext
     ): Promise<Array<Recipe>> => {
       log.info('Finding all recipes')
       const recipes = await dataSources.recipeAPI.findAllRecipes()
@@ -24,10 +21,7 @@ export default {
     createRecipe: async (
       _: any,
       { recipe }: { recipe: RecipeInput },
-      {
-        dataSources,
-        log
-      } : IResolverContext
+      { dataSources, log }: IResolverContext
     ): Promise<Recipe> => {
       log.info('Creating recipe')
       const createdRecipe = await dataSources.recipeAPI.createRecipe(recipe)
@@ -37,29 +31,24 @@ export default {
     deleteRecipe: async (
       _: any,
       title: string,
-      {
-        auth,
-        dataSources,
-        log
-      } : IResolverContext
+      { auth, dataSources, log }: IResolverContext
     ): Promise<Recipe> => {
       log.info('Creating recipe')
       const deletedRecipe = await dataSources.recipeAPI.deleteRecipe(title)
       log.info('Recipe created')
       return deletedRecipe
-    },
+    }
   },
   Recipe: {
     recipeAttribution: async (
       { recipeAttributionId }: RecipeEntity,
       __: any,
-      {
-        dataSources,
-        log
-      } : IResolverContext
+      { dataSources, log }: IResolverContext
     ): Promise<RecipeAttribution> => {
       log.info('Finding recipe attributions.')
-      const attributions = await dataSources.recipeAPI.findAttribution(recipeAttributionId)
+      const attributions = await dataSources.recipeAPI.findAttribution(
+        recipeAttributionId
+      )
       log.info('Attributions found.')
       return attributions
     }

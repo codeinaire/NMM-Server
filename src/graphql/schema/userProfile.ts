@@ -1,11 +1,18 @@
-const { gql } = require('apollo-server-lambda');
+const { gql } = require('apollo-server-lambda')
 
 export default gql`
+  enum MotivationsEnum {
+    Environment
+    AnimalWelfare
+    FoodSecurity
+    PersonalHealth
+  }
+
   type UserProfile {
     id: ID
     totalPoints: Int!
     challengeGoals: Int!
-    motivations: String!
+    motivations: [MotivationsEnum!]!
     username: String!
     bio: String
     lowResProfile: String
@@ -16,7 +23,7 @@ export default gql`
   input UserProfileInput {
     id: ID!
     challengeGoals: Int!
-    motivations: String!
+    motivations: [MotivationsEnum!]!
     username: String!
     bio: String
     lowResProfile: String

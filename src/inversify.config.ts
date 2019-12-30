@@ -8,8 +8,18 @@ import UserProfileAPI from './graphql/datasources/userProfile'
 import Server from './server'
 import Logger from './utils/Logger'
 import CalculatePoints from './utils/CalculatePoints'
+import ChallengeAPI from './graphql/datasources/Challenge'
 
-import { IRecipeAPI, IUserProfileAPI, IServer, IDatabase, ILogger, IAuthorisation, ICalculatePoints } from './types'
+import {
+  IRecipeAPI,
+  IUserProfileAPI,
+  IServer,
+  IDatabase,
+  ILogger,
+  IAuthorisation,
+  ICalculatePoints,
+  IChallengeAPI
+} from './types'
 
 const container = new Container()
 container.bind<IRecipeAPI>(TYPES.RecipeAPI).to(RecipeAPI)
@@ -19,5 +29,6 @@ container.bind<IServer>(TYPES.Server).to(Server)
 container.bind<ILogger>(TYPES.Logger).to(Logger)
 container.bind<IAuthorisation>(TYPES.Authorisation).to(Authorisation)
 container.bind<ICalculatePoints>(TYPES.CalculatePoints).to(CalculatePoints)
+container.bind<IChallengeAPI>(TYPES.ChallengeAPI).to(ChallengeAPI)
 
 export { container }

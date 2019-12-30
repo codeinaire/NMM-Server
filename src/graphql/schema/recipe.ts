@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server-lambda');
+const { gql } = require('apollo-server-lambda')
 
 export default gql`
   enum DifficultyEnum {
@@ -26,7 +26,7 @@ export default gql`
     name: String!
     ingredients: String!
     method: String!
-    hashtags: String!
+    hashtags: [String!]!
     difficulty: DifficultyEnum!
     cost: CostEnum!
     mealType: MealTypeEnum!
@@ -45,13 +45,13 @@ export default gql`
     difficulty: DifficultyEnum!
     cost: CostEnum!
     mealType: MealTypeEnum!
-    hashtags: String!
+    hashtags: [String!]!
     "**LIST**"
     lowResolution: String!
     "**SHOW**"
     recipeAttribution: RecipeAttribution!
-    ingredients: String!
-    method: String!
+    ingredients: [String!]!
+    method: [String!]!
     standardResolution: String!
   }
 

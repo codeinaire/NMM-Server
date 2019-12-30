@@ -1,5 +1,4 @@
 import 'reflect-metadata'
-import createJWKSMock from 'mock-jwks'
 
 import { container } from '../../../inversify.config'
 import { TYPES } from '../../../inversifyTypes'
@@ -9,31 +8,21 @@ import { Authorisation } from '../../../utils/Authorisation'
 import log from '../../../utils/Logger'
 // TYPES
 import userProfileResolver from '../../resolvers/userProfile'
+import { jwksMock, setUpAuthToken } from '../../../testUtils/testJwksSetup'
 import {
-  mockCustomEvent,
   mockMaxUserProfileInput,
   mockMaxTotalPoints
 } from '../../../testUtils/testMocks'
 
-const TOKEN_ISSUER = 'https://test-app.com/'
-
 describe('Resolvers - [UserProfile]', () => {
   setUpTakeDownEnvs()
+  afterEach(async () => {
+    await jwksMock.stop()
+  })
 
   describe('Query', () => {
     it('[ME] Returned - user profile', async () => {
-      const jwksMock = createJWKSMock(TOKEN_ISSUER)
-      await jwksMock.start()
-
-      const accessToken = jwksMock.token({
-        aud: ['https://test-app.com/test/'],
-        iss: TOKEN_ISSUER,
-        sub: 'testuserid',
-        scope: 'profile'
-      })
-      const mockedEvent = mockCustomEvent({
-        authorization: `Bearer ${accessToken}`
-      })
+      const mockedEvent = await setUpAuthToken('profile')
 
       const mockContext = {
         dataSources: {
@@ -55,7 +44,6 @@ describe('Resolvers - [UserProfile]', () => {
       )
 
       expect(res).toEqual([mockMaxUserProfileInput])
-      await jwksMock.stop()
     })
   })
 
@@ -66,19 +54,11 @@ describe('Resolvers - [UserProfile]', () => {
       userProfileAPI.closeDbConnection()
     })
     it('[CREATE PROFILE] Returned - user profile', async () => {
-      const jwksMock = createJWKSMock(TOKEN_ISSUER)
-      await jwksMock.start()
+      const mockedEvent = await setUpAuthToken('profile')
 
-      const accessToken = jwksMock.token({
-        aud: ['https://test-app.com/test/'],
-        iss: TOKEN_ISSUER,
-        sub: 'testuserid',
-        scope: 'profile'
-      })
-      const mockedEvent = mockCustomEvent({
-        authorization: `Bearer ${accessToken}`
-      })
-
+      // Initialize is called by ApolloServer when being setup
+      // The DB is set up in this function which is why it's necessary
+      // to call it here
       await userProfileAPI.initialize({
         context: jest.fn(),
         cache: {
@@ -117,12 +97,10 @@ describe('Resolvers - [UserProfile]', () => {
         mockMaxUserProfileInput.motivations
       )
       expect(res).toHaveProperty(
-        'profilePic',
-        mockMaxUserProfileInput.profilePic
+        'standardResolution',
+        mockMaxUserProfileInput.standardResolution
       )
       expect(res).toHaveProperty('totalPoints', mockMaxTotalPoints)
-
-      await jwksMock.stop()
     })
   })
 })

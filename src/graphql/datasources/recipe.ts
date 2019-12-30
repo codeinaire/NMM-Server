@@ -29,9 +29,11 @@ export default class RecipeAPI implements IRecipeAPI {
   }
 
   public async findAttribution(recipeAttributionId: number) {
-    const attributions = await this.db.getRepository(RecipeAttributionEntity).findOne({
-      id: recipeAttributionId
-    })
+    const attributions = await this.db
+      .getRepository(RecipeAttributionEntity)
+      .findOne({
+        id: recipeAttributionId
+      })
 
     return attributions
   }
@@ -76,15 +78,14 @@ export default class RecipeAPI implements IRecipeAPI {
         where: { name }
       })
 
-    if (foundChef) {
-      recipe.recipeAttribution = foundChef
-    } else {
+    if (foundChef) recipe.recipeAttribution = foundChef
+    else {
       let recipeAttribution = new RecipeAttributionEntity()
       recipeAttribution.name = name
       recipeAttribution.email = email
       recipeAttribution.website = website!
       recipeAttribution.facebook = facebook!
-      recipeAttribution.instragram = instagram!
+      recipeAttribution.instagram = instagram!
       recipeAttribution.twitter = twitter!
 
       recipe.recipeAttribution = recipeAttribution

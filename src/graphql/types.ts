@@ -17,6 +17,33 @@ export type Article = {
   type: Scalars['String'],
 };
 
+export type Challenge = {
+   __typename?: 'Challenge',
+  id: Scalars['ID'],
+  type: TypeEnum,
+  difficulty: ChallengeDifficultyEnum,
+  maxAwardablePoints?: Maybe<Scalars['Int']>,
+  awardedPoints?: Maybe<Scalars['Int']>,
+  maxSectionsCompletable?: Maybe<Scalars['Int']>,
+  sectionsCompleted: Array<SectionsCompletedEnum>,
+  sharedFriendsImages?: Maybe<SharedFriendsImage>,
+};
+
+export enum ChallengeDifficultyEnum {
+  Easy = '1',
+  Medium = '1.15',
+  Hard = '1.3'
+}
+
+export type ChallengeInput = {
+  type: TypeEnum,
+  sectionsCompleted: Array<SectionsCompletedEnum>,
+  difficulty: ChallengeDifficultyEnum,
+  lowResSharedFriendsImage?: Maybe<Scalars['String']>,
+  standardResolution?: Maybe<Scalars['String']>,
+  recipeId: Scalars['Int'],
+};
+
 export enum CostEnum {
   Budget = 'Budget',
   Moderate = 'Moderate',
@@ -43,6 +70,13 @@ export enum MealTypeEnum {
   Snack = 'Snack'
 }
 
+export enum MotivationsEnum {
+  Environment = 'Environment',
+  AnimalWelfare = 'AnimalWelfare',
+  FoodSecurity = 'FoodSecurity',
+  PersonalHealth = 'PersonalHealth'
+}
+
 export type Mutation = {
    __typename?: 'Mutation',
   createArticles?: Maybe<Array<Maybe<Article>>>,
@@ -50,6 +84,7 @@ export type Mutation = {
   createUserProfile?: Maybe<UserProfile>,
   createRecipe?: Maybe<Recipe>,
   deleteRecipe?: Maybe<Recipe>,
+  createOrUpdateChallenge?: Maybe<Challenge>,
 };
 
 
@@ -77,8 +112,14 @@ export type MutationDeleteRecipeArgs = {
   title?: Maybe<Scalars['String']>
 };
 
+
+export type MutationCreateOrUpdateChallengeArgs = {
+  challengeInput?: Maybe<ChallengeInput>
+};
+
 export type Query = {
    __typename?: 'Query',
+  challenge?: Maybe<Challenge>,
   recipes: Array<Maybe<Recipe>>,
   articles?: Maybe<Array<Maybe<Article>>>,
   me?: Maybe<UserProfile>,
@@ -97,13 +138,13 @@ export type Recipe = {
   difficulty: DifficultyEnum,
   cost: CostEnum,
   mealType: MealTypeEnum,
-  hashtags: Scalars['String'],
+  hashtags: Array<Scalars['String']>,
   /** **LIST** */
   lowResolution: Scalars['String'],
   /** **SHOW** */
   recipeAttribution: RecipeAttribution,
-  ingredients: Scalars['String'],
-  method: Scalars['String'],
+  ingredients: Array<Scalars['String']>,
+  method: Array<Scalars['String']>,
   standardResolution: Scalars['String'],
 };
 
@@ -124,7 +165,7 @@ export type RecipeInput = {
   name: Scalars['String'],
   ingredients: Scalars['String'],
   method: Scalars['String'],
-  hashtags: Scalars['String'],
+  hashtags: Array<Scalars['String']>,
   difficulty: DifficultyEnum,
   cost: CostEnum,
   mealType: MealTypeEnum,
@@ -136,12 +177,33 @@ export type RecipeInput = {
   twitter?: Maybe<Scalars['String']>,
 };
 
+export enum SectionsCompletedEnum {
+  None = 'None',
+  Ingredients = 'Ingredients',
+  Method = 'Method',
+  SharedFriendsImage = 'SharedFriendsImage',
+  SharedRecipe = 'SharedRecipe',
+  ReadArticle = 'ReadArticle',
+  SharedArticle = 'SharedArticle'
+}
+
+export type SharedFriendsImage = {
+   __typename?: 'SharedFriendsImage',
+  lowResSharedFriendsImage?: Maybe<Scalars['String']>,
+  standardResolution?: Maybe<Scalars['String']>,
+};
+
+export enum TypeEnum {
+  Recipe = 'Recipe',
+  Article = 'Article'
+}
+
 export type UserProfile = {
    __typename?: 'UserProfile',
   id?: Maybe<Scalars['ID']>,
   totalPoints: Scalars['Int'],
   challengeGoals: Scalars['Int'],
-  motivations: Scalars['String'],
+  motivations: Array<MotivationsEnum>,
   username: Scalars['String'],
   bio?: Maybe<Scalars['String']>,
   lowResProfile?: Maybe<Scalars['String']>,
@@ -152,7 +214,7 @@ export type UserProfile = {
 export type UserProfileInput = {
   id: Scalars['ID'],
   challengeGoals: Scalars['Int'],
-  motivations: Scalars['String'],
+  motivations: Array<MotivationsEnum>,
   username: Scalars['String'],
   bio?: Maybe<Scalars['String']>,
   lowResProfile?: Maybe<Scalars['String']>,

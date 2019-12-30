@@ -1,16 +1,17 @@
-import { Connection, ConnectionManager } from 'typeorm'
+import { Connection } from 'typeorm'
 import { ApolloServer } from 'apollo-server-lambda'
 import { DataSource, DataSourceConfig } from 'apollo-datasource'
 import { APIGatewayProxyEvent, Context } from 'aws-lambda'
 import {
-  RecipeInput,
+  Challenge,
+  ChallengeInput,
   Recipe,
   UserProfile,
   UserProfileInput,
-  RecipeAttribution
+  RecipeAttribution,
+  TypeEnum
 } from './graphql/types'
 import { LambdaLog } from 'lambda-log'
-import { JwksClient } from 'jwks-rsa'
 
 export interface IEnvs {
   audience: string
@@ -100,14 +101,21 @@ export interface IUserProfileAPI extends DataSource {
   closeDbConnection(): void
 }
 
-export interface ICalculatePoints {
-  calculate(
-    arg0: IChallengeObject,
-    arg1: string,
-    arg2?: number
-  ): number | string
+export interface IChallengeAPI extends DataSource {
+  findChallenge(): Promise<Challenge | undefined>
+  createOrUpdateChallenge(
+    arg0: ChallengeInput,
+    arg1: TypeEnum,
+    arg2: string
+  ): Promise<Challenge>
+  closeDbConnection(): void
+  initialize(arg0?: DataSourceConfig<any>): void
 }
 
-interface IChallengeObject {
-  [index: string]: any
+export interface ICalculatePoints {
+  calculate(
+    arg0: ChallengeInput | UserProfileInput,
+    arg1: string,
+    arg2?: number
+  ): number
 }

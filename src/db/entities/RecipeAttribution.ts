@@ -32,7 +32,7 @@ export default class RecipeAttribution {
   facebook: string
 
   @Column()
-  instragram: string
+  instagram: string
 
   @Column()
   twitter: string

@@ -37,18 +37,14 @@ export default class Recipe {
   @Column()
   title: string
 
-  @Column({
-    type: 'text'
-  })
-  ingredients: string
+  @Column('simple-array')
+  ingredients: string[]
 
-  @Column({
-    type: 'text'
-  })
-  method: string
+  @Column('simple-array')
+  method: string[]
 
-  @Column()
-  hashtags: string
+  @Column('simple-array')
+  hashtags: string[]
 
   @Column({
     type: 'enum',
@@ -77,11 +73,15 @@ export default class Recipe {
   @Column('int', { nullable: true })
   recipeAttributionId: number
 
-  @ManyToOne(() => RecipeAttribution, recipeAttribution => recipeAttribution.recipes, {
-    cascade: true,
-    onDelete: 'CASCADE'
-  })
-  @JoinColumn({ name: 'recipeAttributionId'})
+  @ManyToOne(
+    () => RecipeAttribution,
+    recipeAttribution => recipeAttribution.recipes,
+    {
+      cascade: true,
+      onDelete: 'CASCADE'
+    }
+  )
+  @JoinColumn({ name: 'recipeAttributionId' })
   recipeAttribution: RecipeAttribution
 
   @CreateDateColumn()

@@ -14,5 +14,14 @@
     "statusBarItem.hoverBackground": "#2f7c47",
     "statusBar.foreground": "#e7e7e7"
   },
-  "peacock.color": "#215732"
+  "peacock.color": "#215732",
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.formatOnSave": true,
+  "eslint.enable": true,
+  "eslint.alwaysShowStatus": true,
+  "eslint.codeActionsOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    "typescript"
+  ]
 }

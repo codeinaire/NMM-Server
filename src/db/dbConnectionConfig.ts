@@ -1,8 +1,20 @@
 import Recipe from './entities/Recipe'
 import RecipeAttribution from './entities/RecipeAttribution'
 import UserProfile from './entities/UserProfile'
+import Challenge from './entities/Challenge'
+import UncompletedChallenge from './entities/UncompletedChallenge'
+import CompletedChallenge from './entities/CompletedChallenge'
 
 import { ConnectionOptions } from 'typeorm'
+
+const entities = [
+  Recipe,
+  RecipeAttribution,
+  UserProfile,
+  Challenge,
+  CompletedChallenge,
+  UncompletedChallenge
+]
 
 export const production: ConnectionOptions = {
   name: 'default',
@@ -15,7 +27,7 @@ export const production: ConnectionOptions = {
   synchronize: false,
   logging: 'all',
   dropSchema: false,
-  entities: [Recipe, RecipeAttribution, UserProfile]
+  entities
 }
 
 export const test: ConnectionOptions = {
@@ -29,7 +41,7 @@ export const test: ConnectionOptions = {
   synchronize: true,
   logging: false,
   dropSchema: true,
-  entities: [Recipe, RecipeAttribution, UserProfile]
+  entities
 }
 
 export const development: ConnectionOptions = {
@@ -43,5 +55,5 @@ export const development: ConnectionOptions = {
   synchronize: true,
   logging: 'all',
   dropSchema: false,
-  entities: [Recipe, RecipeAttribution, UserProfile]
+  entities
 }

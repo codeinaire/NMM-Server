@@ -13,27 +13,31 @@ import {
   IServer,
   ILogger,
   IAuthorisation,
-  IUserProfileAPI
+  IUserProfileAPI,
+  IChallengeAPI
 } from './types'
 
 @injectable()
 export default class Server implements IServer {
   private apolloServer: ApolloServer
-  private readonly _recipeAPI: IRecipeAPI
-  private readonly _userProfileAPI: IUserProfileAPI
-  private readonly _logger: ILogger
-  private readonly _authorisation: IAuthorisation
+  private readonly recipeAPI: IRecipeAPI
+  private readonly userProfileAPI: IUserProfileAPI
+  private readonly logger: ILogger
+  private readonly authorisation: IAuthorisation
+  private readonly challengeAPI: IChallengeAPI
 
   public constructor(
     @inject(TYPES.RecipeAPI) recipeAPI: IRecipeAPI,
     @inject(TYPES.UserProfileAPI) userProfileAPI: IUserProfileAPI,
     @inject(TYPES.Logger) Logger: ILogger,
-    @inject(TYPES.Authorisation) Authorisation: IAuthorisation
+    @inject(TYPES.Authorisation) Authorisation: IAuthorisation,
+    @inject(TYPES.ChallengeAPI) challengeAPI: IChallengeAPI
   ) {
-    this._recipeAPI = recipeAPI
-    this._userProfileAPI = userProfileAPI
-    this._logger = Logger
-    this._authorisation = Authorisation
+    this.recipeAPI = recipeAPI
+    this.userProfileAPI = userProfileAPI
+    this.logger = Logger
+    this.authorisation = Authorisation
+    this.challengeAPI = challengeAPI
   }
   private initContext() {
     return ({
@@ -43,21 +47,22 @@ export default class Server implements IServer {
       event: APIGatewayProxyEvent
       context: Context
     }) => {
-      this._logger.createContext(event, context)
-      const log = this._logger.getLogger()
+      this.logger.createContext(event, context)
+      const log = this.logger.getLogger()
 
       return {
         event,
         log,
-        auth: this._authorisation
+        auth: this.authorisation
       }
     }
   }
 
   private initDatasources() {
     return () => ({
-      recipeAPI: this._recipeAPI,
-      userProfileAPI: this._userProfileAPI
+      recipeAPI: this.recipeAPI,
+      userProfileAPI: this.userProfileAPI,
+      challengeAPI: this.challengeAPI
     })
   }
 
