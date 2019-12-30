@@ -78,8 +78,6 @@ export default class RecipeAPI implements IRecipeAPI {
         where: { name }
       })
 
-    console.log('foundChef', foundChef)
-
     if (foundChef) recipe.recipeAttribution = foundChef
     else {
       let recipeAttribution = new RecipeAttributionEntity()
@@ -87,7 +85,7 @@ export default class RecipeAPI implements IRecipeAPI {
       recipeAttribution.email = email
       recipeAttribution.website = website!
       recipeAttribution.facebook = facebook!
-      recipeAttribution.instragram = instagram!
+      recipeAttribution.instagram = instagram!
       recipeAttribution.twitter = twitter!
 
       recipe.recipeAttribution = recipeAttribution

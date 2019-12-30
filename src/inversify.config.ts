@@ -10,7 +10,16 @@ import Logger from './utils/Logger'
 import CalculatePoints from './utils/CalculatePoints'
 import ChallengeAPI from './graphql/datasources/Challenge'
 
-import { IRecipeAPI, IUserProfileAPI, IServer, IDatabase, ILogger, IAuthorisation, ICalculatePoints, IChallengeAPI } from './types';
+import {
+  IRecipeAPI,
+  IUserProfileAPI,
+  IServer,
+  IDatabase,
+  ILogger,
+  IAuthorisation,
+  ICalculatePoints,
+  IChallengeAPI
+} from './types'
 
 const container = new Container()
 container.bind<IRecipeAPI>(TYPES.RecipeAPI).to(RecipeAPI)

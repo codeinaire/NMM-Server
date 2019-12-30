@@ -159,6 +159,7 @@ export default class ChallengeAPI implements IChallengeAPI {
       }
     }
     // Remove Recipe object from returned object
+    // to be compatible with GraphQL return type
     if (type == 'Recipe') delete savedChallenge.recipe
 
     return savedChallenge
