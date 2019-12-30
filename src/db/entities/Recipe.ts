@@ -37,15 +37,11 @@ export default class Recipe {
   @Column()
   title: string
 
-  @Column({
-    type: 'text'
-  })
-  ingredients: string
+  @Column('simple-array')
+  ingredients: string[]
 
-  @Column({
-    type: 'text'
-  })
-  method: string
+  @Column('simple-array')
+  method: string[]
 
   @Column('simple-array')
   hashtags: string[]
