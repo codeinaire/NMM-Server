@@ -50,8 +50,8 @@ export default gql`
     lowResolution: String!
     "**SHOW**"
     recipeAttribution: RecipeAttribution!
-    ingredients: String!
-    method: String!
+    ingredients: [String!]!
+    method: [String!]!
     standardResolution: String!
   }
 
