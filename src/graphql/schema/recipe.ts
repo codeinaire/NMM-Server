@@ -24,8 +24,8 @@ export default gql`
     title: String!
     email: String!
     name: String!
-    ingredients: String!
-    method: String!
+    ingredients: [String!]!
+    method: [String!]!
     hashtags: [String!]!
     difficulty: DifficultyEnum!
     cost: CostEnum!
