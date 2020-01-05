@@ -15,6 +15,16 @@ export default {
       const recipes = await dataSources.recipeAPI.findAllRecipes()
       log.info('Found all recipes')
       return recipes
+    },
+    recipe: async (
+      _: any,
+      { recipeId }: { recipeId: number },
+      { dataSources, log }: IResolverContext
+    ): Promise<Recipe> => {
+      log.info(`Finding all recipe no. ${recipeId}`)
+      const recipe = await dataSources.recipeAPI.findRecipe(recipeId)
+      log.info(`Found all recipe no. ${recipe.id}`)
+      return recipe
     }
   },
   Mutation: {

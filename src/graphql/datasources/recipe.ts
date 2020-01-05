@@ -28,6 +28,13 @@ export default class RecipeAPI implements IRecipeAPI {
     this.db = await this.database.getDatabase()
   }
 
+  public async findRecipe(id: number) {
+    const recipe = await this.db.getRepository(RecipeEntity).findOne({ id })
+    console.log('recipe', recipe)
+
+    return recipe
+  }
+
   public async findAttribution(recipeAttributionId: number) {
     const attributions = await this.db
       .getRepository(RecipeAttributionEntity)
