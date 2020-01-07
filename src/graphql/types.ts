@@ -126,6 +126,11 @@ export type Query = {
 };
 
 
+export type QueryChallengeArgs = {
+  recipeId: Scalars['ID']
+};
+
+
 export type QueryMeArgs = {
   id: Scalars['String']
 };

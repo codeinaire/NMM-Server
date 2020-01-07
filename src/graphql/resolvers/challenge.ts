@@ -5,11 +5,20 @@ export default {
   Query: {
     challenge: async (
       _: any,
-      __: any,
+      { recipeId }: { recipeId: number },
       { auth, dataSources, log, event }: IResolverContext
     ): Promise<Challenge> => {
+      log.info(`Authorising user to find challenge...`)
+      const verifiedUserId = await auth.checkScopesAndResolve(event, [
+        'challenge'
+      ])
+      log.info(`Authorisation of user ${verifiedUserId} successful!`)
+
       log.info('Finding challenge')
-      const challenge = await dataSources.challengeAPI.findChallenge()
+      const challenge = await dataSources.challengeAPI.findChallenge(
+        recipeId,
+        verifiedUserId
+      )
       log.info('Found challenge')
       return challenge
     }
@@ -22,16 +31,16 @@ export default {
     ): Promise<Challenge> => {
       try {
         log.info(`Authorising user to create challenge...`)
-        const verifiedId = await auth.checkScopesAndResolve(event, [
+        const verifiedUserId = await auth.checkScopesAndResolve(event, [
           'challenge'
         ])
-        log.info(`Authorisation of user ${verifiedId} successful!`)
+        log.info(`Authorisation of user ${verifiedUserId} successful!`)
 
-        log.info(`Creating challenge for ${verifiedId}`)
+        log.info(`Creating challenge for ${verifiedUserId}`)
         const createdChallenge = await dataSources.challengeAPI.createOrUpdateChallenge(
           challengeInput,
           challengeInput.type,
-          verifiedId
+          verifiedUserId
         )
         log.info('Challenge created')
         return createdChallenge

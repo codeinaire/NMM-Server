@@ -31,11 +31,11 @@ export default class UserProfileAPI implements IUserProfileAPI {
     this.db = await this.database.getDatabase()
   }
 
-  public async findUserProfile(verifiedId: string) {
+  public async findUserProfile(verifiedUserId: string) {
     this.context
     const userProfile = await this.db.getRepository(UserProfileEntity).findOne({
       where: {
-        id: verifiedId
+        id: verifiedUserId
       }
     })
 
