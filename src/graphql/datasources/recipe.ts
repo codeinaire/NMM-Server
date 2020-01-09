@@ -30,7 +30,6 @@ export default class RecipeAPI implements IRecipeAPI {
 
   public async findRecipe(id: number) {
     const recipe = await this.db.getRepository(RecipeEntity).findOne({ id })
-    console.log('recipe', recipe)
 
     return recipe
   }
