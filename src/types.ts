@@ -42,6 +42,7 @@ export interface IResolverContext {
 
 // AUTHORISATION
 export interface IVerifiedToken {
+  [index: string]: any
   iss: string
   sub: string
   aud: [string]
