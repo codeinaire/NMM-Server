@@ -40,7 +40,7 @@ functions:
         path: nmm-app
         method: post
         cors:
-          origin: http://localhost:3000
+          origin: ${opt:secureOrigin, 'http://localhost:3000'}
           headers:
               - Content-Type
               - X-Amz-Date
@@ -56,7 +56,7 @@ functions:
         path: nmm-app
         method: get
         cors:
-          origin: http://localhost:3000
+          origin: ${opt:secureOrigin, 'http://localhost:3000'}
           headers:
               - Content-Type
               - X-Amz-Date

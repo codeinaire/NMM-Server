@@ -40,6 +40,8 @@ export default gql`
     maxSectionsCompletable: Int
     sectionsCompleted: [SectionsCompletedEnum!]!
     sharedFriendsImages: SharedFriendsImage
+    userProfileId: String
+    recipeId: Int
   }
 
   type SharedFriendsImage {

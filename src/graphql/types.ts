@@ -27,6 +27,8 @@ export type Challenge = {
   maxSectionsCompletable?: Maybe<Scalars['Int']>,
   sectionsCompleted: Array<SectionsCompletedEnum>,
   sharedFriendsImages?: Maybe<SharedFriendsImage>,
+  userProfileId?: Maybe<Scalars['String']>,
+  recipeId?: Maybe<Scalars['Int']>,
 };
 
 export enum ChallengeDifficultyEnum {
