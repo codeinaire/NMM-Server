@@ -10,10 +10,12 @@ export default {
     ): Promise<UserProfile> => {
       try {
         log.info(`Authorising user ${id}...`)
-        const verifiedId = await auth.checkScopesAndResolve(event, ['profile'])
-        log.info(`Authorisation of user ${verifiedId} successful!`)
+        const verifiedUserId = await auth.checkScopesAndResolve(event, [
+          'profile'
+        ])
+        log.info(`Authorisation of user ${verifiedUserId} successful!`)
         const userProfile = await dataSources.userProfileAPI.findUserProfile(
-          verifiedId
+          verifiedUserId
         )
         return userProfile
       } catch (error) {
@@ -30,10 +32,12 @@ export default {
     ): Promise<UserProfile> => {
       try {
         log.info(`Authorising user ${userProfileInput.id}...`)
-        const verifiedId = await auth.checkScopesAndResolve(event, ['profile'])
+        const verifiedUserId = await auth.checkScopesAndResolve(event, [
+          'profile'
+        ])
         log.info(`Authorisation of user ${userProfileInput.id} successful!`)
 
-        log.info(`Creating profile for user ${verifiedId}...`)
+        log.info(`Creating profile for user ${verifiedUserId}...`)
         const createdUserProfile = await dataSources.userProfileAPI.createUserProfile(
           userProfileInput,
           'createUserProfile'

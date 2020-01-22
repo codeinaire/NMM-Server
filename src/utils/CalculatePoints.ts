@@ -43,7 +43,7 @@ export default class CalculatePoints implements ICalculatePoints {
     if (completedSections == MAX_COMPLETABLE_ITEMS)
       sumTotalPoints += this.ALL_SECTIONS_COMPLETED_BONUS
 
-    return sumTotalPoints
+    return Math.floor(sumTotalPoints)
   }
 
   /**
@@ -73,14 +73,14 @@ export default class CalculatePoints implements ICalculatePoints {
     if (completedSections == MAX_COMPLETABLE_ITEMS)
       sectionsCompletedSumTotal += this.ALL_SECTIONS_COMPLETED_BONUS
 
-    return sectionsCompletedSumTotal
+    return Math.floor(sectionsCompletedSumTotal)
   }
 
   public calculate(
     challengeObject: any,
     challengeType: string,
     currentSumTotalPoints = 0
-  ) {
+  ): number {
     if (!challengeType) throw new Error('No challengeType provided!')
     let sumTotalPoints
     switch (challengeType) {

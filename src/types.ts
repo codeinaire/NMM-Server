@@ -42,6 +42,7 @@ export interface IResolverContext {
 
 // AUTHORISATION
 export interface IVerifiedToken {
+  [index: string]: any
   iss: string
   sub: string
   aud: [string]
@@ -102,7 +103,7 @@ export interface IUserProfileAPI extends DataSource {
 }
 
 export interface IChallengeAPI extends DataSource {
-  findChallenge(): Promise<Challenge | undefined>
+  findChallenge(arg0: number, arg1: string): Promise<Challenge | undefined>
   createOrUpdateChallenge(
     arg0: ChallengeInput,
     arg1: TypeEnum,

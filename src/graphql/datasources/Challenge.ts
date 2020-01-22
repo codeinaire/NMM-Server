@@ -42,9 +42,10 @@ export default class ChallengeAPI implements IChallengeAPI {
   /**
    * findChallenge
    */
-  public async findChallenge() {
+  public async findChallenge(recipeId: number, userProfileId: string) {
     const challenge = await this.db.getRepository(ChallengeEntity).findOne({
-      id: 4
+      recipeId,
+      userProfileId
     })
 
     return challenge

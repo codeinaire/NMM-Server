@@ -80,10 +80,13 @@ export class Authorisation implements IAuthorisation {
     )) as IVerifiedToken
 
     const scopes: Array<string> = verifiedToken.scope.split(' ')
+    const addedScope: Array<string> = scopes.concat(
+      verifiedToken[`${process.env.CLIENT_HOST}challenge`]
+    )
 
     return {
       principleId: verifiedToken.sub,
-      scopes: scopes
+      scopes: addedScope
     }
   }
 

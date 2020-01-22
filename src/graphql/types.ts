@@ -27,6 +27,8 @@ export type Challenge = {
   maxSectionsCompletable?: Maybe<Scalars['Int']>,
   sectionsCompleted: Array<SectionsCompletedEnum>,
   sharedFriendsImages?: Maybe<SharedFriendsImage>,
+  userProfileId?: Maybe<Scalars['String']>,
+  recipeId?: Maybe<Scalars['Int']>,
 };
 
 export enum ChallengeDifficultyEnum {
@@ -121,8 +123,19 @@ export type Query = {
    __typename?: 'Query',
   challenge?: Maybe<Challenge>,
   recipes: Array<Maybe<Recipe>>,
+  recipe: Recipe,
   articles?: Maybe<Array<Maybe<Article>>>,
   me?: Maybe<UserProfile>,
+};
+
+
+export type QueryChallengeArgs = {
+  recipeId: Scalars['ID']
+};
+
+
+export type QueryRecipeArgs = {
+  recipeId: Scalars['ID']
 };
 
 
