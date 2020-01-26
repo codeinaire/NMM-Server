@@ -87,7 +87,7 @@
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
     "reflect-metadata": "^0.1.13",
-    "serverless": "^1.57.0",
+    "serverless": "^1.61.3",
     "typeorm": "^0.2.20"
   }
 }
