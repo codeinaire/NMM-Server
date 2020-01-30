@@ -1,11 +1,9 @@
-org: codeinaire
-app: nmm
-
 service: no-meat-may-app
 
 plugins:
   - serverless-webpack
   - serverless-dotenv-plugin
+  - serverless-cloudside-plugin
   - serverless-offline
 
 custom:
@@ -19,17 +17,23 @@ custom:
   DB_HOST:
     Fn::GetAtt: [PostgreSqlRDSInstance, Endpoint.Address]
   VPC_CIDR: 10
+  ENV: ${opt:env, 'development'}
 
 provider:
   name: aws
   runtime: nodejs10.x
-  stage: prod
+  stage: ${opt:stage, 'dev'}
+  role: LambdaRole
   region: ap-southeast-2
+  cfnRole: arn:aws:iam::592363304474:role/nmm-serverless-deploy-role
+  timeout: 10
+  logRetentionInDays: 14
   # Guesstimate - AWS recommends load testing &
   # checking MAX MEMORY USED to adjust the size
   memorySize: 512
   environment:
     DB_HOST: ${opt:LOCAL_DB_HOST, self:custom.DB_HOST}
+    ENV: ${self:custom.ENV}
 
 layers:
   graphql:
@@ -58,10 +62,10 @@ resources:
     RouteB: ${file(./serverlessResources/RouteB.yml)}
     RouteTableAssociationSubnetA: ${file(./serverlessResources/RouteTableAssociationSubnetA.yml)}
     RouteTableAssociationSubnetB: ${file(./serverlessResources/RouteTableAssociationSubnetB.yml)}
-    NATSubnetA: $(file(./serverlessResources/NATSubnetA.yml))
-    EIPSubnetA: $(file(./serverlessResources/EIPSubnetA.yml))
-    NATSubnetB: $(file(./serverlessResources/NATSubnetB.yml))
-    EIPSubnetB: $(file(./serverlessResources/EIPSubnetB.yml))
+    NATSubnetA: ${file(./serverlessResources/NATSubnetA.yml)}
+    EIPSubnetA: ${file(./serverlessResources/EIPSubnetA.yml)}
+    NATSubnetB: ${file(./serverlessResources/NATSubnetB.yml)}
+    EIPSubnetB: ${file(./serverlessResources/EIPSubnetB.yml)}
     PostgreSqlRDSInstance: ${file(./serverlessResources/PostgreSqlRDSInstance.yml)}
 
 functions:
@@ -103,6 +107,10 @@ functions:
     - http:
         path: playground
         method: get
+        cors: true
+    - http:
+        path: playground
+        method: post
         cors: true
     vpc:
       securityGroupIds:

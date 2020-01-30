@@ -6,5 +6,5 @@ Properties:
     - Ref: SubnetB
   Tags:
     -
-      Key: 'Name'
-      Value: 'SubnetGroup'
+      Key: Name
+      Value: NMMSubnetGroup

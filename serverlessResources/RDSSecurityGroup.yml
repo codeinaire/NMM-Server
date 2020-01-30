@@ -11,5 +11,5 @@ Properties:
       FromPort: '5432'
   Tags:
     -
-      Key: 'Name'
-      Value: 'NMMLambdaToRDSecurityGroup'
+      Key: Name
+      Value: NMMLambdaToRDSecurityGroup

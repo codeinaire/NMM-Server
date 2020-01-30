@@ -8,5 +8,5 @@ Properties:
     Ref: SubnetA
   Tags:
     -
-      Key: 'Name'
-      Value: 'NMMNatGatewaySubnetA'
+      Key: Name
+      Value: NMMNatGatewaySubnetA

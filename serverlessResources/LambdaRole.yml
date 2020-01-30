@@ -1,14 +1,15 @@
 Type: AWS::IAM::Role
 Properties:
+  RoleName: NMMLambdaRole
   AssumeRolePolicyDocument:
-    Statement:
-    - Effect: Allow
-      Action: sts:AssumeRole
-      Principal:
-        Service: lambda.amazonaws.com
     Version: '2012-10-17'
+    Statement:
+      - Effect: Allow
+        Action: sts:AssumeRole
+        Principal:
+          Service: lambda.amazonaws.com
   Policies:
-    - PolicyName: CanLog&CreateNetworkInterface
+    - PolicyName: CanLogCreateNetworkInterface
       PolicyDocument:
         Version: '2012-10-17'
         Statement:

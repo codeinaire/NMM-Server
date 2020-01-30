@@ -4,4 +4,4 @@ Properties:
   NatGatewayId:
     Ref: NATSubnetB
   RouteTableId:
-    Ref: RouteTablePublicSubnetB
+    Ref: RouteTableSubnetB

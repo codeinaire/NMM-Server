@@ -5,5 +5,5 @@ Properties:
   EnableDnsHostnames: true
   Tags:
     -
-      Key: "Name"
-      Value: "NMMVPC"
+      Key: Name
+      Value: NMMVPC

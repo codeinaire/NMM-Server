@@ -28,13 +28,15 @@ export class Database implements IDatabase {
   }
 
   private async getConnection(): Promise<Connection> {
+    this._logger.info('Selecting current environment')
     const currentEnv =
-      process.env.NODE_ENV == 'production'
+      process.env.ENV == 'production'
         ? 'production'
-        : process.env.NODE_ENV == 'test'
+        : process.env.ENV == 'test'
         ? 'test'
         : 'development'
     const CONNECTION_NAME = currentEnv == 'development' ? 'default' : 'test'
+    console.log('currentEnv', currentEnv, process.env.DB_HOST, process.env.ENV)
 
     if (this.connectionManager.has(CONNECTION_NAME)) {
       this._logger.info(`Using existing DB connection for ${currentEnv}`)

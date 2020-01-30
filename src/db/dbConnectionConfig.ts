@@ -26,7 +26,10 @@ export const production: ConnectionOptions = {
   database: process.env.DB_DATABASE,
   synchronize: false,
   logging: 'all',
+  logger: 'advanced-console',
   dropSchema: false,
+  migrationsRun: true,
+  migrations: ['migrations/*.ts'],
   entities
 }
 
@@ -52,8 +55,8 @@ export const development: ConnectionOptions = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  synchronize: true,
+  synchronize: false,
   logging: 'all',
-  dropSchema: false,
+  dropSchema: true,
   entities
 }
