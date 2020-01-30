@@ -1,0 +1,12 @@
+Type: AWS::EC2::NatGateway
+Properties:
+  AllocationId:
+    Fn::GetAtt:
+      - EIPSubnetA
+      - AllocationId
+  SubnetId:
+    Ref: SubnetA
+  Tags:
+    -
+      Key: 'Name'
+      Value: 'NMMNatGatewaySubnetA'

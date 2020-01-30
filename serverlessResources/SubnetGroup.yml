@@ -1,0 +1,10 @@
+Type: AWS::RDS::DBSubnetGroup
+Properties:
+  DBSubnetGroupDescription: "NMM RDS Subnet Group"
+  SubnetIds:
+    - Ref: SubnetA
+    - Ref: SubnetB
+  Tags:
+    -
+      Key: 'Name'
+      Value: 'SubnetGroup'

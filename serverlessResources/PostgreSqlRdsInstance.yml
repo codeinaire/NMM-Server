@@ -4,7 +4,7 @@ Properties:
   BackupRetentionPeriod: 35
   CopyTagsToSnapshot: true
   DBInstanceClass: db.t2.micro
-  DBName: ${self:custom.DB_NAME}
+  DBName: ${env:DB_DATABASE}
   DBSubnetGroupName:
     Ref: ServerlessSubnetGroup
   DeleteAutomatedBackups: false
@@ -14,15 +14,15 @@ Properties:
     - 'upgrade'
     - 'postgresql'
   Engine: postgres
-  MasterUsername: ${self:custom.USERNAME}
-  MasterUserPassword: ${self:custom.PASSWORD}
+  MasterUsername: ${env:DB_USERNAME}
+  MasterUserPassword: ${env:DB_PASSWORD}
   MultiAZ: true
   Port: 5432
   PreferredBackupWindow: '15:00-16:00'
   PubliclyAccessible: false
   Tags:
     -
-      Key: 'project'
-      Value: 'nmm'
+      Key: 'Name'
+      Value: 'NMMDatabase'
   VPCSecurityGroups:
   - !GetAtt ServerlessSecurityGroup.GroupId

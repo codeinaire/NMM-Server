@@ -1,0 +1,6 @@
+Type: AWS::EC2::SubnetRouteTableAssociation
+Properties:
+  RouteTableId:
+    Ref: RouteTableSubnetB
+  SubnetId:
+    Ref: SubnetB

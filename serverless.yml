@@ -15,16 +15,21 @@ custom:
     excludeFiles: src/**/*.test.js # Provide a glob for files to ignore
   serverless-offline:
     port: 4000
+  AWS_ACCOUNT: 592363304474
+  DB_HOST:
+    Fn::GetAtt: [PostgreSqlRDSInstance, Endpoint.Address]
+  VPC_CIDR: 10
 
 provider:
   name: aws
   runtime: nodejs10.x
   stage: prod
   region: ap-southeast-2
-  # Guesstimate - AWS recommends load testing & checking MAX MEMORY USED
-  # to adjust the size
+  # Guesstimate - AWS recommends load testing &
+  # checking MAX MEMORY USED to adjust the size
   memorySize: 512
-
+  environment:
+    DB_HOST: ${opt:LOCAL_DB_HOST, self:custom.DB_HOST}
 
 layers:
   graphql:
@@ -34,6 +39,30 @@ layers:
 package:
   exclude:
     - node_modules/**
+
+# Raw AWS CloudFormation goes here
+resources:
+  Resources:
+    LambdaRole: ${file(./serverlessResources/LambdaRole.yml)}
+    InternetGateway: ${file(./serverlessResources/InternetGateway.yml)}
+    VPCGatewayAssociation: ${file(./serverlessResources/VPCGatewayAssociation.yml)}
+    VPC: ${file(./serverlessResources/VPC.yml)}
+    SubnetA: ${file(./serverlessResources/SubnetA.yml)}
+    SubnetB: ${file(./serverlessResources/SubnetB.yml)}
+    SubnetGroup: ${file(./serverlessResources/SubnetGroup.yml)}
+    RDSSecurityGroup: ${file(./serverlessResources/RDSSecurityGroup.yml)}
+    LambdaSecurityGroup: ${file(./serverlessResources/LambdaSecurityGroup.yml)}
+    RouteTableSubnetA: ${file(./serverlessResources/RouteTableSubnetA.yml)}
+    RouteTableSubnetB: ${file(./serverlessResources/RouteTableSubnetB.yml)}
+    RouteA: ${file(./serverlessResources/RouteA.yml)}
+    RouteB: ${file(./serverlessResources/RouteB.yml)}
+    RouteTableAssociationSubnetA: ${file(./serverlessResources/RouteTableAssociationSubnetA.yml)}
+    RouteTableAssociationSubnetB: ${file(./serverlessResources/RouteTableAssociationSubnetB.yml)}
+    NATSubnetA: $(file(./serverlessResources/NATSubnetA.yml))
+    EIPSubnetA: $(file(./serverlessResources/EIPSubnetA.yml))
+    NATSubnetB: $(file(./serverlessResources/NATSubnetB.yml))
+    EIPSubnetB: $(file(./serverlessResources/EIPSubnetB.yml))
+    PostgreSqlRDSInstance: ${file(./serverlessResources/PostgreSqlRDSInstance.yml)}
 
 functions:
   graphql:
@@ -71,37 +100,16 @@ functions:
               - apollographql-client-name
               - apollographql-client-version
           allowCredentials: true
-    # - http:
-    #     path: playground
-    #     method: '*'
-    #     cors: true
+    - http:
+        path: playground
+        method: get
+        cors: true
+    vpc:
+      securityGroupIds:
+        - !GetAtt LambdaSecurityGroup.GroupId
+      subnetIds:
+        - Ref: SubnetA
+        - Ref: SubnetB
     layers:
     # Name = <name of layer>LambdaLayer
       - { Ref: GraphqlLambdaLayer }
-
-# Raw AWS CloudFormation goes here
-resources:
-  Resources:
-    ServerlessVPCGA:
-      Type: AWS::EC2::VPCGatewayAttachment
-      Properties:
-        VpcId:
-          Ref: ServerlessVPC
-        InternetGatewayId:
-          Ref: ServerlessInternetGateway
-    PostgreSqlRDSInstance:
-      Description: 'This template deploys a single RDS PostgreSQL master database.'
-      DependsOn: ServerlessVPCGA
-      Type: AWS::RDS::DBInstance
-      Properties:
-        MasterUsername: ${env:DB_USERNAME}
-        MasterUserPassword: ${env:DB_PASSWORD}
-        AllocatedStorage: 20
-        DBName: ${env:DB_DATABASE}
-        DBInstanceClass: db.t2.micro
-        VPCSecurityGroups:
-        - !GetAtt ServerlessSecurityGroup.GroupId
-        DBSubnetGroupName:
-          Ref: ServerlessSubnetGroup
-        Engine: postgres
-        PubliclyAccessible: false
