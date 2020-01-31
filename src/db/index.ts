@@ -9,7 +9,7 @@ import {
 import { injectable, inject } from 'inversify'
 import { TYPES } from '../inversifyTypes'
 
-import { production, test, development } from './dbConnectionConfig'
+import { prod, test, dev } from './dbConnectionConfig'
 
 import { IDatabase, ILogger } from '../types'
 import { LambdaLog } from 'lambda-log'
@@ -30,12 +30,12 @@ export class Database implements IDatabase {
   private async getConnection(): Promise<Connection> {
     this._logger.info('Selecting current environment')
     const currentEnv =
-      process.env.ENV == 'production'
-        ? 'production'
+      process.env.ENV == 'prod'
+        ? 'prod'
         : process.env.ENV == 'test'
         ? 'test'
-        : 'development'
-    const CONNECTION_NAME = currentEnv == 'development' ? 'default' : 'test'
+        : 'dev'
+    const CONNECTION_NAME = currentEnv == 'dev' ? 'default' : 'test'
     console.log('currentEnv', currentEnv, process.env.DB_HOST, process.env.ENV)
 
     if (this.connectionManager.has(CONNECTION_NAME)) {
@@ -47,8 +47,8 @@ export class Database implements IDatabase {
     } else {
       this._logger.info(`Creating DB connection for ${currentEnv}`)
 
-      let connectionOptions: ConnectionOptions = development
-      if (currentEnv == 'production') connectionOptions = production
+      let connectionOptions: ConnectionOptions = dev
+      if (currentEnv == 'prod') connectionOptions = prod
       if (currentEnv == 'test') connectionOptions = test
 
       this.connection = await createConnection(connectionOptions)

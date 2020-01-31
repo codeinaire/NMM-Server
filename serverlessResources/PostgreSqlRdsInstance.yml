@@ -19,11 +19,12 @@ Properties:
   MasterUserPassword: ${env:DB_PASSWORD}
   MultiAZ: true
   Port: 5432
-  PreferredBackupWindow: '15:00-16:00'
+  PreferredBackupWindow: '01:00-02:00'
   PubliclyAccessible: false
   Tags:
     -
       Key: 'Name'
       Value: 'NMMDatabase'
   VPCSecurityGroups:
-  - !GetAtt RDSSecurityGroup.GroupId
+  - !GetAtt SecurityGroupLambdaToRDS.GroupId
+  - !GetAtt SecurityGroupBastionToRDS.GroupId

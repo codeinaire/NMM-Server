@@ -4,4 +4,4 @@ Properties:
     Ref: VPC
   Tags:
     - Key: Name
-      Value: private-route-subnetB
+      Value: nmm-private-route-subnetB

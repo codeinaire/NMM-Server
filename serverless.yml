@@ -17,12 +17,12 @@ custom:
   DB_HOST:
     Fn::GetAtt: [PostgreSqlRDSInstance, Endpoint.Address]
   VPC_CIDR: 10
-  ENV: ${opt:env, 'development'}
+  ENV: ${opt:env, 'dev'}
 
 provider:
   name: aws
   runtime: nodejs10.x
-  stage: ${opt:stage, 'dev'}
+  stage: ${opt:env, 'dev'}
   role: LambdaRole
   region: ap-southeast-2
   cfnRole: arn:aws:iam::592363304474:role/nmm-serverless-deploy-role
@@ -53,15 +53,21 @@ resources:
     VPC: ${file(./serverlessResources/VPC.yml)}
     SubnetA: ${file(./serverlessResources/SubnetA.yml)}
     SubnetB: ${file(./serverlessResources/SubnetB.yml)}
+    SubnetC: ${file(./serverlessResources/SubnetC.yml)}
     SubnetGroup: ${file(./serverlessResources/SubnetGroup.yml)}
-    RDSSecurityGroup: ${file(./serverlessResources/RDSSecurityGroup.yml)}
-    LambdaSecurityGroup: ${file(./serverlessResources/LambdaSecurityGroup.yml)}
+    SecurityGroupLambdaToRDS: ${file(./serverlessResources/SecurityGroupLambdaToRDS.yml)}
+    SecurityGroupBastionToRDS: ${file(./serverlessResources/SecurityGroupBastionToRDS.yml)}
+    SecurityGroupLambda: ${file(./serverlessResources/SecurityGroupLambda.yml)}
+    SecurityGroupBastion: ${file(./serverlessResources/SecurityGroupBastion.yml)}
     RouteTableSubnetA: ${file(./serverlessResources/RouteTableSubnetA.yml)}
     RouteTableSubnetB: ${file(./serverlessResources/RouteTableSubnetB.yml)}
+    RouteTableSubnetC: ${file(./serverlessResources/RouteTableSubnetC.yml)}
     RouteA: ${file(./serverlessResources/RouteA.yml)}
     RouteB: ${file(./serverlessResources/RouteB.yml)}
+    RouteC: ${file(./serverlessResources/RouteC.yml)}
     RouteTableAssociationSubnetA: ${file(./serverlessResources/RouteTableAssociationSubnetA.yml)}
     RouteTableAssociationSubnetB: ${file(./serverlessResources/RouteTableAssociationSubnetB.yml)}
+    RouteTableAssociationSubnetC: ${file(./serverlessResources/RouteTableAssociationSubnetC.yml)}
     NATSubnetA: ${file(./serverlessResources/NATSubnetA.yml)}
     EIPSubnetA: ${file(./serverlessResources/EIPSubnetA.yml)}
     NATSubnetB: ${file(./serverlessResources/NATSubnetB.yml)}
@@ -114,7 +120,7 @@ functions:
         cors: true
     vpc:
       securityGroupIds:
-        - !GetAtt LambdaSecurityGroup.GroupId
+        - !GetAtt SecurityGroupLambda.GroupId
       subnetIds:
         - Ref: SubnetA
         - Ref: SubnetB

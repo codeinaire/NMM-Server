@@ -6,7 +6,7 @@ Properties:
     Ref: VPC
   SecurityGroupIngress:
     - IpProtocol: tcp
-      SourceSecurityGroupId: !GetAtt LambdaSecurityGroup.GroupId
+      SourceSecurityGroupId: !GetAtt SecurityGroupLambda.GroupId
       ToPort: '5432'
       FromPort: '5432'
   Tags:

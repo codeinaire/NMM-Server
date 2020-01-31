@@ -16,7 +16,7 @@ const entities = [
   UncompletedChallenge
 ]
 
-export const production: ConnectionOptions = {
+export const prod: ConnectionOptions = {
   name: 'default',
   type: 'postgres',
   port: 5432,
@@ -28,8 +28,6 @@ export const production: ConnectionOptions = {
   logging: 'all',
   logger: 'advanced-console',
   dropSchema: false,
-  migrationsRun: true,
-  migrations: ['migrations/*.ts'],
   entities
 }
 
@@ -47,7 +45,7 @@ export const test: ConnectionOptions = {
   entities
 }
 
-export const development: ConnectionOptions = {
+export const dev: ConnectionOptions = {
   name: 'default',
   type: 'postgres',
   port: 5432,

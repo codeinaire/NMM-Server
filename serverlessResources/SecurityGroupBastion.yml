@@ -1,0 +1,15 @@
+DependsOn: VPC
+Type: AWS::EC2::SecurityGroup
+Properties:
+  GroupDescription: Enables SSH Access to Bastion
+  VpcId:
+    Ref: VPC
+  SecurityGroupIngress:
+    - IpProtocol: tcp
+      CidrIp: '203.220.129.254'
+      ToPort: '22'
+      FromPort: '22'
+  Tags:
+    -
+      Key: Name
+      Value: NMMBastionToRDS
