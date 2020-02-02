@@ -6,10 +6,10 @@ Properties:
     Ref: VPC
   SecurityGroupIngress:
     - IpProtocol: tcp
-      CidrIp: '203.220.129.254'
+      CidrIp: 203.220.129.254/0
       ToPort: '22'
       FromPort: '22'
   Tags:
     -
       Key: Name
-      Value: NMMBastionToRDS
+      Value: NMMBastionToRDSSecurityGroup

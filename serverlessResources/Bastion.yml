@@ -1,6 +1,8 @@
-Resources:
+
   BastionMainLogGroup:
     Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: NMMBastionLogGroup
   BastionHostRole:
     Type: AWS::IAM::Role
     Properties:
@@ -28,7 +30,7 @@ Resources:
                   - logs:PutMetricFilter
                   - logs:CreateLogGroup
                 Resource: !Sub
-                  - arn:aws:logs:${self:provide.region}:${self:custom.AWS_ACCOUNT}:log-group:${BastionMainLogGroup}:*
+                  - arn:aws:logs:${self:provider.region}:${self:custom.AWS_ACCOUNT}:log-group:NMMBastionLogGroup:*
               - Effect: Allow
                 Action:
                   - ec2:AssociateAddress
@@ -71,7 +73,7 @@ Resources:
           Ref: BastionHostProfile
         ImageId: ami-0b8b10b5bf11f3a22
         SecurityGroups:
-          Ref: BastionSecurityGroup
+          Ref: SecurityGroupBastion
         InstanceType:
           Ref: t2.micro
         BlockDeviceMappings:
@@ -86,9 +88,6 @@ Resources:
             - |
               #!/bin/bash
               set -x
-              for e in $(echo "${EnvironmentVariables}" | tr ',' ' '); do
-                export $e
-              done
               export PATH=$PATH:/usr/local/bin
               #cfn signaling functions
               yum install git -y || apt-get install -y git || zypper -n install git
@@ -97,13 +96,13 @@ Resources:
 
               function cfn_fail
               {
-                cfn-signal -e 1 --stack ${AWS::StackName} --region ${self:provide.region} --resource BastionLaunchConfiguration
+                cfn-signal -e 1 --stack no-meat-may-app-prod --region ${self:provider.region} --resource BastionLaunchConfiguration
                 exit 1
               }
 
               function cfn_success
               {
-                cfn-signal -e 0 --stack ${AWS::StackName} --region ${self:provide.region} --resource BastionAutoScalingGroup
+                cfn-signal -e 0 --stack no-meat-may-app-prod --region ${self:provider.region} --resource BastionAutoScalingGroup
                 exit 0
               }
 
@@ -114,7 +113,6 @@ Resources:
               #qs_bootstrap_pip || qs_err " pip bootstrap failed ";
               qs_aws-cfn-bootstrap || qs_err " cfn bootstrap failed ";
 
-              EIP_LIST="${EIP1}"
-              CLOUDWATCHGROUP=${BastionMainLogGroup}
-              cfn-init -v --stack '${AWS::StackName}' --resource BastionLaunchConfiguration --region ${self:provide.region} || cfn_fail
+              CLOUDWATCHGROUP=NMMBastionLogGroup
+              cfn-init -v --stack 'no-meat-may-app-prod' --resource BastionLaunchConfiguration --region ${self:provider.region} || cfn_fail
               [ $(qs_status) == 0 ] && cfn_success || cfn_fail

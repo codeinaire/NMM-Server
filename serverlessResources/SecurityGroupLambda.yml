@@ -4,3 +4,7 @@ Properties:
   GroupDescription: Security group to connect Lambda to RDS Security group
   VpcId:
     Ref: VPC
+  Tags:
+    -
+      Key: Name
+      Value: NMMLambdaToRDSSecurityGroup

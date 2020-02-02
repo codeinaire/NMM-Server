@@ -6,10 +6,10 @@ Properties:
     Ref: VPC
   SecurityGroupIngress:
     - IpProtocol: tcp
-      SourceSecurityGroupId: !GetAtt SecurityGroupBastionHost.GroupId
+      SourceSecurityGroupId: !GetAtt SecurityGroupBastion.GroupId
       ToPort: '5432'
       FromPort: '5432'
   Tags:
     -
       Key: Name
-      Value: NMMBastionToRDSecurityGroup
+      Value: NMMBastionToRDSSecurityGroup
