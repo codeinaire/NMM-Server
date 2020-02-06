@@ -36,7 +36,6 @@ export class Database implements IDatabase {
         ? 'test'
         : 'dev'
     const CONNECTION_NAME = currentEnv == 'dev' ? 'default' : 'test'
-    console.log('currentEnv', currentEnv, process.env.DB_HOST, process.env.ENV)
 
     if (this.connectionManager.has(CONNECTION_NAME)) {
       this._logger.info(`Using existing DB connection for ${currentEnv}`)

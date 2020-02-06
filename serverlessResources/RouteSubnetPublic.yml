@@ -4,4 +4,4 @@ Properties:
   GatewayId:
     Ref: InternetGateway
   RouteTableId:
-    Ref: RouteTableSubnetC
+    Ref: RouteTableSubnetPublic

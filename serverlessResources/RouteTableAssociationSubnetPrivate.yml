@@ -1,6 +1,6 @@
 Type: AWS::EC2::SubnetRouteTableAssociation
 Properties:
   RouteTableId:
-    Ref: RouteTableSubnetA
+    Ref: RouteTableSubnetPrivate
   SubnetId:
-    Ref: SubnetA
+    Ref: SubnetAzAPrivate

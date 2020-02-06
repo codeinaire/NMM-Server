@@ -1,15 +1,15 @@
 DependsOn: VPC
 Type: AWS::EC2::SecurityGroup
 Properties:
-  GroupDescription: SecurityGroup for Lambda to RDS
+  GroupDescription: SecurityGroup for APIGW to VPC
   VpcId:
     Ref: VPC
   SecurityGroupIngress:
     - IpProtocol: tcp
       SourceSecurityGroupId: !GetAtt SecurityGroupLambda.GroupId
-      FromPort: '5432'
-      ToPort: '5432'
+      FromPort: 443
+      ToPort: 443
   Tags:
     -
       Key: Name
-      Value: NMMLambdaToRDSSecurityGroup
+      Value: NmmApigwToVpc

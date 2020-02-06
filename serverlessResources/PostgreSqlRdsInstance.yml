@@ -8,8 +8,8 @@ Properties:
   DBSubnetGroupName:
     Ref: SubnetGroup
   # make these opposite when in prod
-  DeleteAutomatedBackups: true
-  DeletionProtection: false
+  DeleteAutomatedBackups: false
+  DeletionProtection: true
   EnablePerformanceInsights: true
   EnableCloudwatchLogsExports:
     - 'upgrade'
@@ -20,7 +20,7 @@ Properties:
   MultiAZ: true
   Port: 5432
   PreferredBackupWindow: '01:00-02:00'
-  PubliclyAccessible: false
+  PubliclyAccessible: true
   Tags:
     -
       Key: 'Name'

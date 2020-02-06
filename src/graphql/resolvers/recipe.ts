@@ -34,6 +34,7 @@ export default {
       { dataSources, log }: IResolverContext
     ): Promise<Recipe> => {
       log.info('Creating recipe')
+      console.log('Creating recipe yay!!')
       const createdRecipe = await dataSources.recipeAPI.createRecipe(recipe)
       log.info('Recipe created')
       return createdRecipe

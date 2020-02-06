@@ -31,6 +31,7 @@ provider:
   # Guesstimate - AWS recommends load testing &
   # checking MAX MEMORY USED to adjust the size
   memorySize: 512
+  endpointType: regional
   environment:
     DB_HOST: ${opt:LOCAL_DB_HOST, self:custom.DB_HOST}
     ENV: ${self:custom.ENV}
@@ -48,161 +49,47 @@ package:
 resources:
   Resources:
     LambdaRole: ${file(./serverlessResources/LambdaRole.yml)}
-    InternetGateway: ${file(./serverlessResources/InternetGateway.yml)}
-    VPCGatewayAssociation: ${file(./serverlessResources/VPCGatewayAssociation.yml)}
+    # VPC
     VPC: ${file(./serverlessResources/VPC.yml)}
-    SubnetA: ${file(./serverlessResources/SubnetA.yml)}
-    SubnetB: ${file(./serverlessResources/SubnetB.yml)}
-    SubnetC: ${file(./serverlessResources/SubnetC.yml)}
+    InternetGateway: ${file(./serverlessResources/InternetGateway.yml)}
+    InternetGatewayAssociation: ${file(./serverlessResources/InternetGatewayAssociation.yml)}
+    # Security Groups
+    SecurityGroupLambda: ${file(./serverlessResources/SecurityGroupLambda.yml)}
+    SecurityGroupBastion: ${file(./serverlessResources/SecurityGroupBastion.yml)}
+    SecurityGroupAPIGWToVPC: ${file(./serverlessResources/SecurityGroupAPIGWToVPC.yml)}
+    # REGION A
+    #Pubilc
+    SubnetAzAPublic: ${file(./serverlessResources/SubnetAzAPublic.yml)}
+    RouteTableSubnetPublic: ${file(./serverlessResources/RouteTableSubnetPublic.yml)}
+    RouteSubnetPublic: ${file(./serverlessResources/RouteSubnetPublic.yml)}
+    RouteTableAssociationSubnetPublic: ${file(./serverlessResources/RouteTableAssociationSubnetPublic.yml)}
+    NATPublic: ${file(./serverlessResources/NATPublic.yml)}
+    EipNATPublic: ${file(./serverlessResources/EipNATPublic.yml)}
+    # Private
+    SubnetAzAPrivate: ${file(./serverlessResources/SubnetAzAPrivate.yml)}
+    RouteTableSubnetPrivate: ${file(./serverlessResources/RouteTableSubnetPrivate.yml)}
+    RouteSubnetPrivate: ${file(./serverlessResources/RouteSubnetPrivate.yml)}
+    RouteTableAssociationSubnetPrivate: ${file(./serverlessResources/RouteTableAssociationSubnetPrivate.yml)}
+
+    # REGION C
+    # Public
+    SubnetAzCPublic: ${file(./serverlessResources/SubnetAzCPublic.yml)}
+    RouteTableSubnetPublicC: ${file(./serverlessResources/RouteTableSubnetPublicC.yml)}
+    RouteSubnetPublicC: ${file(./serverlessResources/RouteSubnetPublicC.yml)}
+    RouteTableAssociationSubnetPublicC: ${file(./serverlessResources/RouteTableAssociationSubnetPublicC.yml)}
+    NATPublicC: ${file(./serverlessResources/NATPublicC.yml)}
+    EipNATPublicC: ${file(./serverlessResources/EipNATPublicC.yml)}
+    # Private
+    SubnetAzCPrivate: ${file(./serverlessResources/SubnetAzCPrivate.yml)}
+    RouteTableSubnetPrivateC: ${file(./serverlessResources/RouteTableSubnetPrivateC.yml)}
+    RouteSubnetPrivateC: ${file(./serverlessResources/RouteSubnetPrivateC.yml)}
+    RouteTableAssociationSubnetPrivateC: ${file(./serverlessResources/RouteTableAssociationSubnetPrivateC.yml)}
+    # RDS instance
+    PostgreSqlRDSInstance: ${file(./serverlessResources/PostgreSqlRDSInstance.yml)}
     SubnetGroup: ${file(./serverlessResources/SubnetGroup.yml)}
     SecurityGroupLambdaToRDS: ${file(./serverlessResources/SecurityGroupLambdaToRDS.yml)}
     SecurityGroupBastionToRDS: ${file(./serverlessResources/SecurityGroupBastionToRDS.yml)}
-    SecurityGroupLambda: ${file(./serverlessResources/SecurityGroupLambda.yml)}
-    SecurityGroupBastion: ${file(./serverlessResources/SecurityGroupBastion.yml)}
-    RouteTableSubnetA: ${file(./serverlessResources/RouteTableSubnetA.yml)}
-    RouteTableSubnetB: ${file(./serverlessResources/RouteTableSubnetB.yml)}
-    RouteTableSubnetC: ${file(./serverlessResources/RouteTableSubnetC.yml)}
-    RouteA: ${file(./serverlessResources/RouteA.yml)}
-    RouteB: ${file(./serverlessResources/RouteB.yml)}
-    RouteC: ${file(./serverlessResources/RouteC.yml)}
-    RouteTableAssociationSubnetA: ${file(./serverlessResources/RouteTableAssociationSubnetA.yml)}
-    RouteTableAssociationSubnetB: ${file(./serverlessResources/RouteTableAssociationSubnetB.yml)}
-    RouteTableAssociationSubnetC: ${file(./serverlessResources/RouteTableAssociationSubnetC.yml)}
-    NATSubnetA: ${file(./serverlessResources/NATSubnetA.yml)}
-    EIPSubnetA: ${file(./serverlessResources/EIPSubnetA.yml)}
-    NATSubnetB: ${file(./serverlessResources/NATSubnetB.yml)}
-    EIPSubnetB: ${file(./serverlessResources/EIPSubnetB.yml)}
-    EIPSubnetC: ${file(./serverlessResources/EIPSubnetC.yml)}
-    PostgreSqlRDSInstance: ${file(./serverlessResources/PostgreSqlRDSInstance.yml)}
-    # BastionEIPAssociation:
-    #   Type: AWS::EC2::EIPAssociation
-    #   Properties:
-    #     EIP:
-    #       Ref: EIPSubnetC
-    #     InstanceId:
-    BastionMainLogGroup:
-      Type: AWS::Logs::LogGroup
-      Properties:
-        LogGroupName: NMMBastionLogGroup
-    BastionPolicyRole:
-      Type: AWS::IAM::Role
-      Properties:
-        RoleName: NMMBastionRole
-        AssumeRolePolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Action: sts:AssumeRole
-              Principal:
-                Service: ec2.amazonaws.com
-    BastionHostPolicy:
-      Type: AWS::IAM::Policy
-      Properties:
-        PolicyName: BastionPolicy
-        Roles:
-          - Ref: BastionPolicyRole
-        PolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Action:
-                - logs:CreateLogStream
-                - logs:GetLogEvents
-                - logs:PutLogEvents
-                - logs:DescribeLogGroups
-                - logs:DescribeLogStreams
-                - logs:PutRetentionPolicy
-                - logs:PutMetricFilter
-                - logs:CreateLogGroup
-              Resource:
-                - arn:aws:logs:${self:provider.region}:${self:custom.AWS_ACCOUNT}:log-group:NMMBastionLogGroup:*
-            - Effect: Allow
-              Action:
-                - ec2:AssociateAddress
-                - ec2:DescribeAddresses
-              Resource: '*'
-    BastionHostProfile:
-      DependsOn: BastionHostPolicy
-      Type: AWS::IAM::InstanceProfile
-      Properties:
-        Roles:
-          - Ref: BastionPolicyRole
-    BastionAutoScalingGroup:
-      Type: AWS::AutoScaling::AutoScalingGroup
-      Properties:
-        AutoScalingGroupName: NMMBastionAutoScale
-        LaunchConfigurationName:
-          Ref: BastionLaunchConfiguration
-        VPCZoneIdentifier:
-          - Ref: SubnetC
-        MinSize: '1'
-        MaxSize: '1'
-        Cooldown: '300'
-        DesiredCapacity: '1'
-        Tags:
-          - Key: Name
-            Value: NMMBastionAutoScale
-            PropagateAtLaunch: true
-      CreationPolicy:
-        ResourceSignal:
-          Count: 1
-          Timeout: PT30M
-        AutoScalingCreationPolicy:
-          MinSuccessfulInstancesPercent: 100
-      UpdatePolicy:
-        AutoScalingReplacingUpdate:
-          WillReplace: true
-    BastionLaunchConfiguration:
-      # DependsOn: VPC
-      Type: AWS::AutoScaling::LaunchConfiguration
-      Properties:
-        AssociatePublicIpAddress: true
-        KeyName: nmmBastionKeyPair
-        IamInstanceProfile:
-          Ref: BastionHostProfile
-        ImageId: ami-0b8b10b5bf11f3a22
-        SecurityGroups:
-          - Fn::GetAtt: SecurityGroupBastion.GroupId
-        InstanceType: t2.micro
-        BlockDeviceMappings:
-          - DeviceName: /dev/xvda
-            Ebs:
-              VolumeSize: '10'
-              VolumeType: gp2
-              Encrypted: true
-              DeleteOnTermination: true
-        UserData:
-          Fn::Base64: >
-              #!/bin/bash
-              set -x
-              export PATH=$PATH:/usr/local/bin
-              #cfn signaling functions
-              yum install git -y || apt-get install -y git || zypper -n install git
-              sudo amazon-linux-extras install epel
-              sudo yum install nodejs
 
-              function cfn_fail
-              {
-                cfn-signal -e 1 --stack no-meat-may-app-prod --region ${self:provider.region} --resource BastionLaunchConfiguration
-                exit 1
-              }
-
-              function cfn_success
-              {
-                cfn-signal -e 0 --stack no-meat-may-app-prod --region ${self:provider.region} --resource BastionAutoScalingGroup
-                exit 0
-              }
-
-              until git clone https://github.com/aws-quickstart/quickstart-linux-utilities.git ; do echo "Retrying"; done
-              cd /quickstart-linux-utilities;
-              source quickstart-cfn-tools.source;
-              qs_update-os || qs_err;
-              #qs_bootstrap_pip || qs_err " pip bootstrap failed ";
-              qs_aws-cfn-bootstrap || qs_err " cfn bootstrap failed ";
-
-              CLOUDWATCHGROUP=NMMBastionLogGroup
-              cfn-init -v --stack 'no-meat-may-app-prod' --resource BastionLaunchConfiguration --region ${self:provider.region} || cfn_fail
-              [ $(qs_status) == 0 ] && cfn_success || cfn_fail
 
 
 functions:
@@ -253,8 +140,7 @@ functions:
       securityGroupIds:
         - !GetAtt SecurityGroupLambda.GroupId
       subnetIds:
-        - Ref: SubnetA
-        - Ref: SubnetB
+        - Ref: SubnetAzAPrivate
     layers:
     # Name = <name of layer>LambdaLayer
       - { Ref: GraphqlLambdaLayer }

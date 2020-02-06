@@ -49,6 +49,9 @@ export default class Server implements IServer {
     }) => {
       this.logger.createContext(event, context)
       const log = this.logger.getLogger()
+      log.info('testing info logger')
+      console.log('testing console log')
+      log.debug('testing info')
 
       return {
         event,

@@ -2,8 +2,8 @@ Type: AWS::RDS::DBSubnetGroup
 Properties:
   DBSubnetGroupDescription: "NMM RDS Subnet Group"
   SubnetIds:
-    - Ref: SubnetA
-    - Ref: SubnetB
+    - Ref: SubnetAzAPrivate
+    - Ref: SubnetAzCPrivate
   Tags:
     -
       Key: Name
