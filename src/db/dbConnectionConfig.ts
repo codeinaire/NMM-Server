@@ -55,6 +55,6 @@ export const dev: ConnectionOptions = {
   database: process.env.DB_DATABASE,
   synchronize: false,
   logging: 'all',
-  dropSchema: true,
+  dropSchema: false,
   entities
 }

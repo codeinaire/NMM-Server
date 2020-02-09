@@ -5,8 +5,6 @@ export default {
       __: any,
       { dataSources }: { dataSources: any }
     ) => {
-      // console.log('This is query', dataSources);
-      // console.log('DataSources', dataSources.articleAPI.context.event);
       const result = await dataSources.articleAPI.getArticles()
       return result
     }
@@ -17,7 +15,6 @@ export default {
       { articles }: { articles: any },
       { dataSources }: { dataSources: any }
     ) => {
-      console.log('RESOLVERS', dataSources)
       return dataSources.articleAPI.createArticles({ articles })
     },
     createArticle: (
@@ -25,7 +22,6 @@ export default {
       { article }: { article: any },
       { dataSources }: { dataSources: any }
     ) => {
-      console.log('RESOLVERS@@@@@', dataSources, article)
       return dataSources.articleAPI.createArticle({ article })
     }
   }

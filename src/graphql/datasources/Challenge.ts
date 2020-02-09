@@ -1,4 +1,5 @@
 import { injectable, inject } from 'inversify'
+// import { container } from '../../inversify.config'
 // DB Entities
 import ChallengeEntity from '../../db/entities/Challenge'
 import UserProfileEntity from '../../db/entities/UserProfile'
@@ -15,35 +16,36 @@ import {
   IDatabase,
   ICalculatePoints
 } from '../../types'
-import { Connection } from 'typeorm'
+
 import { DataSourceConfig } from 'apollo-datasource'
 
 @injectable()
 export default class ChallengeAPI implements IChallengeAPI {
   private readonly calculatePoints: ICalculatePoints
   private readonly logger: ILogger
-  // private context: any
-  private db: Connection
-  @inject(TYPES.Database) private database: IDatabase
+  private readonly database: IDatabase
+  private context: any
+
   public constructor(
     @inject(TYPES.CalculatePoints) calculatePoints: ICalculatePoints,
-    @inject(TYPES.Logger) Logger: ILogger
+    @inject(TYPES.Logger) Logger: ILogger,
+    @inject(TYPES.Database) database: IDatabase
   ) {
-    // eslint-disable-next-line prettier/prettier
     this.calculatePoints = calculatePoints
     this.logger = Logger
+    this.database = database
   }
 
   public async initialize(config: DataSourceConfig<any>) {
-    // this.context = config.context
-    this.db = await this.database.getDatabase()
+    this.context = config.context
   }
 
   /**
    * findChallenge
    */
   public async findChallenge(recipeId: number, userProfileId: string) {
-    const challenge = await this.db.getRepository(ChallengeEntity).findOne({
+    const db = await this.database.getConnection()
+    const challenge = await db.getRepository(ChallengeEntity).findOne({
       recipeId,
       userProfileId
     })
@@ -67,6 +69,7 @@ export default class ChallengeAPI implements IChallengeAPI {
       standardResolution,
       recipeId
     } = challengeInput
+    const db = await this.database.getConnection()
 
     // Calculate challenge points, update UserProfileEntity
     // with new total, & get updated UserProfile object
@@ -76,7 +79,7 @@ export default class ChallengeAPI implements IChallengeAPI {
     )
 
     const ERROR_NO_AFFECTED_ROWS = 0
-    const updatedUserProfile = await this.db
+    const updatedUserProfile = await db
       .getRepository(UserProfileEntity)
       .increment({ id: verifiedUser }, 'totalPoints', calculatedPoints)
     if (updatedUserProfile.affected == ERROR_NO_AFFECTED_ROWS) {
@@ -84,7 +87,7 @@ export default class ChallengeAPI implements IChallengeAPI {
       throw new Error('UserProfile totalPoints not updated. Try again!')
     }
 
-    const updatedUserProfileObject = await this.db
+    const updatedUserProfileObject = await db
       .getRepository(UserProfileEntity)
       .findOne(verifiedUser)
     if (updatedUserProfileObject == undefined) {
@@ -93,7 +96,7 @@ export default class ChallengeAPI implements IChallengeAPI {
     }
 
     let challenge: ChallengeEntity | undefined
-    challenge = await this.db
+    challenge = await db
       .getRepository(ChallengeEntity)
       .findOne({ userProfileId: verifiedUser, recipeId })
     // Create/Update ChallengeEntity
@@ -123,10 +126,10 @@ export default class ChallengeAPI implements IChallengeAPI {
       challenge.sharedFriendsImages = sharedFriendsImages
     }
 
-    const recipe = await this.db.getRepository(RecipeEntity).findOne(recipeId)
+    const recipe = await db.getRepository(RecipeEntity).findOne(recipeId)
     if (recipe) challenge.recipe = recipe
 
-    const savedChallenge = await this.db
+    const savedChallenge = await db
       .getRepository(ChallengeEntity)
       .save(challenge)
 
@@ -136,15 +139,13 @@ export default class ChallengeAPI implements IChallengeAPI {
       let completedChallenge = new CompletedChallengeEntity()
       completedChallenge.userProfile = updatedUserProfileObject
       completedChallenge.challenge = savedChallenge
-      await this.db
-        .getRepository(CompletedChallengeEntity)
-        .save(completedChallenge)
+      await db.getRepository(CompletedChallengeEntity).save(completedChallenge)
       // Delete uncompleted entity when challenge complete
-      await this.db
+      await db
         .getRepository(UncompletedChallengeEntity)
         .delete({ userProfileId: verifiedUser, challengeId: savedChallenge.id })
     } else {
-      let uncompletedChallenge = await this.db
+      let uncompletedChallenge = await db
         .getRepository(UncompletedChallengeEntity)
         .findOne({
           userProfileId: verifiedUser,
@@ -154,7 +155,7 @@ export default class ChallengeAPI implements IChallengeAPI {
         uncompletedChallenge = new UncompletedChallengeEntity()
         uncompletedChallenge.userProfile = updatedUserProfileObject
         uncompletedChallenge.challenge = savedChallenge
-        await this.db
+        await db
           .getRepository(UncompletedChallengeEntity)
           .save(uncompletedChallenge)
       }
@@ -167,6 +168,7 @@ export default class ChallengeAPI implements IChallengeAPI {
   }
 
   public async closeDbConnection() {
-    await this.db.close()
+    const db = await this.database.getConnection()
+    await db.close()
   }
 }

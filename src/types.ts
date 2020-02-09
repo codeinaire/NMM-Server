@@ -24,7 +24,7 @@ export interface IServer {
 }
 
 export interface IDatabase {
-  getDatabase(): Promise<Connection>
+  getConnection(): Promise<Connection>
 }
 
 export interface ILogger {

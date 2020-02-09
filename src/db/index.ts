@@ -27,7 +27,7 @@ export class Database implements IDatabase {
     this.connectionManager = getConnectionManager()
   }
 
-  private async getConnection(): Promise<Connection> {
+  public async getConnection(): Promise<Connection> {
     this._logger.info('Selecting current environment')
     const currentEnv =
       process.env.ENV == 'prod'
@@ -35,7 +35,8 @@ export class Database implements IDatabase {
         : process.env.ENV == 'test'
         ? 'test'
         : 'dev'
-    const CONNECTION_NAME = currentEnv == 'dev' ? 'default' : 'test'
+    const CONNECTION_NAME =
+      currentEnv == 'prod' || currentEnv == 'dev' ? 'default' : 'test'
 
     if (this.connectionManager.has(CONNECTION_NAME)) {
       this._logger.info(`Using existing DB connection for ${currentEnv}`)
@@ -54,9 +55,5 @@ export class Database implements IDatabase {
     }
 
     return this.connection
-  }
-
-  public async getDatabase() {
-    return await this.getConnection()
   }
 }

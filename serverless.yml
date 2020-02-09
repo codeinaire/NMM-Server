@@ -26,7 +26,7 @@ provider:
   role: LambdaRole
   region: ap-southeast-2
   cfnRole: arn:aws:iam::592363304474:role/nmm-serverless-deploy-role
-  timeout: 10
+  timeout: 30
   logRetentionInDays: 14
   # Guesstimate - AWS recommends load testing &
   # checking MAX MEMORY USED to adjust the size
