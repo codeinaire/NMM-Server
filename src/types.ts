@@ -89,10 +89,14 @@ export interface IModifiedObject {
 
 // DATASOURCES
 export interface IRecipeAPI extends DataSource {
-  findAttribution(arg0: number): Promise<RecipeAttribution | undefined>
+  findRecipe(arg0?: number, arg1?: string): Promise<Recipe | undefined>
+  findAttribution(
+    arg0?: number,
+    arg1?: string
+  ): Promise<RecipeAttribution | undefined>
   findAllRecipes(): Promise<Array<Recipe>>
   createRecipe(args: any): Promise<Recipe>
-  deleteRecipe(arg0: string): Promise<Recipe>
+  deleteRecipe(arg0?: number, arg1?: string): Promise<Recipe>
 }
 
 export interface IUserProfileAPI extends DataSource {

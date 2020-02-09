@@ -135,7 +135,8 @@ export type QueryChallengeArgs = {
 
 
 export type QueryRecipeArgs = {
-  recipeId: Scalars['ID']
+  recipeId?: Maybe<Scalars['ID']>,
+  recipeTitle?: Maybe<Scalars['String']>
 };
 
 

@@ -1,4 +1,5 @@
 import { injectable, inject } from 'inversify'
+import { ForbiddenError, UserInputError } from 'apollo-server-lambda'
 // DB Entities
 import RecipeEntity from '../../db/entities/Recipe'
 import RecipeAttributionEntity from '../../db/entities/RecipeAttribution'
@@ -26,22 +27,29 @@ export default class RecipeAPI implements IRecipeAPI {
     this.context = config.context
   }
 
-  public async findRecipe(id: number) {
+  public async findRecipe(id: number, title: string) {
     const db = await this.database.getConnection()
-    const recipe = await db.getRepository(RecipeEntity).findOne({ id })
+    const recipe = await db.getRepository(RecipeEntity).findOne({
+      where: [{ id }, { title }]
+    })
+
+    if (!recipe)
+      throw new UserInputError(
+        `The recipe with title "${title}" or "${id}" doesn't exist. Come on mate, have a go!`
+      )
 
     return recipe
   }
 
-  public async findAttribution(recipeAttributionId: number) {
+  public async findAttribution(id: number, name: string) {
     const db = await this.database.getConnection()
-    const attributions = await db
+    const attribution = await db
       .getRepository(RecipeAttributionEntity)
       .findOne({
-        id: recipeAttributionId
+        where: [{ id }, { name }]
       })
 
-    return attributions
+    return attribution
   }
 
   public async findAllRecipes() {
@@ -69,6 +77,15 @@ export default class RecipeAPI implements IRecipeAPI {
     twitter = 'Twitter profile not available'
   }: RecipeInput) {
     const db = await this.database.getConnection()
+
+    const duplicateRecipe = await db.getRepository(RecipeEntity).findOne({
+      where: { title }
+    })
+
+    if (duplicateRecipe)
+      throw new UserInputError(
+        `The title "${duplicateRecipe.title}" is taken by another recipe. Change the title and/or delete recipe number ${duplicateRecipe.id}`
+      )
 
     // TODO - add logic to prevent recipe with same name being created
     let recipe = new RecipeEntity()
@@ -105,11 +122,16 @@ export default class RecipeAPI implements IRecipeAPI {
     return savedRecipe
   }
 
-  public async deleteRecipe(title: string): Promise<any> {
+  public async deleteRecipe(id: number, title: string): Promise<any> {
     const db = await this.database.getConnection()
-    const recipeToDelete: any = await db
-      .getRepository(RecipeEntity)
-      .findOne(title)
+    const recipeToDelete = await db.getRepository(RecipeEntity).findOne({
+      where: [{ id }, { title }]
+    })
+
+    if (!recipeToDelete)
+      throw new UserInputError(
+        `The recipe with title "${title}" or "${id}" doesn't exist. Have go mate!`
+      )
 
     const deletedRecipe = await db
       .getRepository(RecipeEntity)
