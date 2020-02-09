@@ -8,7 +8,11 @@ export default gql`
     createUserProfile(userProfileInput: UserProfileInput): UserProfile
 
     createRecipe(recipe: RecipeInput): Recipe
-    deleteRecipe(title: String): Recipe
+    deleteRecipe(
+      deleteSecret: String!
+      recipeId: Int
+      recipeTitle: String
+    ): Recipe
 
     createOrUpdateChallenge(challengeInput: ChallengeInput): Challenge
   }

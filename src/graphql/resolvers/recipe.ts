@@ -4,6 +4,8 @@ import { IResolverContext } from '../../types'
 import RecipeEntity from '../../db/entities/Recipe'
 import { RecipeAttribution } from '../types'
 
+import { ForbiddenError } from 'apollo-server-lambda'
+
 export default {
   Query: {
     recipes: async (
@@ -18,11 +20,14 @@ export default {
     },
     recipe: async (
       _: any,
-      { recipeId }: { recipeId: number },
+      { recipeId, recipeTitle }: { recipeId: number; recipeTitle: string },
       { dataSources, log }: IResolverContext
     ): Promise<Recipe> => {
       log.info(`Finding all recipe no. ${recipeId}`)
-      const recipe = await dataSources.recipeAPI.findRecipe(recipeId)
+      const recipe = await dataSources.recipeAPI.findRecipe(
+        recipeId,
+        recipeTitle
+      )
       log.info(`Found all recipe no. ${recipe.id}`)
       return recipe
     }
@@ -33,20 +38,38 @@ export default {
       { recipe }: { recipe: RecipeInput },
       { dataSources, log }: IResolverContext
     ): Promise<Recipe> => {
-      log.info('Creating recipe')
-      const createdRecipe = await dataSources.recipeAPI.createRecipe(recipe)
-      log.info('Recipe created')
-      return createdRecipe
+      try {
+        log.info('Creating recipe')
+        const createdRecipe = await dataSources.recipeAPI.createRecipe(recipe)
+        log.info('Recipe created')
+        return createdRecipe
+      } catch (error) {
+        throw error
+      }
     },
     deleteRecipe: async (
       _: any,
-      title: string,
+      {
+        deleteSecret,
+        recipeId,
+        recipeTitle
+      }: { deleteSecret: string; recipeId: number; recipeTitle: string },
       { auth, dataSources, log }: IResolverContext
     ): Promise<Recipe> => {
-      log.info('Creating recipe')
-      const deletedRecipe = await dataSources.recipeAPI.deleteRecipe(title)
-      log.info('Recipe created')
-      return deletedRecipe
+      try {
+        const authToDelete = deleteSecret == process.env.DELETE_SECRET
+        if (!authToDelete)
+          throw new ForbiddenError('You are not allowed to delete! Begone!')
+        log.info('Deleting recipe')
+        const deletedRecipe = await dataSources.recipeAPI.deleteRecipe(
+          recipeId,
+          recipeTitle
+        )
+        log.info('Recipe deleted')
+        return deletedRecipe
+      } catch (error) {
+        throw error
+      }
     }
   },
   Recipe: {
@@ -55,12 +78,16 @@ export default {
       __: any,
       { dataSources, log }: IResolverContext
     ): Promise<RecipeAttribution> => {
-      log.info('Finding recipe attributions.')
-      const attributions = await dataSources.recipeAPI.findAttribution(
-        recipeAttributionId
-      )
-      log.info('Attributions found.')
-      return attributions
+      try {
+        log.info('Finding recipe attribution')
+        const attribution = await dataSources.recipeAPI.findAttribution(
+          recipeAttributionId
+        )
+        log.info('Attribution found.')
+        return attribution
+      } catch (error) {
+        throw error
+      }
     }
   }
 }
