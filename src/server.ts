@@ -49,7 +49,8 @@ export default class Server implements IServer {
     }) => {
       this.logger.createContext(event, context)
       const log = this.logger.getLogger()
-
+      // how to set https://github.com/apollographql/apollo-server/issues/1479
+      context.callbackWaitsForEmptyEventLoop = false
       return {
         event,
         log,

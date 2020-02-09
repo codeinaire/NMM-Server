@@ -12,8 +12,6 @@ export default class Logger implements ILogger {
 
   public constructor() {
     this.log = log
-    this.log.options.dev = process.env.DEV_LOGGING
-    this.log.options.silent = process.env.SILENT_LOGGING
   }
 
   createContext(event?: APIGatewayProxyEvent, context?: Context) {
@@ -22,6 +20,9 @@ export default class Logger implements ILogger {
   }
 
   getLogger() {
+    this.log.options.dev = process.env.DEV_LOGGING
+    this.log.options.silent = process.env.SILENT_LOGGING
+    this.log.options.debug = process.env.DEBUG_LOGGING
     return this.log
   }
 }

@@ -4,6 +4,8 @@ custom_authorizer/node_modules/*
 
 # Secrets
 .env
+.env.prod
+src/ormconfigProd.json
 
 # Built
 dist/*
@@ -20,3 +22,6 @@ dist/*
 
 # DB
 ormconfig.json
+
+# Serverless
+.serverless/*
