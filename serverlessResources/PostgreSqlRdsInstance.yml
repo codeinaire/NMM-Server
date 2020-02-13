@@ -8,8 +8,8 @@ Properties:
   DBSubnetGroupName:
     Ref: SubnetGroup
   # make these opposite when in prod
-  DeleteAutomatedBackups: true
-  DeletionProtection: false
+  DeleteAutomatedBackups: false
+  DeletionProtection: true
   EnablePerformanceInsights: true
   EnableCloudwatchLogsExports:
     - 'upgrade'

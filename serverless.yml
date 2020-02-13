@@ -49,14 +49,6 @@ package:
 resources:
   Resources:
     LambdaRole: ${file(./serverlessResources/LambdaRole.yml)}
-    # VPC
-    VPC: ${file(./serverlessResources/VPC.yml)}
-    InternetGateway: ${file(./serverlessResources/InternetGateway.yml)}
-    InternetGatewayAssociation: ${file(./serverlessResources/InternetGatewayAssociation.yml)}
-    # Security Groups
-    SecurityGroupLambda: ${file(./serverlessResources/SecurityGroupLambda.yml)}
-    SecurityGroupBastion: ${file(./serverlessResources/SecurityGroupBastion.yml)}
-    SecurityGroupAPIGWToVPC: ${file(./serverlessResources/SecurityGroupAPIGWToVPC.yml)}
     # REGION A
     #Pubilc
     SubnetAzAPublic: ${file(./serverlessResources/SubnetAzAPublic.yml)}
@@ -146,10 +138,10 @@ resources:
         VPCZoneIdentifier:
           - Ref: SubnetAzAPublic
           - Ref: SubnetAzCPublic
-        MinSize: '1'
-        MaxSize: '1'
+        MinSize: '0'
+        MaxSize: '0'
         Cooldown: '300'
-        DesiredCapacity: '1'
+        DesiredCapacity: '0'
         Tags:
           - Key: Name
             Value: NMMBastionAutoScale
@@ -173,6 +165,14 @@ resources:
               VolumeType: gp2
               Encrypted: true
               DeleteOnTermination: true
+    # VPC
+    VPC: ${file(./serverlessResources/VPC.yml)}
+    InternetGateway: ${file(./serverlessResources/InternetGateway.yml)}
+    InternetGatewayAssociation: ${file(./serverlessResources/InternetGatewayAssociation.yml)}
+    # Security Groups
+    SecurityGroupLambda: ${file(./serverlessResources/SecurityGroupLambda.yml)}
+    SecurityGroupBastion: ${file(./serverlessResources/SecurityGroupBastion.yml)}
+    SecurityGroupAPIGWToVPC: ${file(./serverlessResources/SecurityGroupAPIGWToVPC.yml)}
 
 functions:
   graphql:
