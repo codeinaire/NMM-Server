@@ -87,7 +87,6 @@ export type Mutation = {
   createOrUpdateChallenge?: Maybe<Challenge>,
 };
 
-
 export type MutationCreateUserProfileArgs = {
   userProfileInput?: Maybe<UserProfileInput>
 };
@@ -102,6 +101,7 @@ export type MutationDeleteRecipeArgs = {
   deleteSecret: Scalars['String'],
   recipeId?: Maybe<Scalars['Int']>,
   recipeTitle?: Maybe<Scalars['String']>
+
 };
 
 

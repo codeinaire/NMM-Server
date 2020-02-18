@@ -224,6 +224,7 @@ functions:
       subnetIds:
         - Ref: SubnetAzAPrivate
         - Ref: SubnetAzCPrivate
+
     layers:
     # Name = <name of layer>LambdaLayer
       - { Ref: GraphqlLambdaLayer }
