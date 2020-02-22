@@ -1,21 +1,23 @@
 service: no-meat-may-app
 
 plugins:
+  - serverless-plugin-warmup
   - serverless-webpack
   - serverless-dotenv-plugin
-  - serverless-plugin-warmup
   - serverless-cloudside-plugin
   - serverless-offline
 
 custom:
+  warmup:
+    folderName: 'noMeatMayWarmupLambda'
+    name: 'noMeatMayWarmupLambda'
+    tags:
+      name: 'noMeatMayWarmup'
+      env: 'prod'
   webpack:
     webpackConfig: 'webpack.config.js'   # Name of webpack configuration file
     includeModules: true   # Node modules configuration for packaging
     excludeFiles: src/**/*.test.js # Provide a glob for files to ignore
-  warmup:
-    tags:
-      name: noMeatMayWarmup
-      env: prod
   serverless-offline:
     port: 4000
   AWS_ACCOUNT: 592363304474
@@ -229,6 +231,8 @@ functions:
         path: playground
         method: post
         cors: true
+    warmup:
+      enabled: prod
     layers:
     # Name = <name of layer>LambdaLayer
       - { Ref: GraphqlLambdaLayer }

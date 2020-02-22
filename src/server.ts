@@ -7,14 +7,15 @@ import { TYPES } from './inversifyTypes'
 // GRAPHQL
 import schema from './graphql/schema'
 // TYPES
-import { ExtendedAPIGatewayProxyEvent, Context } from 'aws-lambda'
+import { Context } from 'aws-lambda'
 import {
   IRecipeAPI,
   IServer,
   ILogger,
   IAuthorisation,
   IUserProfileAPI,
-  IChallengeAPI
+  IChallengeAPI,
+  ExtendedAPIGatewayProxyEvent
 } from './types'
 
 @injectable()
