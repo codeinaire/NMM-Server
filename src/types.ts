@@ -82,6 +82,7 @@ export interface IScopeAndId {
 export interface IAuthorisation {
   checkScopesAndResolve(
     arg0: ExtendedAPIGatewayProxyEvent,
+
     arg1: Array<string>,
     arg3?: LambdaLog
   ): Promise<string>

@@ -7,6 +7,7 @@ import { TYPES } from './inversifyTypes'
 // GRAPHQL
 import schema from './graphql/schema'
 // TYPES
+
 import { Context } from 'aws-lambda'
 import {
   IRecipeAPI,
@@ -45,6 +46,7 @@ export default class Server implements IServer {
       event,
       context
     }: {
+
       event: ExtendedAPIGatewayProxyEvent
       context: Context
     }) => {
