@@ -37,13 +37,13 @@ export default class Recipe {
   @Column()
   title: string
 
-  @Column('simple-array')
+  @Column({ type: 'text', array: true })
   ingredients: string[]
 
-  @Column('simple-array')
+  @Column({ type: 'text', array: true })
   method: string[]
 
-  @Column('simple-array')
+  @Column({ type: 'text', array: true })
   hashtags: string[]
 
   @Column({
