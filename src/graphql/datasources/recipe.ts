@@ -55,6 +55,7 @@ export default class RecipeAPI implements IRecipeAPI {
       throw new UserInputError(
         `The recipe with title "${title}" or "${id}" doesn't exist. Come on mate, have a go!`
       )
+    console.log(recipe)
 
     return recipe
   }

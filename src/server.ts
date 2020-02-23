@@ -7,10 +7,6 @@ import { TYPES } from './inversifyTypes'
 // GRAPHQL
 import schema from './graphql/schema'
 // TYPES
-<<<<<<< HEAD
-=======
-
->>>>>>> hotfix/warmup-lambda-cron-schedule
 import { Context } from 'aws-lambda'
 import {
   IRecipeAPI,
@@ -49,7 +45,7 @@ export default class Server implements IServer {
       event,
       context
     }: {
-      event: ExtendedAPIGatewayProxyEvent,
+      event: ExtendedAPIGatewayProxyEvent
       context: Context
     }) => {
       this.logger.createContext(event, context)
