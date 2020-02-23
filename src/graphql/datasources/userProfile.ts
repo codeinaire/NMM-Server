@@ -1,6 +1,7 @@
 import { injectable, inject } from 'inversify'
 // DB Entities
 import UserProfileEntity from '../../db/entities/UserProfile'
+import ChallengeEntity from '../../db/entities/Challenge'
 // TYPES
 import { UserProfileInput } from '../types'
 import { TYPES } from '../../inversifyTypes'

@@ -10,6 +10,7 @@ export default gql`
   enum TypeEnum {
     Recipe
     Article
+    UserProfile
   }
 
   enum SectionsCompletedEnum {

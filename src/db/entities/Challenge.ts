@@ -19,7 +19,8 @@ export enum ChallengeDifficultyEnum {
 
 export enum TypeEnum {
   Recipe = 'Recipe',
-  Article = 'Article'
+  Article = 'Article',
+  UserProfile = 'User Profile'
 }
 
 export enum SectionsCompletedEnum {
