@@ -87,7 +87,6 @@ export type Mutation = {
   createOrUpdateChallenge?: Maybe<Challenge>,
 };
 
-
 export type MutationCreateUserProfileArgs = {
   userProfileInput?: Maybe<UserProfileInput>
 };
