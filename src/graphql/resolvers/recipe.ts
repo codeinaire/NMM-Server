@@ -35,10 +35,15 @@ export default {
   Mutation: {
     createRecipe: async (
       _: any,
-      { recipe }: { recipe: RecipeInput },
+      { recipe, createSecret }: { recipe: RecipeInput; createSecret: string },
       { dataSources, log }: IResolverContext
     ): Promise<Recipe> => {
       try {
+        const authToCreate = createSecret == process.env.CREATE_SECRET
+        if (!authToCreate)
+          throw new ForbiddenError(
+            'You are not allowed to create a recipe! Begone!'
+          )
         log.info('Creating recipe')
         const createdRecipe = await dataSources.recipeAPI.createRecipe(recipe)
         log.info('Recipe created')
