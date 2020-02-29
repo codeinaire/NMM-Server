@@ -3,7 +3,6 @@ import { ApolloServer } from 'apollo-server-lambda'
 import { DataSource, DataSourceConfig } from 'apollo-datasource'
 import { APIGatewayProxyEvent, Context } from 'aws-lambda'
 import {
-  Challenge,
   ChallengeInput,
   Recipe,
   UserProfile,
@@ -11,6 +10,7 @@ import {
   RecipeAttribution,
   TypeEnum
 } from './graphql/types'
+import ChallengeEntity from './db/entities/Challenge'
 import { LambdaLog } from 'lambda-log'
 
 export interface ExtendedAPIGatewayProxyEvent extends APIGatewayProxyEvent {
@@ -104,19 +104,25 @@ export interface IRecipeAPI extends DataSource {
 }
 
 export interface IUserProfileAPI extends DataSource {
-  createUserProfile(arg0: UserProfileInput, arg1?: string): Promise<UserProfile>
+  createOrUpdateUserProfile(
+    arg0: UserProfileInput,
+    arg1?: string
+  ): Promise<UserProfile>
   findUserProfile(arg0: string, arg1?: string): Promise<UserProfile | undefined>
   initialize(arg0?: DataSourceConfig<any>): void
   closeDbConnection(): void
 }
 
 export interface IChallengeAPI extends DataSource {
-  findChallenge(arg0: number, arg1: string): Promise<Challenge | undefined>
+  findChallenge(
+    arg0: number,
+    arg1: string
+  ): Promise<ChallengeEntity | undefined>
   createOrUpdateChallenge(
     arg0: ChallengeInput,
     arg1: TypeEnum,
     arg2: string
-  ): Promise<Challenge>
+  ): Promise<ChallengeEntity>
   closeDbConnection(): void
   initialize(arg0?: DataSourceConfig<any>): void
 }
@@ -124,7 +130,7 @@ export interface IChallengeAPI extends DataSource {
 export interface ICalculatePoints {
   calculate(
     arg0: ChallengeInput | UserProfileInput,
-    arg1: string,
-    arg2?: number
-  ): number
+    arg1: ChallengeEntity,
+    arg2: string
+  ): ChallengeEntity
 }

@@ -3,7 +3,7 @@ import { injectable, inject } from 'inversify'
 import UserProfileEntity from '../../db/entities/UserProfile'
 import ChallengeEntity from '../../db/entities/Challenge'
 // TYPES
-import { UserProfileInput } from '../types'
+import { UserProfileInput, TypeEnum, ChallengeDifficultyEnum } from '../types'
 import { TYPES } from '../../inversifyTypes'
 import { IUserProfileAPI, IDatabase, ICalculatePoints } from '../../types'
 import { DataSourceConfig } from 'apollo-datasource'

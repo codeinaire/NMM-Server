@@ -21,6 +21,12 @@ export default gql`
     SharedRecipe
     ReadArticle
     SharedArticle
+    Motivations
+    ChallengeGoals
+    Username
+    Bio
+    LowResProfile
+    ChallengeQuote
   }
 
   input ChallengeInput {
@@ -43,6 +49,7 @@ export default gql`
     sharedFriendsImages: SharedFriendsImage
     userProfileId: String
     recipeId: Int
+    completed: Boolean
   }
 
   type SharedFriendsImage {

@@ -20,7 +20,7 @@ export enum ChallengeDifficultyEnum {
 export enum TypeEnum {
   Recipe = 'Recipe',
   Article = 'Article',
-  UserProfile = 'User Profile'
+  UserProfile = 'UserProfile'
 }
 
 export enum SectionsCompletedEnum {
@@ -30,7 +30,13 @@ export enum SectionsCompletedEnum {
   SharedFriendsImage = 'SharedFriendsImage',
   SharedRecipe = 'SharedRecipe',
   ReadArticle = 'ReadArticle',
-  SharedArticle = 'SharedArticle'
+  SharedArticle = 'SharedArticle',
+  Motivations = 'Motivations',
+  ChallengeGoals = 'ChallengeGoals',
+  Username = 'Username',
+  Bio = 'Bio',
+  LowResProfile = 'LowResProfile',
+  ChallengeQuote = 'ChallengeQuote'
 }
 
 @Entity()
@@ -85,7 +91,7 @@ export default class Challenge {
   @JoinColumn({ name: 'recipeId' })
   recipe: Recipe
 
-  @Column('int', { nullable: true })
+  @Column({ nullable: true })
   userProfileId: string
 
   @ManyToOne(
@@ -98,6 +104,9 @@ export default class Challenge {
   )
   @JoinColumn({ name: 'userProfileId' })
   userProfile: UserProfile
+
+  @Column({ default: false })
+  completed: boolean
 
   @CreateDateColumn()
   createdAt: Date
