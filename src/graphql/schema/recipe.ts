@@ -36,6 +36,7 @@ export default gql`
     facebook: String
     instagram: String
     twitter: String
+    videoClipLink: String
   }
 
   type Recipe {
@@ -53,6 +54,7 @@ export default gql`
     ingredients: [String!]!
     method: [String!]!
     standardResolution: String!
+    videoClipLink: String
   }
 
   type RecipeAttribution {

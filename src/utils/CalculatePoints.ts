@@ -17,6 +17,40 @@ export default class CalculatePoints implements ICalculatePoints {
 
   /**
    * @remarks
+   * This is to determine which sections have been completed for the current
+   * challenge and add the unique currently completed sections to the
+   *  sections that have already been completed in the challenge
+   *
+   * @param sectionsCompleted
+   * @param sectionsAboutToComplete
+   * @return { currentSectionsCompleted, totalSectionsCompleted }
+   */
+  private checkSectionsAndMergeCompletedSections(
+    sectionsCompleted: Array<SectionsCompletedEnum>,
+    sectionsAboutToComplete: Array<SectionsCompletedEnum>
+  ): {
+    totalSectionsCompleted: Array<SectionsCompletedEnum>
+    currentSectionsCompleted: Array<SectionsCompletedEnum>
+  } {
+    const VALUE_NOT_PRESENT = -1
+    // ERROR - cannot read property indexOf of undefined
+    // {"id":"auth0|5e5aeb5d2c30470ca12f3b71","challengeGoals":5,"motivations":["Environment","AnimalWelfare"],"username":"Test User","challengeQuote":"I'm a test user"}
+    // Find sections not completed
+    const currentSectionsCompleted = sectionsAboutToComplete.filter(
+      section => VALUE_NOT_PRESENT === sectionsCompleted.indexOf(section)
+    )
+    // Combine sections just completed and previously completed sections
+    const totalSectionsCompleted = sectionsCompleted.concat(
+      currentSectionsCompleted
+    )
+
+    return {
+      totalSectionsCompleted,
+      currentSectionsCompleted
+    }
+  }
+  /**
+   * @remarks
    * This is to create the appropriate data type for the sectionsCompleted
    * property in the challenge entity
    *
@@ -59,7 +93,7 @@ export default class CalculatePoints implements ICalculatePoints {
    *
    * @param userProfile - a UserProfileInput object
    * @param challenge - challenge entity
-   * @returns challenge - challenge entity
+   * @returns { updatedChallenge: ChallengeEntity, amountToAddToUserProfile: number }
    */
   private calculateUserProfilePoints(
     userProfile: UserProfileInput,
@@ -70,28 +104,43 @@ export default class CalculatePoints implements ICalculatePoints {
       MAX_COMPLETABLE_ITEMS * this.POINTS_PER_SECTION_COMPLETED +
       this.ALL_SECTIONS_COMPLETED_BONUS
     const sectionsArray = Object.keys(userProfile)
-
-    // Calculate points
-    const completedSections = sectionsArray.length
-    let sectionsCompletedSumTotal =
-      completedSections * this.POINTS_PER_SECTION_COMPLETED
-    if (completedSections == MAX_COMPLETABLE_ITEMS)
-      sectionsCompletedSumTotal += this.ALL_SECTIONS_COMPLETED_BONUS
-    const awardedPoints = Math.floor(sectionsCompletedSumTotal)
-
-    // Update/Add challenge sections
-    const sectionsCompleted: Array<SectionsCompletedEnum> = sectionsArray.map(
+    // Map user profile sections to Enum keys
+    const sectionsJustCompleted: Array<SectionsCompletedEnum> = sectionsArray.map(
       (section: string) => {
         return this.addSection(section)
       }
     )
-    challenge.sectionsCompleted = sectionsCompleted
+
+    const {
+      totalSectionsCompleted,
+      currentSectionsCompleted
+    } = this.checkSectionsAndMergeCompletedSections(
+      challenge.sectionsCompleted,
+      sectionsJustCompleted
+    )
+
+    // Calculate points for current sections
+    const totalCompletedSections = totalSectionsCompleted.length
+    const completedSections = currentSectionsCompleted.length
+
+    let sectionsCompletedSumTotal =
+      completedSections * this.POINTS_PER_SECTION_COMPLETED
+    if (totalCompletedSections == MAX_COMPLETABLE_ITEMS)
+      sectionsCompletedSumTotal += this.ALL_SECTIONS_COMPLETED_BONUS
+    const awardedPoints = Math.floor(sectionsCompletedSumTotal)
+
+    // Update/Add challenge sections
+    challenge.sectionsCompleted = totalSectionsCompleted
     challenge.maxSectionsCompletable = MAX_COMPLETABLE_ITEMS
     challenge.maxAwardablePoints = maxAwardablePoints
-    challenge.awardedPoints = awardedPoints
-    if (maxAwardablePoints === awardedPoints) challenge.completed = true
+    challenge.awardedPoints += awardedPoints
+    if (maxAwardablePoints === challenge.awardedPoints)
+      challenge.completed = true
 
-    return challenge
+    return {
+      updatedChallenge: challenge,
+      amountToAddToUserProfile: awardedPoints
+    }
   }
 
   /**
@@ -108,7 +157,8 @@ export default class CalculatePoints implements ICalculatePoints {
    *
    * @param { sectionsCompleted, difficultly } - ChallengeInput object
    * @param challenge - challenge entity
-   * @returns challenge entity
+   * @returns { updatedChallenge: ChallengeEntity, amountToAddToUserProfile: number }
+  }
    */
   private calculateRecipeChallengePoints(
     { sectionsCompleted, difficulty }: ChallengeInput,
@@ -121,32 +171,48 @@ export default class CalculatePoints implements ICalculatePoints {
         this.ALL_SECTIONS_COMPLETED_BONUS) *
       difficultyAsNumber
 
+    const {
+      totalSectionsCompleted,
+      currentSectionsCompleted
+    } = this.checkSectionsAndMergeCompletedSections(
+      challenge.sectionsCompleted,
+      sectionsCompleted
+    )
+
     // calculate points
-    const completedSections = sectionsCompleted.length
+    const totalCompletedSections = totalSectionsCompleted.length
+    const completedSections = currentSectionsCompleted.length
     let sectionsCompletedSumTotal =
       completedSections * this.POINTS_PER_SECTION_COMPLETED * difficultyAsNumber
-    if (completedSections == MAX_COMPLETABLE_ITEMS)
+    if (totalCompletedSections == MAX_COMPLETABLE_ITEMS)
       sectionsCompletedSumTotal += this.ALL_SECTIONS_COMPLETED_BONUS
     const awardedPoints = Math.floor(sectionsCompletedSumTotal)
 
     // Update/Add challenge sections
     challenge.difficulty = difficulty
-    challenge.sectionsCompleted = sectionsCompleted
+    challenge.sectionsCompleted = totalSectionsCompleted
     challenge.maxSectionsCompletable = MAX_COMPLETABLE_ITEMS
     challenge.maxAwardablePoints = maxAwardablePoints
-    challenge.awardedPoints = awardedPoints
-    if (maxAwardablePoints === awardedPoints) challenge.completed = true
+    challenge.awardedPoints += awardedPoints
+    if (maxAwardablePoints === challenge.awardedPoints)
+      challenge.completed = true
 
-    return challenge
+    return {
+      updatedChallenge: challenge,
+      amountToAddToUserProfile: awardedPoints
+    }
   }
 
   public calculate(
     challengeObject: any,
     challenge: ChallengeEntity,
     challengeType: string
-  ): ChallengeEntity {
+  ): {
+    updatedChallenge: ChallengeEntity
+    amountToAddToUserProfile: number
+  } {
     if (!challengeType) throw new Error('No challengeType provided!')
-    let updatedChallenge
+    let result
     switch (challengeType) {
       case 'UserProfile':
         console.info(
@@ -154,23 +220,21 @@ export default class CalculatePoints implements ICalculatePoints {
             challengeObject
           )}`
         )
-        updatedChallenge = this.calculateUserProfilePoints(
-          challengeObject,
-          challenge
+        challenge.type = TypeEnum.UserProfile
+        result = this.calculateUserProfilePoints(challengeObject, challenge)
+        console.info(
+          `Calculated points: ${result.updatedChallenge.awardedPoints}`
         )
-        updatedChallenge.type = TypeEnum.UserProfile
-        console.info(`Calculated points: ${updatedChallenge.awardedPoints}`)
-        return updatedChallenge
+        return result
       case 'Recipe':
         console.info(`Calculating points for recipe challenge with items:
         ${challengeObject.sectionsCompleted.toString()}`)
-        updatedChallenge = this.calculateRecipeChallengePoints(
-          challengeObject,
-          challenge
+        challenge.type = TypeEnum.Recipe
+        result = this.calculateRecipeChallengePoints(challengeObject, challenge)
+        console.info(
+          `Calculated points: ${result.updatedChallenge.awardedPoints}`
         )
-        updatedChallenge.type = TypeEnum.Recipe
-        console.info(`Calculated points: ${updatedChallenge.awardedPoints}`)
-        return updatedChallenge
+        return result
       default:
         throw new Error('No challenge type passed through! Try again!')
     }

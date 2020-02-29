@@ -105,7 +105,7 @@ export default class Recipe {
   @JoinColumn({ name: 'recipeAttributionId' })
   recipeAttribution: RecipeAttribution
 
-  @Column()
+  @Column({ nullable: true })
   videoClipLink: string
 
   @CreateDateColumn()

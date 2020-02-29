@@ -151,6 +151,7 @@ export type Recipe = {
   ingredients: Array<Scalars['String']>,
   method: Array<Scalars['String']>,
   standardResolution: Scalars['String'],
+  videoClipLink?: Maybe<Scalars['String']>,
 };
 
 export type RecipeAttribution = {
@@ -180,6 +181,7 @@ export type RecipeInput = {
   facebook?: Maybe<Scalars['String']>,
   instagram?: Maybe<Scalars['String']>,
   twitter?: Maybe<Scalars['String']>,
+  videoClipLink?: Maybe<Scalars['String']>,
 };
 
 export enum SectionsCompletedEnum {

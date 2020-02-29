@@ -42,7 +42,7 @@ export default class UserProfileAPI implements IUserProfileAPI {
     return userProfile
   }
 
-  public async createUserProfile(
+  public async createOrUpdateUserProfile(
     userProfileInput: UserProfileInput,
     challengeType: string
   ) {
@@ -58,17 +58,61 @@ export default class UserProfileAPI implements IUserProfileAPI {
     } = userProfileInput
     const db = await this.database.getConnection()
 
-    // TODO - make sure they their point's aren't reset when
-    // they update their profile or they don't cheat and just continually
-    // update their profile to get points.
-    const calculatedPoints = this.calculatePoints.calculate(
+    // * 1. check if challenge exists
+    let challenge: ChallengeEntity | undefined
+    challenge = await db
+      .getRepository(ChallengeEntity)
+      .findOne({ where: { userProfileId: id, type: TypeEnum.UserProfile } })
+    // * 1.a. Chek if challenge doesn't exist, create new challenge
+    if (typeof challenge === 'undefined') challenge = new ChallengeEntity()
+    // * 1.b. Check if challenge is complete, if complete return Challenge
+    if (challenge.completed) return challenge
+
+    // * 2.check if user profile exists
+    const checkSavedUserProfile = await db
+      .getRepository(UserProfileEntity)
+      .findOne({
+        where: {
+          id
+        }
+      })
+    let userProfile
+    if (typeof checkSavedUserProfile === 'undefined') {
+      userProfile = new UserProfileEntity()
+      userProfile.id = id as string
+    } else userProfile = checkSavedUserProfile
+
+    // * 3 Calculate points & update challenge entity
+    const {
+      updatedChallenge,
+      amountToAddToUserProfile
+    } = this.calculatePoints.calculate(
       userProfileInput,
+      challenge,
       challengeType
     )
-    // TODO - fix up so if user updates their profile later they'll get
-    // points for completing it
-    let userProfile = new UserProfileEntity()
-    userProfile.id = id as string
+    // * 4 Save challenge entity
+    const savedChallenge = await db
+      .getRepository(ChallengeEntity)
+      .save(updatedChallenge)
+    console.info(`User Profile - challenge ${savedChallenge.id} saved`)
+
+    // * 5 Update user profile total points
+    const ERROR_NO_AFFECTED_ROWS = 0
+    const updatedUserProfile = await db
+      .getRepository(UserProfileEntity)
+      .increment({ id: id as string }, 'totalPoints', amountToAddToUserProfile)
+    if (updatedUserProfile.affected == ERROR_NO_AFFECTED_ROWS) {
+      console.error(
+        `UserProfile totalPoints not updated: ${JSON.stringify(
+          updatedUserProfile
+        )}`
+      )
+      throw new Error(
+        'Challenge - UserProfile totalPoints not updated. Try again!'
+      )
+    }
+    // * 6 Update user profile attributes
     userProfile.motivations = motivations
     userProfile.challengeGoals = challengeGoals
     userProfile.username = username
@@ -81,8 +125,7 @@ export default class UserProfileAPI implements IUserProfileAPI {
     if (typeof lowResProfile == 'string')
       userProfile.lowResProfile = lowResProfile
 
-    userProfile.totalPoints = calculatedPoints as number
-
+    // * 7 Save and return user profile
     const savedUserProfile = await db
       .getRepository(UserProfileEntity)
       .save(userProfile)

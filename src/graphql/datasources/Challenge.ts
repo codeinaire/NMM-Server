@@ -1,7 +1,9 @@
 import { injectable, inject } from 'inversify'
 // import { container } from '../../inversify.config'
 // DB Entities
-import ChallengeEntity from '../../db/entities/Challenge'
+import ChallengeEntity, {
+  SectionsCompletedEnum
+} from '../../db/entities/Challenge'
 import UserProfileEntity from '../../db/entities/UserProfile'
 import RecipeEntity from '../../db/entities/Recipe'
 
@@ -70,7 +72,11 @@ export default class ChallengeAPI implements IChallengeAPI {
       .getRepository(ChallengeEntity)
       .findOne({ userProfileId: verifiedUser, recipeId })
     // * 1.a. Chek if challenge doesn't exist, create new challenge
-    if (typeof challenge === 'undefined') challenge = new ChallengeEntity()
+    if (typeof challenge === 'undefined') {
+      console.info(`Challenge is ${challenge} - creating new challenge`)
+      challenge = new ChallengeEntity()
+      challenge.sectionsCompleted = [SectionsCompletedEnum.None]
+    }
     // * 1.b. Check if challenge is complete, if complete return Challenge
     if (challenge.completed) return challenge
 
@@ -87,11 +93,10 @@ export default class ChallengeAPI implements IChallengeAPI {
       sharedFriendsImages.standardResolution = standardResolution
       challenge.sharedFriendsImages = sharedFriendsImages
     }
-    const updatedChallenge = this.calculatePoints.calculate(
-      challengeInput,
-      challenge,
-      challengeType
-    )
+    const {
+      updatedChallenge,
+      amountToAddToUserProfile
+    } = this.calculatePoints.calculate(challengeInput, challenge, challengeType)
     const recipe = await db.getRepository(RecipeEntity).findOne(recipeId)
     if (typeof recipe !== 'undefined') updatedChallenge.recipe = recipe
     else {
@@ -105,11 +110,7 @@ export default class ChallengeAPI implements IChallengeAPI {
     const ERROR_NO_AFFECTED_ROWS = 0
     const updatedUserProfile = await db
       .getRepository(UserProfileEntity)
-      .increment(
-        { id: verifiedUser },
-        'totalPoints',
-        (updatedChallenge.awardedPoints as unknown) as number
-      )
+      .increment({ id: verifiedUser }, 'totalPoints', amountToAddToUserProfile)
     if (updatedUserProfile.affected == ERROR_NO_AFFECTED_ROWS) {
       console.error(
         `UserProfile totalPoints not updated: ${JSON.stringify(

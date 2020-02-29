@@ -107,7 +107,7 @@ export interface IUserProfileAPI extends DataSource {
   createOrUpdateUserProfile(
     arg0: UserProfileInput,
     arg1?: string
-  ): Promise<UserProfile>
+  ): Promise<UserProfile | ChallengeEntity>
   findUserProfile(arg0: string, arg1?: string): Promise<UserProfile | undefined>
   initialize(arg0?: DataSourceConfig<any>): void
   closeDbConnection(): void
@@ -132,5 +132,8 @@ export interface ICalculatePoints {
     arg0: ChallengeInput | UserProfileInput,
     arg1: ChallengeEntity,
     arg2: string
-  ): ChallengeEntity
+  ): {
+    updatedChallenge: ChallengeEntity
+    amountToAddToUserProfile: number
+  }
 }

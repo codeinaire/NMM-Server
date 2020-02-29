@@ -58,10 +58,10 @@ export default class Challenge {
   })
   difficulty: ChallengeDifficultyEnum
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: 0 })
   maxAwardablePoints: number
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: 0 })
   awardedPoints: number
 
   @Column({ nullable: true })

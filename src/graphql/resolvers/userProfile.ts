@@ -25,7 +25,7 @@ export default {
     }
   },
   Mutation: {
-    createUserProfile: async (
+    createOrUpdateUserProfile: async (
       _: any,
       { userProfileInput }: { userProfileInput: UserProfileInput },
       { auth, dataSources, log, event }: IResolverContext
@@ -38,9 +38,9 @@ export default {
         log.info(`Authorisation of user ${userProfileInput.id} successful!`)
 
         log.info(`Creating profile for user ${verifiedUserId}...`)
-        const createdUserProfile = await dataSources.userProfileAPI.createUserProfile(
+        const createdUserProfile = await dataSources.userProfileAPI.createOrUpdateUserProfile(
           userProfileInput,
-          'createUserProfile'
+          'UserProfile'
         )
 
         log.info(`User profile for ${createdUserProfile.id} created.`)
