@@ -97,11 +97,7 @@ export default class UserProfileAPI implements IUserProfileAPI {
       userProfile = new UserProfileEntity()
       userProfile.id = id as string
       userProfile.totalPoints = amountToAddToUserProfile
-      console.log(
-        'userProfile in IF####',
-        userProfile,
-        amountToAddToUserProfile
-      )
+      console.info(`Creating`)
     } else {
       userProfile = checkSavedUserProfile
       // * 4 Update user profile total points
