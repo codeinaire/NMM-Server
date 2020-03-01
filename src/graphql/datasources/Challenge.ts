@@ -75,7 +75,8 @@ export default class ChallengeAPI implements IChallengeAPI {
     if (typeof challenge === 'undefined') {
       console.info(`Challenge is ${challenge} - creating new challenge`)
       challenge = new ChallengeEntity()
-      challenge.sectionsCompleted = [SectionsCompletedEnum.None]
+      challenge.sectionsCompleted = []
+      challenge.awardedPoints = 0
     }
     // * 1.b. Check if challenge is complete, if complete return Challenge
     if (challenge.completed) return challenge

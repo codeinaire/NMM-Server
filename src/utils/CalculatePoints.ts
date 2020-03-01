@@ -22,21 +22,22 @@ export default class CalculatePoints implements ICalculatePoints {
    *  sections that have already been completed in the challenge
    *
    * @param sectionsCompleted
-   * @param sectionsAboutToComplete
+   * @param sectionsJustCompleted
    * @return { currentSectionsCompleted, totalSectionsCompleted }
    */
   private checkSectionsAndMergeCompletedSections(
     sectionsCompleted: Array<SectionsCompletedEnum>,
-    sectionsAboutToComplete: Array<SectionsCompletedEnum>
+    sectionsJustCompleted: Array<SectionsCompletedEnum>
   ): {
     totalSectionsCompleted: Array<SectionsCompletedEnum>
     currentSectionsCompleted: Array<SectionsCompletedEnum>
   } {
+    console.log('totalSectionsCompleted', sectionsCompleted)
+    console.log('currentSectionsCompleted', sectionsJustCompleted)
+
     const VALUE_NOT_PRESENT = -1
-    // ERROR - cannot read property indexOf of undefined
-    // {"id":"auth0|5e5aeb5d2c30470ca12f3b71","challengeGoals":5,"motivations":["Environment","AnimalWelfare"],"username":"Test User","challengeQuote":"I'm a test user"}
     // Find sections not completed
-    const currentSectionsCompleted = sectionsAboutToComplete.filter(
+    const currentSectionsCompleted = sectionsJustCompleted.filter(
       section => VALUE_NOT_PRESENT === sectionsCompleted.indexOf(section)
     )
     // Combine sections just completed and previously completed sections
@@ -58,6 +59,8 @@ export default class CalculatePoints implements ICalculatePoints {
    * @returns SectionsCompletedEnum - a key from the enum
    */
   private addSection(section: string) {
+    console.log('section', section)
+
     switch (section) {
       case 'motivations':
         return SectionsCompletedEnum.Motivations
@@ -118,6 +121,9 @@ export default class CalculatePoints implements ICalculatePoints {
       challenge.sectionsCompleted,
       sectionsJustCompleted
     )
+
+    console.log('currentSectionsCompleted', currentSectionsCompleted)
+    console.log('totalSectionsCompleted', totalSectionsCompleted)
 
     // Calculate points for current sections
     const totalCompletedSections = totalSectionsCompleted.length
@@ -221,6 +227,8 @@ export default class CalculatePoints implements ICalculatePoints {
           )}`
         )
         challenge.type = TypeEnum.UserProfile
+        delete challengeObject.id
+        delete challengeObject.standardResolution
         result = this.calculateUserProfilePoints(challengeObject, challenge)
         console.info(
           `Calculated points: ${result.updatedChallenge.awardedPoints}`

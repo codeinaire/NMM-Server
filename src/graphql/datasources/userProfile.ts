@@ -1,9 +1,11 @@
 import { injectable, inject } from 'inversify'
 // DB Entities
 import UserProfileEntity from '../../db/entities/UserProfile'
-import ChallengeEntity from '../../db/entities/Challenge'
+import ChallengeEntity, {
+  SectionsCompletedEnum
+} from '../../db/entities/Challenge'
 // TYPES
-import { UserProfileInput, TypeEnum, ChallengeDifficultyEnum } from '../types'
+import { UserProfileInput, TypeEnum } from '../types'
 import { TYPES } from '../../inversifyTypes'
 import { IUserProfileAPI, IDatabase, ICalculatePoints } from '../../types'
 import { DataSourceConfig } from 'apollo-datasource'
@@ -64,11 +66,25 @@ export default class UserProfileAPI implements IUserProfileAPI {
       .getRepository(ChallengeEntity)
       .findOne({ where: { userProfileId: id, type: TypeEnum.UserProfile } })
     // * 1.a. Chek if challenge doesn't exist, create new challenge
-    if (typeof challenge === 'undefined') challenge = new ChallengeEntity()
+    if (typeof challenge === 'undefined') {
+      challenge = new ChallengeEntity()
+      challenge.sectionsCompleted = []
+      challenge.awardedPoints = 0
+    }
     // * 1.b. Check if challenge is complete, if complete return Challenge
     if (challenge.completed) return challenge
 
-    // * 2.check if user profile exists
+    // * 2 Calculate points & update challenge entity
+    const {
+      updatedChallenge,
+      amountToAddToUserProfile
+    } = this.calculatePoints.calculate(
+      userProfileInput,
+      challenge,
+      challengeType
+    )
+
+    // * 3.check if user profile exists
     const checkSavedUserProfile = await db
       .getRepository(UserProfileEntity)
       .findOne({
@@ -80,39 +96,19 @@ export default class UserProfileAPI implements IUserProfileAPI {
     if (typeof checkSavedUserProfile === 'undefined') {
       userProfile = new UserProfileEntity()
       userProfile.id = id as string
-    } else userProfile = checkSavedUserProfile
-
-    // * 3 Calculate points & update challenge entity
-    const {
-      updatedChallenge,
-      amountToAddToUserProfile
-    } = this.calculatePoints.calculate(
-      userProfileInput,
-      challenge,
-      challengeType
-    )
-    // * 4 Save challenge entity
-    const savedChallenge = await db
-      .getRepository(ChallengeEntity)
-      .save(updatedChallenge)
-    console.info(`User Profile - challenge ${savedChallenge.id} saved`)
-
-    // * 5 Update user profile total points
-    const ERROR_NO_AFFECTED_ROWS = 0
-    const updatedUserProfile = await db
-      .getRepository(UserProfileEntity)
-      .increment({ id: id as string }, 'totalPoints', amountToAddToUserProfile)
-    if (updatedUserProfile.affected == ERROR_NO_AFFECTED_ROWS) {
-      console.error(
-        `UserProfile totalPoints not updated: ${JSON.stringify(
-          updatedUserProfile
-        )}`
+      userProfile.totalPoints = amountToAddToUserProfile
+      console.log(
+        'userProfile in IF####',
+        userProfile,
+        amountToAddToUserProfile
       )
-      throw new Error(
-        'Challenge - UserProfile totalPoints not updated. Try again!'
-      )
+    } else {
+      userProfile = checkSavedUserProfile
+      // * 4 Update user profile total points
+      userProfile.totalPoints += amountToAddToUserProfile
     }
-    // * 6 Update user profile attributes
+
+    // * 5 Update user profile attributes
     userProfile.motivations = motivations
     userProfile.challengeGoals = challengeGoals
     userProfile.username = username
@@ -125,10 +121,17 @@ export default class UserProfileAPI implements IUserProfileAPI {
     if (typeof lowResProfile == 'string')
       userProfile.lowResProfile = lowResProfile
 
-    // * 7 Save and return user profile
+    // * 6 Save and return user profile
     const savedUserProfile = await db
       .getRepository(UserProfileEntity)
       .save(userProfile)
+
+    // * 7 Save challenge entity
+    updatedChallenge.userProfile = savedUserProfile
+    const savedChallenge = await db
+      .getRepository(ChallengeEntity)
+      .save(updatedChallenge)
+    console.info(`User Profile - challenge ${savedChallenge.id} saved`)
 
     return savedUserProfile
   }
