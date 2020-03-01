@@ -106,7 +106,7 @@ export default class Recipe {
   recipeAttribution: RecipeAttribution
 
   @Column({ nullable: true })
-  videoClipLink: string
+  videoUrl: string
 
   @CreateDateColumn()
   createdAt: Date

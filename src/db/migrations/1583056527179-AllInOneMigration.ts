@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm'
 
-export class AllInOneMigration1583014242875 implements MigrationInterface {
-  name = 'AllInOneMigration1583014242875'
+export class AllInOneMigration1583056527179 implements MigrationInterface {
+  name = 'AllInOneMigration1583056527179'
 
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(
@@ -21,7 +21,7 @@ export class AllInOneMigration1583014242875 implements MigrationInterface {
       undefined
     )
     await queryRunner.query(
-      `CREATE TABLE "recipe" ("id" SERIAL NOT NULL, "title" character varying NOT NULL, "ingredients" text array NOT NULL, "method" text array NOT NULL, "hashtags" text array NOT NULL, "difficulty" "recipe_difficulty_enum" NOT NULL, "cost" "recipe_cost_enum" NOT NULL, "mealType" "recipe_mealtype_enum" NOT NULL, "lowResolution" character varying NOT NULL, "standardResolution" character varying NOT NULL, "recipeAttributionId" integer, "videoClipLink" character varying, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_e365a2fedf57238d970e07825ca" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "recipe" ("id" SERIAL NOT NULL, "title" character varying NOT NULL, "ingredients" text array NOT NULL, "method" text array NOT NULL, "hashtags" text array NOT NULL, "difficulty" "recipe_difficulty_enum" NOT NULL, "cost" "recipe_cost_enum" NOT NULL, "mealType" "recipe_mealtype_enum" NOT NULL, "lowResolution" character varying NOT NULL, "standardResolution" character varying NOT NULL, "recipeAttributionId" integer, "videoUrl" character varying, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_e365a2fedf57238d970e07825ca" PRIMARY KEY ("id"))`,
       undefined
     )
     await queryRunner.query(
