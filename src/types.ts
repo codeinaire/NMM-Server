@@ -12,6 +12,7 @@ import {
 } from './graphql/types'
 import ChallengeEntity from './db/entities/Challenge'
 import { LambdaLog } from 'lambda-log'
+import { MealTypeEnum } from './graphql/types'
 
 export interface ExtendedAPIGatewayProxyEvent extends APIGatewayProxyEvent {
   source: any
@@ -99,6 +100,7 @@ export interface IRecipeAPI extends DataSource {
     arg1?: string
   ): Promise<RecipeAttribution | undefined>
   findAllRecipes(): Promise<Array<Recipe>>
+  findRecipesByMealType(arg0: MealTypeEnum): Promise<Array<Recipe>>
   createRecipe(args: any): Promise<Recipe>
   deleteRecipe(arg0?: number, arg1?: string): Promise<Recipe>
 }

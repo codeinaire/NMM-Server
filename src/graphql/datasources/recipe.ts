@@ -4,7 +4,7 @@ import { ForbiddenError, UserInputError } from 'apollo-server-lambda'
 import RecipeEntity from '../../db/entities/Recipe'
 import RecipeAttributionEntity from '../../db/entities/RecipeAttribution'
 // TYPES
-import { RecipeInput } from '../types'
+import { RecipeInput, MealTypeEnum } from '../types'
 import { IRecipeAPI, IDatabase } from '../../types'
 
 import { DataSourceConfig } from 'apollo-datasource'
@@ -58,6 +58,21 @@ export default class RecipeAPI implements IRecipeAPI {
     console.log(recipe)
 
     return recipe
+  }
+
+  public async findRecipesByMealType(mealType: MealTypeEnum) {
+    const db = await this.database.getConnection()
+    const recipes = await db
+      .getRepository(RecipeEntity)
+      .createQueryBuilder('recipe')
+      .where('recipe.mealType = :mealType', { mealType })
+      .orderBy('RANDOM()')
+      .limit(3)
+      .getMany()
+
+    console.log('get recipes', recipes)
+
+    return recipes
   }
 
   public async deleteRecipe(id: number, title: string): Promise<any> {
