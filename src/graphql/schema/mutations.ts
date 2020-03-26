@@ -16,5 +16,7 @@ export default gql`
     ): Recipe
 
     createOrUpdateChallenge(challengeInput: ChallengeInput): Challenge
+
+    deleteUserProfile(userProfileId: String!): UserProfile
   }
 `

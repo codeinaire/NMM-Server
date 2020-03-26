@@ -33,8 +33,31 @@ export default class UserProfileAPI implements IUserProfileAPI {
     this.context = config.context
   }
 
+  public async deleteUserProfile(userProfileId: string) {
+    const db = await this.database.getConnection()
+    const checkSavedUserProfile = await db
+      .getRepository(UserProfileEntity)
+      .findOne({
+        where: {
+          id: userProfileId
+        }
+      })
+
+    if (typeof checkSavedUserProfile === 'undefined')
+      throw new Error('No user profile to delete!')
+    else {
+      const resp = await db.getRepository(UserProfileEntity).delete({
+        id: userProfileId
+      })
+      console.log('resp', resp)
+
+      return 'Deletion of user profile successful!'
+    }
+  }
+
   public async findUserProfile(verifiedUserId: string) {
     const db = await this.database.getConnection()
+
     const userProfile = await db.getRepository(UserProfileEntity).findOne({
       where: {
         id: verifiedUserId

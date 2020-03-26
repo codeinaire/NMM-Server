@@ -45,6 +45,10 @@ export interface IResolverContext {
   dataSources: any
 }
 
+export interface IUserProfileId {
+  userProfileId: string
+}
+
 // AUTHORISATION
 export interface IVerifiedToken {
   [index: string]: any
@@ -113,6 +117,7 @@ export interface IUserProfileAPI extends DataSource {
   findUserProfile(arg0: string, arg1?: string): Promise<UserProfile | undefined>
   initialize(arg0?: DataSourceConfig<any>): void
   closeDbConnection(): void
+  deleteUserProfile(arg0: string): Promise<string>
 }
 
 export interface IChallengeAPI extends DataSource {
