@@ -29,6 +29,12 @@ export enum MealTypeEnum {
   Snack = 'Snack'
 }
 
+const roleTransformer = {
+  to: (arrayOfStrings: string[]): string =>
+    `{"${arrayOfStrings.filter(string => string).join('","')}"}`,
+  from: (postgresArray: any): string[] => postgresArray
+}
+
 @Entity()
 export default class Recipe {
   @PrimaryGeneratedColumn()
@@ -37,13 +43,28 @@ export default class Recipe {
   @Column()
   title: string
 
-  @Column({ type: 'text', array: true })
+  @Column({
+    type: 'text',
+    nullable: false,
+    array: true,
+    transformer: roleTransformer
+  })
   ingredients: string[]
 
-  @Column({ type: 'text', array: true })
+  @Column({
+    type: 'text',
+    nullable: false,
+    array: true,
+    transformer: roleTransformer
+  })
   method: string[]
 
-  @Column({ type: 'text', array: true })
+  @Column({
+    type: 'text',
+    nullable: false,
+    array: true,
+    transformer: roleTransformer
+  })
   hashtags: string[]
 
   @Column({
@@ -83,6 +104,9 @@ export default class Recipe {
   )
   @JoinColumn({ name: 'recipeAttributionId' })
   recipeAttribution: RecipeAttribution
+
+  @Column({ nullable: true })
+  videoUrl: string
 
   @CreateDateColumn()
   createdAt: Date
