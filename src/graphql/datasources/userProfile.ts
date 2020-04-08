@@ -1,4 +1,5 @@
 import { injectable, inject } from 'inversify'
+import { ManagementClient } from 'auth0'
 // DB Entities
 import UserProfileEntity from '../../db/entities/UserProfile'
 import ChallengeEntity, {
@@ -42,15 +43,23 @@ export default class UserProfileAPI implements IUserProfileAPI {
           id: userProfileId
         }
       })
+    console.info('checkSavedUserProfile', checkSavedUserProfile)
 
     if (typeof checkSavedUserProfile === 'undefined')
       throw new Error('No user profile to delete!')
     else {
-      const resp = await db.getRepository(UserProfileEntity).delete({
+      const management = new ManagementClient({
+        token: process.env.AUTH0_MANAGEMENT_API_TOKEN,
+        clientId: process.env.AUTH0_MANAGEMENT_CLIENT_ID,
+        domain: process.env.AUTH0_MANAGEMENT_URL || '',
+        scope: 'delete:users'
+      })
+      await management.deleteUser({
         id: userProfileId
       })
-      console.log('resp', resp)
-
+      await db.getRepository(UserProfileEntity).delete({
+        id: userProfileId
+      })
       return 'Deletion of user profile successful!'
     }
   }

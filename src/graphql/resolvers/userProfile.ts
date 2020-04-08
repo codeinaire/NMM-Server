@@ -9,6 +9,7 @@ export default {
       { auth, dataSources, log, event }: IResolverContext
     ): Promise<UserProfile> => {
       try {
+        console.info('Resolver - User Profile:', event)
         console.info(`Authorising user ${userProfileId}...`)
         const verifiedUserProfileId = await auth.checkScopesAndResolve(event, [
           'profile'
@@ -21,7 +22,7 @@ export default {
         )
         return userProfile
       } catch (error) {
-        console.error(`Couldn't find user profile: ${error}`)
+        console.error(`User Profile - Couldn't find user profile: ${error}`)
         return error
       }
     }
