@@ -65,18 +65,21 @@ export default class ChallengeAPI implements IChallengeAPI {
       recipeId
     } = challengeInput
     const db = await this.database.getConnection()
+    console.log('verifiedUser', verifiedUser)
 
     // * 1. Check if challenge exists
     let challenge: ChallengeEntity | undefined
     challenge = await db
       .getRepository(ChallengeEntity)
       .findOne({ userProfileId: verifiedUser, recipeId })
+    console.info(`Does challenge exist? ${challenge}`)
     // * 1.a. Chek if challenge doesn't exist, create new challenge
     if (typeof challenge === 'undefined') {
       console.info(`Challenge is ${challenge} - creating new challenge`)
       challenge = new ChallengeEntity()
       challenge.sectionsCompleted = []
       challenge.awardedPoints = 0
+      challenge.userProfileId = verifiedUser
     }
     // * 1.b. Check if challenge is complete, if complete return Challenge
     if (challenge.completed) return challenge
@@ -98,6 +101,7 @@ export default class ChallengeAPI implements IChallengeAPI {
       updatedChallenge,
       amountToAddToUserProfile
     } = this.calculatePoints.calculate(challengeInput, challenge, challengeType)
+    // * 2. a. Find recipe to add to challenge
     const recipe = await db.getRepository(RecipeEntity).findOne(recipeId)
     if (typeof recipe !== 'undefined') updatedChallenge.recipe = recipe
     else {
@@ -108,10 +112,14 @@ export default class ChallengeAPI implements IChallengeAPI {
     }
 
     // * 3. Update user profile total points
+    console.info(`Challenge - saving ${amountToAddToUserProfile} to challenge`)
     const ERROR_NO_AFFECTED_ROWS = 0
     const updatedUserProfile = await db
       .getRepository(UserProfileEntity)
       .increment({ id: verifiedUser }, 'totalPoints', amountToAddToUserProfile)
+    console.info(
+      `Challenge - result of updating points ${updatedUserProfile.raw}`
+    )
     if (updatedUserProfile.affected == ERROR_NO_AFFECTED_ROWS) {
       console.error(
         `UserProfile totalPoints not updated: ${JSON.stringify(
@@ -124,12 +132,16 @@ export default class ChallengeAPI implements IChallengeAPI {
     }
 
     // * 4. Save & Return challenge
+    console.log(
+      `Challenge - saving challenge...${JSON.stringify(updatedChallenge)}`
+    )
     const savedChallenge = await db
       .getRepository(ChallengeEntity)
       .save(updatedChallenge)
     // Remove Recipe object from returned object
     // to be compatible with GraphQL return type
     if (type == 'Recipe') delete savedChallenge.recipe
+    console.log(`Challenge saved! - ${JSON.stringify(savedChallenge)}`)
 
     return savedChallenge
   }

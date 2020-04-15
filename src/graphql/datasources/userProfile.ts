@@ -129,10 +129,13 @@ export default class UserProfileAPI implements IUserProfileAPI {
       userProfile = new UserProfileEntity()
       userProfile.id = id as string
       userProfile.totalPoints = amountToAddToUserProfile
-      console.info(`Creating`)
+      console.info(`Creating profile`)
     } else {
       userProfile = checkSavedUserProfile
       // * 4 Update user profile total points
+      console.info(
+        `Updating profile - adding ${amountToAddToUserProfile} to ${userProfile.totalPoints}`
+      )
       userProfile.totalPoints += amountToAddToUserProfile
     }
 
@@ -150,6 +153,7 @@ export default class UserProfileAPI implements IUserProfileAPI {
       userProfile.lowResProfile = lowResProfile
 
     // * 6 Save and return user profile
+    console.info('User profile saving...')
     const savedUserProfile = await db
       .getRepository(UserProfileEntity)
       .save(userProfile)
