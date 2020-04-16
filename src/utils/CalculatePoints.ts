@@ -172,10 +172,11 @@ export default class CalculatePoints implements ICalculatePoints {
   ) {
     const MAX_COMPLETABLE_ITEMS = 4
     const difficultyAsNumber = (difficulty as unknown) as number
-    const maxAwardablePoints =
+    const maxAwardablePoints = Math.floor(
       (MAX_COMPLETABLE_ITEMS * this.POINTS_PER_SECTION_COMPLETED +
         this.ALL_SECTIONS_COMPLETED_BONUS) *
-      difficultyAsNumber
+        difficultyAsNumber
+    )
 
     const {
       totalSectionsCompleted,

@@ -41,7 +41,10 @@ export class Authorisation implements IAuthorisation {
   }
 
   private extractBearerToken(event: APIGatewayProxyEvent): string {
-    const tokenString = event.headers.authorization
+    const tokenString =
+      process.env.ENV === 'dev'
+        ? event.headers.authorization
+        : event.headers.Authorization
     console.info('Authorisation - tokenString', tokenString)
 
     if (!tokenString)
@@ -83,7 +86,7 @@ export class Authorisation implements IAuthorisation {
 
     const scopes: Array<string> = verifiedToken.scope.split(' ')
     const addedScope: Array<string> = scopes.concat(
-      verifiedToken[`${process.env.CLIENT_HOST}challenge`]
+      verifiedToken[`${process.env.CLIENT_URL}/challenge`]
     )
 
     return {
