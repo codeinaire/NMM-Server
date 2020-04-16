@@ -168,6 +168,7 @@ export default class UserProfileAPI implements IUserProfileAPI {
 
     // * 6 Save and return user profile
     console.info('User profile saving...')
+
     const savedUserProfile = await db
       .getRepository(UserProfileEntity)
       .save(userProfile)
