@@ -80,6 +80,7 @@
     "apollo-server": "^2.9.9",
     "apollo-server-lambda": "^2.9.9",
     "auth0": "^2.24.0",
+    "axios": "^0.19.2",
     "dotenv": "^8.2.0",
     "graphql": "^14.5.8",
     "graphql-tools": "^4.0.6",
@@ -91,7 +92,7 @@
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
     "reflect-metadata": "^0.1.13",
-    "serverless": "^1.67.0",
+    "serverless": "^1.67.3",
     "typeorm": "^0.2.20"
   }
 }

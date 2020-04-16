@@ -21,7 +21,7 @@
         "error",
         "multi"
       ],
-      "camelcase": 2
+      "camelcase": 1
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {

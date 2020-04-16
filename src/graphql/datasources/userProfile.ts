@@ -1,5 +1,7 @@
 import { injectable, inject } from 'inversify'
 import { ManagementClient } from 'auth0'
+import axios from 'axios'
+import querystring from 'querystring'
 // DB Entities
 import UserProfileEntity from '../../db/entities/UserProfile'
 import ChallengeEntity, {
@@ -43,13 +45,25 @@ export default class UserProfileAPI implements IUserProfileAPI {
           id: userProfileId
         }
       })
-    console.info('checkSavedUserProfile', checkSavedUserProfile)
+    console.log('checkSavedUserProfile', checkSavedUserProfile)
 
     if (typeof checkSavedUserProfile === 'undefined')
       throw new Error('No user profile to delete!')
     else {
+      const token: any = await axios({
+        method: 'POST',
+        url: process.env.AUTH0_OAUTH_TOKEN_URL,
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        data: querystring.stringify({
+          grant_type: 'client_credentials',
+          client_id: process.env.AUTH0_MANAGEMENT_CLIENT_ID,
+          client_secret: process.env.AUTH0_MANAGEMENT_CLIENT_SECRET,
+          audience: process.env.AUDIENCE
+        })
+      })
+
       const management = new ManagementClient({
-        token: process.env.AUTH0_MANAGEMENT_API_TOKEN,
+        token: token.data.access_token,
         clientId: process.env.AUTH0_MANAGEMENT_CLIENT_ID,
         domain: process.env.AUTH0_MANAGEMENT_URL || '',
         scope: 'delete:users'
