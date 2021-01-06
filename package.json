@@ -80,7 +80,7 @@
     "apollo-server": "^2.9.9",
     "apollo-server-lambda": "^2.9.9",
     "auth0": "^2.24.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "graphql": "^14.5.8",
     "graphql-tools": "^4.0.6",
